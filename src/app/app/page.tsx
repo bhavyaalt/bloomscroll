@@ -15,6 +15,14 @@ import {
 const SWIPE_THRESHOLD = 100;
 const VIEW_STORAGE_KEY = "bloomscroll_viewed_cards";
 const SAVE_STORAGE_KEY = "bloomscroll_saved_cards";
+const PREFERENCES_KEY = "bloomscroll_preferences";
+const ONBOARDING_KEY = "bloomscroll_onboarding_complete";
+
+interface Preferences {
+  topics: string[];
+  goals: string[];
+  completedAt: string;
+}
 
 export default function AppPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -26,11 +34,13 @@ export default function AppPage() {
   const [direction, setDirection] = useState(0);
   const [feed, setFeed] = useState<Card[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [preferences, setPreferences] = useState<Preferences | null>(null);
 
-  // Load saved and viewed cards from localStorage
+  // Load saved cards, viewed cards, and preferences from localStorage
   useEffect(() => {
     const savedJson = localStorage.getItem(SAVE_STORAGE_KEY);
     const viewedJson = localStorage.getItem(VIEW_STORAGE_KEY);
+    const prefsJson = localStorage.getItem(PREFERENCES_KEY);
     
     if (savedJson) {
       setSavedCards(new Set(JSON.parse(savedJson)));
@@ -38,10 +48,13 @@ export default function AppPage() {
     if (viewedJson) {
       setViewedCards(new Set(JSON.parse(viewedJson)));
     }
+    if (prefsJson) {
+      setPreferences(JSON.parse(prefsJson));
+    }
     setIsLoaded(true);
   }, []);
 
-  // Generate smart feed: unseen cards first, then seen cards
+  // Generate smart feed: prioritize preferred topics, unseen cards first
   useEffect(() => {
     if (!isLoaded) return;
 
@@ -49,20 +62,42 @@ export default function AppPage() {
       ? getCardsByTopic(selectedTopic)
       : [...contentLibrary];
 
-    // Separate unseen and seen cards
-    const unseenCards = availableCards.filter(card => !viewedCards.has(card.id));
-    const seenCards = availableCards.filter(card => viewedCards.has(card.id));
+    // If user has preferences, prioritize those topics
+    if (!selectedTopic && preferences?.topics && preferences.topics.length > 0) {
+      // Separate preferred and non-preferred cards
+      const preferredCards = availableCards.filter(card => 
+        card.topic.some(t => preferences.topics.includes(t))
+      );
+      const otherCards = availableCards.filter(card => 
+        !card.topic.some(t => preferences.topics.includes(t))
+      );
 
-    // Shuffle both groups
-    const shuffledUnseen = shuffleCards(unseenCards);
-    const shuffledSeen = shuffleCards(seenCards);
+      // Within each group, prioritize unseen
+      const preferredUnseen = preferredCards.filter(c => !viewedCards.has(c.id));
+      const preferredSeen = preferredCards.filter(c => viewedCards.has(c.id));
+      const otherUnseen = otherCards.filter(c => !viewedCards.has(c.id));
+      const otherSeen = otherCards.filter(c => viewedCards.has(c.id));
 
-    // Prioritize unseen, then fill with seen
-    const smartFeed = [...shuffledUnseen, ...shuffledSeen];
+      // Build feed: preferred unseen → other unseen → preferred seen → other seen
+      const smartFeed = [
+        ...shuffleCards(preferredUnseen),
+        ...shuffleCards(otherUnseen),
+        ...shuffleCards(preferredSeen),
+        ...shuffleCards(otherSeen),
+      ];
+      
+      setFeed(smartFeed);
+    } else {
+      // No preferences - just prioritize unseen cards
+      const unseenCards = availableCards.filter(card => !viewedCards.has(card.id));
+      const seenCards = availableCards.filter(card => viewedCards.has(card.id));
+
+      const smartFeed = [...shuffleCards(unseenCards), ...shuffleCards(seenCards)];
+      setFeed(smartFeed);
+    }
     
-    setFeed(smartFeed);
     setCurrentIndex(0);
-  }, [selectedTopic, isLoaded, viewedCards]);
+  }, [selectedTopic, isLoaded, viewedCards, preferences]);
 
   // Save to localStorage when savedCards changes
   useEffect(() => {

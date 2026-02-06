@@ -18,7 +18,7 @@ const Navigation = () => {
         </div>
         <div className="flex items-center gap-4">
           <a href="#" className="hidden sm:block font-bold text-sm uppercase hover:opacity-70">Log in</a>
-          <Link href="/app" className="flex items-center gap-2 px-5 py-2.5 border border-[#007A5E] bg-[#007A5E] text-[#EACCD4] font-bold text-sm uppercase hover:bg-transparent hover:text-[#007A5E] transition-all">
+          <Link href="/onboarding" className="flex items-center gap-2 px-5 py-2.5 border border-[#007A5E] bg-[#007A5E] text-[#EACCD4] font-bold text-sm uppercase hover:bg-transparent hover:text-[#007A5E] transition-all">
             <span>Start Reading</span>
           </Link>
         </div>
@@ -48,7 +48,7 @@ const Hero = () => {
             </span>
           </p>
           <div className="flex flex-wrap gap-4 mt-4">
-            <Link href="/app" className="px-8 py-4 bg-[#007A5E] text-[#EACCD4] font-bold uppercase tracking-wide hover:bg-[#004a39] transition-colors border border-[#007A5E]">
+            <Link href="/onboarding" className="px-8 py-4 bg-[#007A5E] text-[#EACCD4] font-bold uppercase tracking-wide hover:bg-[#004a39] transition-colors border border-[#007A5E]">
               Start Reading Free
             </Link>
             <Link href="/app" className="px-8 py-4 border border-[#007A5E] font-bold uppercase tracking-wide hover:bg-[#007A5E] hover:text-[#EACCD4] transition-colors">
