@@ -1,22 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bloomscroll.xyz"),
-  title: "Bloomscroll — Turn Scroll Time Into Grow Time",
+  title: "Bloomscroll — Don't Doom, Just Bloom",
   description:
-    "Replace doomscrolling with bite-sized wisdom from books, thinkers, and life lessons. 5 minutes of scrolling = 1 idea that sticks. Subscribe to topics you love. $5/month in USDC on Base.",
+    "Replace the infinite scroll with infinite wisdom. Digestible 60-second summaries of history's greatest ideas, delivered daily. Philosophy, history, science — curated for curious minds. $5/month in USDC on Base.",
   keywords: [
     "bloomscroll",
     "doomscrolling alternative",
@@ -24,13 +13,15 @@ export const metadata: Metadata = {
     "book summaries",
     "daily wisdom",
     "philosophy",
-    "self improvement",
+    "stoicism",
+    "seneca",
+    "marcus aurelius",
     "micro learning",
     "productive scrolling",
-    "stoicism",
     "mental models",
     "base",
     "crypto subscription",
+    "60 second reads",
   ],
   authors: [{ name: "Bloomscroll" }],
   creator: "Bloomscroll",
@@ -40,23 +31,23 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://bloomscroll.xyz",
     siteName: "Bloomscroll",
-    title: "Bloomscroll — Turn Scroll Time Into Grow Time",
+    title: "Bloomscroll — Don't Doom, Just Bloom",
     description:
-      "Replace doomscrolling with bite-sized wisdom. Daily curated ideas from books, philosophy, science & more. $5/month.",
+      "Replace the infinite scroll with infinite wisdom. 60-second summaries of history's greatest ideas. Philosophy, history, science — curated daily.",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Bloomscroll - Bite-sized wisdom for curious minds",
+        alt: "Bloomscroll - Don't Doom, Just Bloom",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Bloomscroll — Turn Scroll Time Into Grow Time",
+    title: "Bloomscroll — Don't Doom, Just Bloom",
     description:
-      "Replace doomscrolling with bite-sized wisdom. Daily curated ideas from books, philosophy, science & more.",
+      "Replace the infinite scroll with infinite wisdom. 60-second summaries of history's greatest ideas.",
     images: ["/og-image.png"],
     creator: "@bloomscroll",
   },
@@ -86,9 +77,9 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <meta name="theme-color" content="#1A7A5E" />
+        <meta name="theme-color" content="#007A5E" />
       </head>
-      <body className={`${inter.variable} ${playfair.variable} antialiased`}>
+      <body className="antialiased">
         {children}
       </body>
     </html>
