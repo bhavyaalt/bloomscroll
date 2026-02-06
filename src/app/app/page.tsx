@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import Link from "next/link";
+import { useAuth } from "@/components/AuthProvider";
+import { incrementViewCount } from "@/lib/supabase";
 import { 
   contentLibrary, 
   Card, 
@@ -25,16 +27,21 @@ interface Preferences {
 }
 
 export default function AppPage() {
+  const { user, loading: authLoading, isSubscribed, viewsRemaining, refreshProfile, signOut } = useAuth();
+  
   const [currentIndex, setCurrentIndex] = useState(0);
   const [savedCards, setSavedCards] = useState<Set<string>>(new Set());
   const [viewedCards, setViewedCards] = useState<Set<string>>(new Set());
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [showSaved, setShowSaved] = useState(false);
   const [showTopicSelector, setShowTopicSelector] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const [direction, setDirection] = useState(0);
   const [feed, setFeed] = useState<Card[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [preferences, setPreferences] = useState<Preferences | null>(null);
+  const [todayViews, setTodayViews] = useState(0);
 
   // Load saved cards, viewed cards, and preferences from localStorage
   useEffect(() => {
@@ -213,6 +220,20 @@ export default function AppPage() {
             </span>
           </Link>
           <div className="flex items-center gap-2">
+            {/* Subscription badge */}
+            {!isSubscribed && user && (
+              <button
+                onClick={() => setShowPaywall(true)}
+                className="px-2 py-1 rounded-full text-xs font-bold bg-[#4D9E8A]/20 text-[#4D9E8A]"
+              >
+                {viewsRemaining > 0 ? `${viewsRemaining} free` : "Upgrade"}
+              </button>
+            )}
+            {isSubscribed && (
+              <span className="px-2 py-1 rounded-full text-xs font-bold bg-[#007A5E] text-white">
+                PRO
+              </span>
+            )}
             <button
               onClick={() => setShowTopicSelector(!showTopicSelector)}
               className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide transition-all ${
@@ -233,6 +254,54 @@ export default function AppPage() {
             >
               ★ {savedCards.size}
             </button>
+            {/* User menu */}
+            <div className="relative">
+              <button
+                onClick={() => setShowUserMenu(!showUserMenu)}
+                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-sm hover:bg-white/20 transition-all"
+              >
+                {user ? "👤" : "?"}
+              </button>
+              {showUserMenu && (
+                <div className="absolute right-0 top-10 bg-[#1a1a1a] border border-white/10 rounded-xl p-2 min-w-[160px] shadow-xl">
+                  {user ? (
+                    <>
+                      <div className="px-3 py-2 text-xs text-white/40 truncate">
+                        {user.email}
+                      </div>
+                      <hr className="border-white/10 my-1" />
+                      {!isSubscribed && (
+                        <button
+                          onClick={() => {
+                            setShowUserMenu(false);
+                            setShowPaywall(true);
+                          }}
+                          className="w-full px-3 py-2 text-left text-sm hover:bg-white/10 rounded-lg text-[#4D9E8A]"
+                        >
+                          ⭐ Upgrade to Pro
+                        </button>
+                      )}
+                      <button
+                        onClick={() => {
+                          signOut();
+                          setShowUserMenu(false);
+                        }}
+                        className="w-full px-3 py-2 text-left text-sm hover:bg-white/10 rounded-lg text-white/70"
+                      >
+                        Sign out
+                      </button>
+                    </>
+                  ) : (
+                    <Link
+                      href="/auth?redirect=/app"
+                      className="block px-3 py-2 text-sm hover:bg-white/10 rounded-lg text-[#4D9E8A]"
+                    >
+                      Sign in
+                    </Link>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </header>
@@ -517,11 +586,87 @@ export default function AppPage() {
       )}
 
       {/* Navigation Hints */}
-      {!showSaved && !showTopicSelector && (
+      {!showSaved && !showTopicSelector && !showPaywall && (
         <div className="fixed bottom-4 left-0 right-0 flex justify-center gap-4 text-white/20 text-xs">
           <span>↑↓ Navigate</span>
           <span>•</span>
           <span>Double-tap to save</span>
+        </div>
+      )}
+
+      {/* Paywall Modal */}
+      {showPaywall && (
+        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-[#EACCD4] text-[#007A5E] rounded-2xl max-w-md w-full overflow-hidden"
+          >
+            <div className="p-6 text-center">
+              <button
+                onClick={() => setShowPaywall(false)}
+                className="absolute top-4 right-4 text-[#007A5E]/40 hover:text-[#007A5E] text-2xl"
+              >
+                ×
+              </button>
+              
+              <div className="text-5xl mb-4">🌱</div>
+              <h2 className="font-impact text-3xl uppercase mb-2">
+                Keep Growing
+              </h2>
+              <p className="font-times italic text-lg mb-6 opacity-80">
+                {viewsRemaining > 0 
+                  ? `You have ${viewsRemaining} free reads left today`
+                  : "You've reached your daily limit"
+                }
+              </p>
+
+              <div className="bg-white/50 rounded-xl p-6 mb-6">
+                <div className="flex items-baseline justify-center gap-2 mb-2">
+                  <span className="text-4xl font-impact">$5</span>
+                  <span className="font-times italic opacity-70">/month</span>
+                </div>
+                <p className="text-sm opacity-70 mb-4">Paid in USDC on Base</p>
+                <ul className="text-sm space-y-2 text-left">
+                  <li className="flex items-center gap-2">
+                    <span className="text-[#007A5E]">✓</span> Unlimited daily reads
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-[#007A5E]">✓</span> Full library access (136+ cards)
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-[#007A5E]">✓</span> Sync across devices
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-[#007A5E]">✓</span> New cards added weekly
+                  </li>
+                </ul>
+              </div>
+
+              {user ? (
+                <Link
+                  href="/subscribe"
+                  className="block w-full py-4 bg-[#007A5E] text-[#EACCD4] rounded-full font-bold uppercase tracking-widest hover:bg-[#004a39] transition-all"
+                >
+                  Subscribe Now
+                </Link>
+              ) : (
+                <Link
+                  href="/auth?redirect=/subscribe"
+                  className="block w-full py-4 bg-[#007A5E] text-[#EACCD4] rounded-full font-bold uppercase tracking-widest hover:bg-[#004a39] transition-all"
+                >
+                  Sign in to Subscribe
+                </Link>
+              )}
+
+              <button
+                onClick={() => setShowPaywall(false)}
+                className="mt-4 text-sm opacity-60 hover:opacity-100"
+              >
+                Maybe later
+              </button>
+            </div>
+          </motion.div>
         </div>
       )}
     </div>

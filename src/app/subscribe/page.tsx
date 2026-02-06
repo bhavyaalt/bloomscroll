@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { pay, getPaymentStatus } from "@base-org/account";
-import { BasePayButton } from "@base-org/account-ui/react";
-import { recordSubscription, checkSubscription } from "@/lib/supabase";
+import { useAuth } from "@/components/AuthProvider";
+import { recordSubscription } from "@/lib/supabase";
 
 // Your receiving wallet address
 const PAYMENT_ADDRESS = "0x3b9aeF954F97E2Fce9A65Ee6BC0a7fA426128C94";
@@ -14,12 +15,30 @@ const IS_TESTNET = true; // Set to false for mainnet
 type PaymentStatus = "idle" | "pending" | "verifying" | "success" | "error";
 
 export default function SubscribePage() {
+  const router = useRouter();
+  const { user, loading, isSubscribed, refreshProfile } = useAuth();
+  
   const [status, setStatus] = useState<PaymentStatus>("idle");
   const [error, setError] = useState<string | null>(null);
   const [txHash, setTxHash] = useState<string | null>(null);
-  const [email, setEmail] = useState("");
+
+  // Redirect if not logged in
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/auth?redirect=/subscribe");
+    }
+  }, [user, loading, router]);
+
+  // Redirect if already subscribed
+  useEffect(() => {
+    if (isSubscribed) {
+      router.push("/app");
+    }
+  }, [isSubscribed, router]);
 
   const handlePayment = async () => {
+    if (!user) return;
+    
     setStatus("pending");
     setError(null);
 
@@ -31,7 +50,6 @@ export default function SubscribePage() {
         testnet: IS_TESTNET,
         payerInfo: {
           requests: [
-            { type: "email" },
             { type: "onchainAddress" }
           ]
         }
@@ -41,8 +59,7 @@ export default function SubscribePage() {
       setTxHash(payment.id);
       setStatus("verifying");
 
-      // Get email and wallet from payment response
-      const payerEmail = payment.payerInfoResponses?.email;
+      // Get wallet from payment response
       const walletAddress = payment.payerInfoResponses?.onchainAddress || "unknown";
 
       // Poll for payment completion
@@ -57,14 +74,19 @@ export default function SubscribePage() {
 
         if (paymentStatus === "completed") {
           // Record subscription in database
-          await recordSubscription(
+          const success = await recordSubscription(
+            user.id,
             walletAddress,
             payment.id,
-            SUBSCRIPTION_AMOUNT,
-            payerEmail
+            SUBSCRIPTION_AMOUNT
           );
 
-          setStatus("success");
+          if (success) {
+            await refreshProfile();
+            setStatus("success");
+          } else {
+            throw new Error("Failed to record subscription");
+          }
           return;
         }
 
@@ -84,6 +106,16 @@ export default function SubscribePage() {
       setStatus("error");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#EACCD4] flex items-center justify-center">
+        <div className="animate-pulse font-impact text-4xl text-[#007A5E]">
+          Loading...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#EACCD4] text-[#007A5E]">
@@ -108,7 +140,7 @@ export default function SubscribePage() {
             <div className="w-20 h-20 bg-[#007A5E] rounded-full flex items-center justify-center mx-auto mb-6">
               <span className="text-4xl text-[#EACCD4]">✓</span>
             </div>
-            <h1 className="font-impact text-4xl uppercase mb-4">Welcome to Bloomscroll!</h1>
+            <h1 className="font-impact text-4xl uppercase mb-4">Welcome to Bloomscroll Pro!</h1>
             <p className="font-times italic text-xl mb-8 opacity-80">
               Your subscription is now active.
             </p>
@@ -132,11 +164,16 @@ export default function SubscribePage() {
                 Membership
               </span>
               <h1 className="font-impact text-5xl uppercase mb-4">
-                Unlock Bloomscroll
+                Unlock Bloomscroll Pro
               </h1>
               <p className="font-times italic text-xl opacity-80">
                 Infinite wisdom for the price of a coffee.
               </p>
+              {user && (
+                <p className="text-sm opacity-60 mt-4">
+                  Logged in as {user.email}
+                </p>
+              )}
             </div>
 
             {/* Pricing Card */}
@@ -157,11 +194,11 @@ export default function SubscribePage() {
                   </li>
                   <li className="flex items-center gap-3">
                     <span className="w-5 h-5 flex items-center justify-center bg-[#007A5E] text-[#EACCD4] text-xs">✓</span>
-                    <span className="font-bold">Full Archive (500+ Ideas)</span>
+                    <span className="font-bold">Full Archive (136+ Ideas)</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <span className="w-5 h-5 flex items-center justify-center bg-[#007A5E] text-[#EACCD4] text-xs">✓</span>
-                    <span className="font-bold">Save Unlimited Cards</span>
+                    <span className="font-bold">Sync Across Devices</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <span className="w-5 h-5 flex items-center justify-center bg-[#007A5E] text-[#EACCD4] text-xs">✓</span>

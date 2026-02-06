@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AuthProvider } from "@/components/AuthProvider";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bloomscroll.xyz"),
@@ -80,7 +81,9 @@ export default function RootLayout({
         <meta name="theme-color" content="#007A5E" />
       </head>
       <body className="antialiased">
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
