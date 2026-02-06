@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@base-org/account": "^2.5.2",
+    "@base-org/account-ui": "^1.0.1",
     "@supabase/supabase-js": "^2.95.2",
     "framer-motion": "^12.33.0",
     "next": "16.1.6",

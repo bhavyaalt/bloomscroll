@@ -279,12 +279,12 @@ const Pricing = () => {
               </ul>
             </div>
             <div className="w-full md:w-auto flex flex-col gap-4">
-              <button className="w-full md:w-64 py-4 bg-[#007A5E] text-[#EACCD4] font-bold uppercase tracking-widest hover:bg-[#004a39] transition-all hover:scale-105 shadow-lg">
-                Subscribe with Card
-              </button>
-              <button className="w-full md:w-64 py-4 border border-[#007A5E] bg-transparent text-[#007A5E] font-bold uppercase tracking-widest hover:bg-[#007A5E] hover:text-[#EACCD4] transition-all">
-                Subscribe with Crypto
-              </button>
+              <Link href="/subscribe" className="w-full md:w-64 py-4 bg-[#007A5E] text-[#EACCD4] font-bold uppercase tracking-widest hover:bg-[#004a39] transition-all hover:scale-105 shadow-lg text-center">
+                Subscribe Now
+              </Link>
+              <Link href="/app" className="w-full md:w-64 py-4 border border-[#007A5E] bg-transparent text-[#007A5E] font-bold uppercase tracking-widest hover:bg-[#007A5E] hover:text-[#EACCD4] transition-all text-center">
+                Try Free First
+              </Link>
               <p className="text-xs text-center opacity-60 mt-2">Cancel anytime. 100% money-back guarantee.</p>
             </div>
           </div>
