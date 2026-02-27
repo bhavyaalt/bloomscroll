@@ -7933,6 +7933,555 @@ export const contentLibrary: Card[] = [
     40
   ),
 
+
+  // ============================================
+  // FINAL PUSH TO 1000+ (70 cards)
+  // ============================================
+  makeCard(
+    "Susan Cain",
+    "Quiet",
+    ["psychology", "introversion", "leadership"],
+    "There's zero correlation between being the best talker and having the best ideas.",
+    "Loud doesn't mean right. Quiet people often have the deepest insights. Value substance over volume.",
+    40
+  ),
+  makeCard(
+    "Susan Cain",
+    "Quiet",
+    ["psychology", "solitude", "creativity"],
+    "Solitude matters. And for some people it is the air that they breathe.",
+    "Introverts aren't broken extroverts. Solitude is a need, not a deficiency. Honor different temperaments.",
+    40
+  ),
+  makeCard(
+    "Susan Cain",
+    "Quiet",
+    ["psychology", "introversion", "power"],
+    "The secret to life is to put yourself in the right lighting.",
+    "Find environments that suit your nature. Don't force yourself into wrong conditions. Context matters.",
+    35
+  ),
+  makeCard(
+    "Adam Robinson",
+    "Interviews",
+    ["learning", "curiosity", "questions"],
+    "The quality of your life is determined by the quality of your questions.",
+    "Better questions lead to better answers. Improve your questions to improve your life. Ask more, assume less.",
+    40
+  ),
+  makeCard(
+    "Tiago Forte",
+    "Building a Second Brain",
+    ["productivity", "knowledge", "systems"],
+    "Your mind is for having ideas, not storing them.",
+    "Offload information to external systems. Free cognitive space for creativity. Build a second brain.",
+    40
+  ),
+  makeCard(
+    "Tiago Forte",
+    "Building a Second Brain",
+    ["productivity", "notes", "organization"],
+    "Organize information for action, not just for storage.",
+    "Notes should be useful, not just archived. What makes knowledge actionable? Design systems around use.",
+    40
+  ),
+  makeCard(
+    "Elizabeth Gilbert",
+    "Big Magic",
+    ["creativity", "fear", "permission"],
+    "You do not need anybody's permission to live a creative life.",
+    "Creativity isn't reserved for chosen ones. You don't need credentials. Give yourself permission.",
+    35
+  ),
+  makeCard(
+    "Elizabeth Gilbert",
+    "Big Magic",
+    ["creativity", "fear", "courage"],
+    "Your fear will always be triggered by your creativity, because creativity asks you to enter into realms of uncertain outcome.",
+    "Fear and creativity are linked. Expect fear when creating. It's not a sign to stop—it's a sign you're pushing.",
+    45
+  ),
+  makeCard(
+    "Elizabeth Gilbert",
+    "Eat Pray Love",
+    ["philosophy", "balance", "journey"],
+    "I am a better person when I have less on my plate.",
+    "Fullness isn't richness. Margin creates quality. Having less allows being more.",
+    35
+  ),
+  makeCard(
+    "Amanda Palmer",
+    "The Art of Asking",
+    ["creativity", "vulnerability", "connection"],
+    "Asking for help with shame says: You have the power over me. Asking with condescension says: I have the power over you. Asking with gratitude says: We have the power to help each other.",
+    "How you ask matters as much as what you ask. Stance determines response. Ask from equality.",
+    50
+  ),
+  makeCard(
+    "Cheryl Strayed",
+    "Tiny Beautiful Things",
+    ["philosophy", "advice", "courage"],
+    "You don't have a right to the cards you believe you should have been dealt. You have an obligation to play the hell out of the ones you're holding.",
+    "Stop arguing with reality. Accept your hand. Play it masterfully. That's the only option.",
+    45
+  ),
+  makeCard(
+    "Cheryl Strayed",
+    "Wild",
+    ["philosophy", "transformation", "journey"],
+    "I knew that if I allowed fear to overtake me, my journey was doomed.",
+    "Fear is normal. Letting it control you is optional. Acknowledge fear, then act anyway.",
+    40
+  ),
+  makeCard(
+    "Jon Kabat-Zinn",
+    "Wherever You Go, There You Are",
+    ["mindfulness", "presence", "awareness"],
+    "Wherever you go, there you are.",
+    "You can't escape yourself. Geography doesn't change inner reality. Work happens here, not elsewhere.",
+    35
+  ),
+  makeCard(
+    "Jon Kabat-Zinn",
+    "Full Catastrophe Living",
+    ["mindfulness", "stress", "response"],
+    "You can't stop the waves, but you can learn to surf.",
+    "Life's challenges won't stop. Your skill at handling them can grow. Develop responsiveness.",
+    35
+  ),
+  makeCard(
+    "Jack Kornfield",
+    "A Path with Heart",
+    ["spirituality", "compassion", "practice"],
+    "In the end, just three things matter: How well we have lived. How well we have loved. How well we have learned to let go.",
+    "Life's final exam has three questions. Everything else is detail. Focus on what truly matters.",
+    45
+  ),
+  makeCard(
+    "Jack Kornfield",
+    "After the Ecstasy, the Laundry",
+    ["spirituality", "integration", "daily-life"],
+    "Enlightenment is intimacy with all things.",
+    "Awakening isn't escape—it's engagement. Spirituality lives in the ordinary. Wisdom washes dishes.",
+    40
+  ),
+  makeCard(
+    "Ram Dass",
+    "Be Here Now",
+    ["spirituality", "presence", "ego"],
+    "Be here now.",
+    "Three words that capture everything. Not in the past. Not in the future. Here. Now. This is it.",
+    30
+  ),
+  makeCard(
+    "Ram Dass",
+    "Be Here Now",
+    ["spirituality", "love", "service"],
+    "We're all just walking each other home.",
+    "We're all on the same journey. Help each other. Competition is illusion. We share the path.",
+    35
+  ),
+  makeCard(
+    "Byron Katie",
+    "Loving What Is",
+    ["psychology", "thoughts", "inquiry"],
+    "When you argue with reality, you lose—but only 100% of the time.",
+    "Reality wins every argument. Resisting what is creates suffering. Accept first, then act if needed.",
+    35
+  ),
+  makeCard(
+    "Byron Katie",
+    "Loving What Is",
+    ["psychology", "beliefs", "questioning"],
+    "A thought is harmless unless we believe it.",
+    "Thoughts pass through. Belief gives them power. Question beliefs. You don't have to believe every thought.",
+    40
+  ),
+  makeCard(
+    "Don Miguel Ruiz",
+    "The Fifth Agreement",
+    ["philosophy", "skepticism", "truth"],
+    "Be skeptical, but learn to listen.",
+    "Don't believe everything—including yourself. But stay open. Skepticism plus listening equals wisdom.",
+    35
+  ),
+  makeCard(
+    "Wayne Dyer",
+    "The Power of Intention",
+    ["spirituality", "intention", "creation"],
+    "When you change the way you look at things, the things you look at change.",
+    "Perception shapes reality. Shift perspective, shift experience. You see what you're looking for.",
+    35
+  ),
+  makeCard(
+    "Wayne Dyer",
+    "Your Erroneous Zones",
+    ["psychology", "approval", "freedom"],
+    "What other people think of me is none of my business.",
+    "Others' opinions are their business. Your inner state is yours. Stop outsourcing your self-worth.",
+    35
+  ),
+  makeCard(
+    "Marianne Williamson",
+    "A Return to Love",
+    ["spirituality", "fear", "love"],
+    "Our deepest fear is not that we are inadequate. Our deepest fear is that we are powerful beyond measure.",
+    "We fear our light, not our darkness. Playing small serves no one. Shine fully.",
+    45
+  ),
+  makeCard(
+    "Deepak Chopra",
+    "The Seven Spiritual Laws of Success",
+    ["spirituality", "success", "laws"],
+    "In the process of letting go you will lose many things from the past, but you will find yourself.",
+    "Letting go isn't loss—it's liberation. Release the old to discover the essential. Shed to find.",
+    40
+  ),
+  makeCard(
+    "Paramahansa Yogananda",
+    "Autobiography of a Yogi",
+    ["spirituality", "seeking", "truth"],
+    "The season of failure is the best time for sowing the seeds of success.",
+    "Failure is fertile ground. Plant in defeat. The harvest comes later. Timing isn't linear.",
+    40
+  ),
+  makeCard(
+    "Jiddu Krishnamurti",
+    "Freedom from the Known",
+    ["philosophy", "freedom", "conditioning"],
+    "It is no measure of health to be well adjusted to a profoundly sick society.",
+    "Conformity to dysfunction is dysfunction. Normal isn't healthy. Question what's considered well-adjusted.",
+    45
+  ),
+  makeCard(
+    "Jiddu Krishnamurti",
+    "Think on These Things",
+    ["philosophy", "education", "intelligence"],
+    "The ability to observe without evaluating is the highest form of intelligence.",
+    "We judge constantly. Pure observation is rare and powerful. See before categorizing.",
+    40
+  ),
+  makeCard(
+    "Ken Wilber",
+    "A Brief History of Everything",
+    ["philosophy", "integral", "development"],
+    "The point is not merely to have experiences but to become conscious of the patterns of experiences.",
+    "Meta-awareness: seeing the patterns, not just having the experiences. Develop the observer.",
+    45
+  ),
+  makeCard(
+    "Carl Rogers",
+    "On Becoming a Person",
+    ["psychology", "growth", "acceptance"],
+    "The curious paradox is that when I accept myself just as I am, then I can change.",
+    "Self-acceptance enables change. Resistance blocks it. Accept first, then transformation follows.",
+    40
+  ),
+  makeCard(
+    "Carl Rogers",
+    "On Becoming a Person",
+    ["psychology", "authenticity", "being"],
+    "What I am is good enough if I would only be it openly.",
+    "You're enough. The problem is hiding. Show up as you are. Authenticity is sufficient.",
+    35
+  ),
+  makeCard(
+    "Abraham Maslow",
+    "Toward a Psychology of Being",
+    ["psychology", "self-actualization", "growth"],
+    "What is necessary to change a person is to change his awareness of himself.",
+    "Self-image drives behavior. Change self-perception to change action. Identity precedes change.",
+    40
+  ),
+  makeCard(
+    "Abraham Maslow",
+    "Motivation and Personality",
+    ["psychology", "needs", "potential"],
+    "If you plan on being anything less than you are capable of being, you will probably be unhappy all the days of your life.",
+    "Unused potential creates discontent. Growth toward capacity is fulfilling. Aim at your best.",
+    45
+  ),
+  makeCard(
+    "Irvin Yalom",
+    "Love's Executioner",
+    ["psychology", "death", "meaning"],
+    "Though the physicality of death destroys us, the idea of death saves us.",
+    "Confronting mortality creates meaning. Death awareness enhances life. The limit defines the value.",
+    45
+  ),
+  makeCard(
+    "Irvin Yalom",
+    "Staring at the Sun",
+    ["psychology", "death", "anxiety"],
+    "Our awareness of death is the dark shadow that accompanies us throughout life.",
+    "Death anxiety underlies much of experience. Face it directly. Avoidance amplifies fear.",
+    40
+  ),
+  makeCard(
+    "Rollo May",
+    "The Courage to Create",
+    ["psychology", "creativity", "courage"],
+    "Creativity requires the courage to let go of certainties.",
+    "Creating means entering unknown territory. Certainty must be surrendered. Courage precedes creativity.",
+    40
+  ),
+  makeCard(
+    "Erich Fromm",
+    "The Art of Loving",
+    ["psychology", "love", "practice"],
+    "Love is an activity, not a passive affect.",
+    "Love is verb, not noun. It's practiced, not just felt. Active engagement, not passive state.",
+    35
+  ),
+  makeCard(
+    "Erich Fromm",
+    "Escape from Freedom",
+    ["psychology", "freedom", "responsibility"],
+    "Modern man, freed from the bonds of pre-individualistic society, has not gained freedom in the positive sense of realizing his individual self.",
+    "Freedom from isn't freedom to. Negative liberty differs from positive liberty. True freedom requires self-realization.",
+    50
+  ),
+  makeCard(
+    "Karen Horney",
+    "Neurosis and Human Growth",
+    ["psychology", "self", "idealization"],
+    "The search for glory is the comprehensive neurotic solution.",
+    "Chasing an idealized self creates misery. Accept the real self. Glory-seeking is escape from reality.",
+    45
+  ),
+  makeCard(
+    "Alfred Adler",
+    "What Life Should Mean to You",
+    ["psychology", "belonging", "contribution"],
+    "The only worthwhile achievements are those that benefit society.",
+    "Individual success without social contribution rings hollow. Meaning comes through service to others.",
+    40
+  ),
+  makeCard(
+    "David Brooks",
+    "The Road to Character",
+    ["philosophy", "character", "virtue"],
+    "We live in a culture that teaches us to promote and advertise ourselves.",
+    "Resume virtues vs eulogy virtues. We optimize for achievement, neglect character. Rebalance.",
+    40
+  ),
+  makeCard(
+    "David Brooks",
+    "The Second Mountain",
+    ["philosophy", "meaning", "commitment"],
+    "The second mountain is about shedding the ego and making commitments.",
+    "First mountain: achievement. Second mountain: contribution. The second climb requires letting go.",
+    40
+  ),
+  makeCard(
+    "Arthur Brooks",
+    "From Strength to Strength",
+    ["philosophy", "aging", "wisdom"],
+    "The key to happiness after 40 is to pivot from fluid intelligence to crystallized intelligence.",
+    "Different strengths for different ages. Adapt to changing capabilities. Wisdom replaces speed.",
+    45
+  ),
+  makeCard(
+    "Richard Rohr",
+    "Falling Upward",
+    ["spirituality", "growth", "stages"],
+    "We grow spiritually much more by doing it wrong than by doing it right.",
+    "Failure is the teacher. Mistakes are the curriculum. Grace works through brokenness.",
+    40
+  ),
+  makeCard(
+    "Richard Rohr",
+    "Everything Belongs",
+    ["spirituality", "integration", "wholeness"],
+    "If we do not transform our pain, we will most assuredly transmit it.",
+    "Unprocessed pain spreads. Transform it or pass it on. Inner work has outer consequences.",
+    40
+  ),
+  makeCard(
+    "Thomas Merton",
+    "New Seeds of Contemplation",
+    ["spirituality", "solitude", "identity"],
+    "If you want to identify me, ask me not where I live, or what I like to eat, or how I comb my hair, but ask me what I am living for.",
+    "Purpose defines identity better than preferences. What you live for matters more than lifestyle details.",
+    45
+  ),
+  makeCard(
+    "Thomas Merton",
+    "No Man Is an Island",
+    ["spirituality", "connection", "solitude"],
+    "We cannot find ourselves within ourselves, but only in others.",
+    "Self-discovery happens in relationship. Isolation doesn't reveal the self. We find ourselves in the other.",
+    40
+  ),
+  makeCard(
+    "Dietrich Bonhoeffer",
+    "Letters and Papers from Prison",
+    ["spirituality", "faith", "action"],
+    "Action springs not from thought, but from a readiness for responsibility.",
+    "Responsibility, not analysis, produces action. You don't think your way into acting—you commit.",
+    40
+  ),
+  makeCard(
+    "C.S. Lewis",
+    "Mere Christianity",
+    ["philosophy", "morality", "law"],
+    "If the solar system was brought about by an accidental collision, then the appearance of organic life on this planet was also an accident.",
+    "Follow the logic of worldviews to their conclusions. Implications matter. Think through beliefs fully.",
+    45
+  ),
+  makeCard(
+    "C.S. Lewis",
+    "The Screwtape Letters",
+    ["spirituality", "temptation", "human-nature"],
+    "The safest road to Hell is the gradual one.",
+    "Small compromises compound. Not one big fall but many small slides. Vigilance in the mundane matters.",
+    40
+  ),
+  makeCard(
+    "G.K. Chesterton",
+    "Orthodoxy",
+    ["philosophy", "wonder", "gratitude"],
+    "The world will never starve for want of wonders; but only for want of wonder.",
+    "Amazement is a choice. The world is full of marvels. The issue is attention, not availability.",
+    40
+  ),
+  makeCard(
+    "G.K. Chesterton",
+    "What's Wrong with the World",
+    ["philosophy", "ideals", "practice"],
+    "The Christian ideal has not been tried and found wanting. It has been found difficult; and left untried.",
+    "Don't judge ideals by failures to implement them. Difficulty isn't refutation. Try before dismissing.",
+    45
+  ),
+  makeCard(
+    "Dorothy Day",
+    "The Long Loneliness",
+    ["spirituality", "community", "service"],
+    "We have all known the long loneliness and we have learned that the only solution is love.",
+    "Loneliness is universal. Love is the answer. Not romantic love—active, committed love.",
+    40
+  ),
+  makeCard(
+    "Henri Nouwen",
+    "The Wounded Healer",
+    ["spirituality", "service", "vulnerability"],
+    "Nobody escapes being wounded. We all are wounded people.",
+    "Universal wound. Don't hide it—use it. Your wounds enable you to help others with theirs.",
+    40
+  ),
+  makeCard(
+    "Desmond Tutu",
+    "No Future Without Forgiveness",
+    ["spirituality", "forgiveness", "healing"],
+    "Without forgiveness, there is no future.",
+    "Holding grudges imprisons you. Forgiveness liberates the forgiver. It's practical, not just noble.",
+    35
+  ),
+  makeCard(
+    "Howard Thurman",
+    "Meditations of the Heart",
+    ["spirituality", "purpose", "authenticity"],
+    "Don't ask what the world needs. Ask what makes you come alive, and go do it. Because what the world needs is people who have come alive.",
+    "Aliveness serves the world. Following your vitality isn't selfish—it's necessary. The world needs your passion.",
+    45
+  ),
+  makeCard(
+    "Parker Palmer",
+    "Let Your Life Speak",
+    ["spirituality", "vocation", "listening"],
+    "Before you tell your life what you intend to do with it, listen for what it intends to do with you.",
+    "Vocation is discovered, not invented. Listen before imposing plans. Your life has its own wisdom.",
+    40
+  ),
+  makeCard(
+    "Parker Palmer",
+    "A Hidden Wholeness",
+    ["spirituality", "integrity", "soul"],
+    "Integrity is about being whole, not being perfect.",
+    "Integration, not perfection. Wholeness includes shadow. Integrity means all parts are present.",
+    35
+  ),
+  makeCard(
+    "Frederick Buechner",
+    "Wishful Thinking",
+    ["spirituality", "calling", "vocation"],
+    "The place God calls you to is the place where your deep gladness and the world's deep hunger meet.",
+    "Vocation lives at the intersection of joy and need. Neither alone suffices. Both together indicate calling.",
+    45
+  ),
+  makeCard(
+    "Simone Weil",
+    "Gravity and Grace",
+    ["philosophy", "attention", "love"],
+    "Attention is the rarest and purest form of generosity.",
+    "Full presence is the greatest gift. In a distracted world, attention is love made visible.",
+    40
+  ),
+  makeCard(
+    "Simone Weil",
+    "Waiting for God",
+    ["spirituality", "waiting", "receptivity"],
+    "Attention, taken to its highest degree, is the same thing as prayer.",
+    "Prayer is attention. Deep attention is sacred. The quality of presence is the quality of communion.",
+    40
+  ),
+  makeCard(
+    "Dietrich von Hildebrand",
+    "Transformation in Christ",
+    ["spirituality", "change", "openness"],
+    "The absolutely fundamental requirement for the transformation of a person is readiness to change.",
+    "Willingness precedes change. Without openness, nothing happens. Readiness is the first step.",
+    40
+  ),
+  makeCard(
+    "Josef Pieper",
+    "Leisure: The Basis of Culture",
+    ["philosophy", "leisure", "culture"],
+    "Leisure is the basis of culture.",
+    "Without leisure, no culture develops. Constant work produces nothing higher. Make space for contemplation.",
+    40
+  ),
+  makeCard(
+    "Dallas Willard",
+    "The Spirit of the Disciplines",
+    ["spirituality", "practice", "transformation"],
+    "Grace is opposed to earning, not to effort.",
+    "Effort isn't the opposite of grace. Earning is. Work diligently while trusting grace. Both/and.",
+    40
+  ),
+  makeCard(
+    "John O'Donohue",
+    "Anam Cara",
+    ["spirituality", "friendship", "soul"],
+    "In Celtic tradition, there is a beautiful understanding of love and friendship: Anam cara—soul friend.",
+    "Deep friendship touches the soul. Find and be a soul friend. These relationships transform.",
+    40
+  ),
+  makeCard(
+    "John O'Donohue",
+    "Beauty",
+    ["philosophy", "beauty", "presence"],
+    "Beauty is not in the eye of the beholder. It is the real, experienced in the self and others.",
+    "Beauty is objective, not just subjective. It's encountered, not projected. Train yourself to see it.",
+    40
+  ),
+  makeCard(
+    "David Whyte",
+    "Consolations",
+    ["philosophy", "words", "meaning"],
+    "Alertness is the hidden discipline of familiarity.",
+    "The familiar numbs us. Stay alert to what's always there. Attention rescues the everyday from invisibility.",
+    40
+  ),
+  makeCard(
+    "David Whyte",
+    "The Heart Aroused",
+    ["philosophy", "work", "soul"],
+    "The soul would rather fail at its own life than succeed at someone else's.",
+    "Living your own life matters more than succeeding at the wrong one. Authenticity over achievement.",
+    40
+  ),
+
 ];
 
 // Export utility functions
