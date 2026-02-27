@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import Link from "next/link";
 import { useAuth } from "@/components/AuthProvider";
-import { incrementViewCount, submitPaywallFeedback } from "@/lib/supabase";
+import { submitPaywallFeedback } from "@/lib/supabase";
 import { 
   contentLibrary, 
   Card, 
@@ -13,12 +13,16 @@ import {
   getCardsByTopic,
   getTopicCounts 
 } from "@/lib/content-library";
+import { getStreakData, updateStreak, getStreakEmoji, getStreakMessage } from "@/lib/streak";
+import { shareCard, copyQuote } from "@/lib/share";
+import { generateQuizQuestion, updateQuizStats, getQuizStats, getAccuracyPercentage, QuizQuestion } from "@/lib/quiz";
+import { collections, getCollectionCards, Collection } from "@/lib/collections";
 
 const SWIPE_THRESHOLD = 100;
 const VIEW_STORAGE_KEY = "scrollbliss_viewed_cards";
 const SAVE_STORAGE_KEY = "scrollbliss_saved_cards";
 const PREFERENCES_KEY = "scrollbliss_preferences";
-const ONBOARDING_KEY = "scrollbliss_onboarding_complete";
+const CARDS_UNTIL_QUIZ = 10;
 
 interface Preferences {
   topics: string[];
@@ -27,14 +31,16 @@ interface Preferences {
 }
 
 export default function AppPage() {
-  const { user, loading: authLoading, isSubscribed, viewsRemaining, refreshProfile, signOut } = useAuth();
+  const { user, isSubscribed, viewsRemaining, signOut } = useAuth();
   
   const [currentIndex, setCurrentIndex] = useState(0);
   const [savedCards, setSavedCards] = useState<Set<string>>(new Set());
   const [viewedCards, setViewedCards] = useState<Set<string>>(new Set());
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+  const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [showSaved, setShowSaved] = useState(false);
   const [showTopicSelector, setShowTopicSelector] = useState(false);
+  const [showCollections, setShowCollections] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedbackReason, setFeedbackReason] = useState<string | null>(null);
@@ -45,7 +51,24 @@ export default function AppPage() {
   const [feed, setFeed] = useState<Card[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [preferences, setPreferences] = useState<Preferences | null>(null);
-  const [todayViews, setTodayViews] = useState(0);
+  
+  // Deep Dive state
+  const [showDeepDive, setShowDeepDive] = useState(false);
+  
+  // Streak state
+  const [streak, setStreak] = useState({ currentStreak: 0, longestStreak: 0, totalDays: 0, lastVisitDate: "" });
+  const [showStreakModal, setShowStreakModal] = useState(false);
+  
+  // Quiz state
+  const [cardsViewedSinceQuiz, setCardsViewedSinceQuiz] = useState(0);
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [quizQuestion, setQuizQuestion] = useState<QuizQuestion | null>(null);
+  const [quizAnswer, setQuizAnswer] = useState<string | null>(null);
+  const [quizStats, setQuizStats] = useState(getQuizStats());
+  
+  // Share feedback
+  const [showCopied, setShowCopied] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
 
   // Load saved cards, viewed cards, and preferences from localStorage
   useEffect(() => {
@@ -62,20 +85,39 @@ export default function AppPage() {
     if (prefsJson) {
       setPreferences(JSON.parse(prefsJson));
     }
+    
+    // Update streak on load
+    const streakData = updateStreak();
+    setStreak(streakData);
+    
+    // Show streak modal if it's a new day visit
+    const lastShown = localStorage.getItem("bloomscroll_streak_shown");
+    const today = new Date().toISOString().split("T")[0];
+    if (lastShown !== today && streakData.currentStreak > 0) {
+      setShowStreakModal(true);
+      localStorage.setItem("bloomscroll_streak_shown", today);
+    }
+    
+    setQuizStats(getQuizStats());
     setIsLoaded(true);
   }, []);
 
-  // Generate smart feed: prioritize preferred topics, unseen cards first
+  // Generate smart feed
   useEffect(() => {
     if (!isLoaded) return;
 
-    let availableCards = selectedTopic 
-      ? getCardsByTopic(selectedTopic)
-      : [...contentLibrary];
+    let availableCards: Card[];
+    
+    if (selectedCollection) {
+      availableCards = getCollectionCards(selectedCollection);
+    } else if (selectedTopic) {
+      availableCards = getCardsByTopic(selectedTopic);
+    } else {
+      availableCards = [...contentLibrary];
+    }
 
     // If user has preferences, prioritize those topics
-    if (!selectedTopic && preferences?.topics && preferences.topics.length > 0) {
-      // Separate preferred and non-preferred cards
+    if (!selectedTopic && !selectedCollection && preferences?.topics && preferences.topics.length > 0) {
       const preferredCards = availableCards.filter(card => 
         card.topic.some(t => preferences.topics.includes(t))
       );
@@ -83,13 +125,11 @@ export default function AppPage() {
         !card.topic.some(t => preferences.topics.includes(t))
       );
 
-      // Within each group, prioritize unseen
       const preferredUnseen = preferredCards.filter(c => !viewedCards.has(c.id));
       const preferredSeen = preferredCards.filter(c => viewedCards.has(c.id));
       const otherUnseen = otherCards.filter(c => !viewedCards.has(c.id));
       const otherSeen = otherCards.filter(c => viewedCards.has(c.id));
 
-      // Build feed: preferred unseen → other unseen → preferred seen → other seen
       const smartFeed = [
         ...shuffleCards(preferredUnseen),
         ...shuffleCards(otherUnseen),
@@ -99,16 +139,14 @@ export default function AppPage() {
       
       setFeed(smartFeed);
     } else {
-      // No preferences - just prioritize unseen cards
       const unseenCards = availableCards.filter(card => !viewedCards.has(card.id));
       const seenCards = availableCards.filter(card => viewedCards.has(card.id));
-
       const smartFeed = [...shuffleCards(unseenCards), ...shuffleCards(seenCards)];
       setFeed(smartFeed);
     }
     
     setCurrentIndex(0);
-  }, [selectedTopic, isLoaded, viewedCards, preferences]);
+  }, [selectedTopic, selectedCollection, isLoaded, viewedCards, preferences]);
 
   // Save to localStorage when savedCards changes
   useEffect(() => {
@@ -117,7 +155,7 @@ export default function AppPage() {
     }
   }, [savedCards, isLoaded]);
 
-  // Mark card as viewed when it's displayed
+  // Mark card as viewed when displayed
   useEffect(() => {
     if (feed[currentIndex] && isLoaded) {
       const cardId = feed[currentIndex].id;
@@ -126,6 +164,17 @@ export default function AppPage() {
         newViewed.add(cardId);
         setViewedCards(newViewed);
         localStorage.setItem(VIEW_STORAGE_KEY, JSON.stringify([...newViewed]));
+        
+        // Track cards for quiz
+        const newCount = cardsViewedSinceQuiz + 1;
+        setCardsViewedSinceQuiz(newCount);
+        
+        // Trigger quiz every CARDS_UNTIL_QUIZ cards
+        if (newCount >= CARDS_UNTIL_QUIZ) {
+          setQuizQuestion(generateQuizQuestion());
+          setShowQuiz(true);
+          setCardsViewedSinceQuiz(0);
+        }
       }
     }
   }, [currentIndex, feed, isLoaded]);
@@ -136,6 +185,7 @@ export default function AppPage() {
     if (currentIndex < feed.length - 1) {
       setDirection(1);
       setCurrentIndex((prev) => prev + 1);
+      setShowDeepDive(false);
     }
   }, [currentIndex, feed.length]);
 
@@ -143,6 +193,7 @@ export default function AppPage() {
     if (currentIndex > 0) {
       setDirection(-1);
       setCurrentIndex((prev) => prev - 1);
+      setShowDeepDive(false);
     }
   }, [currentIndex]);
 
@@ -175,7 +226,30 @@ export default function AppPage() {
     }
   };
 
-  // Clear view history
+  const handleShare = async () => {
+    if (!currentCard) return;
+    setIsSharing(true);
+    try {
+      await shareCard(currentCard);
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
+  const handleCopy = () => {
+    if (!currentCard) return;
+    copyQuote(currentCard);
+    setShowCopied(true);
+    setTimeout(() => setShowCopied(false), 2000);
+  };
+
+  const handleQuizAnswer = (answer: string) => {
+    setQuizAnswer(answer);
+    const correct = answer === quizQuestion?.correctAuthor;
+    const newStats = updateQuizStats(correct);
+    setQuizStats(newStats);
+  };
+
   const clearViewHistory = () => {
     setViewedCards(new Set());
     localStorage.removeItem(VIEW_STORAGE_KEY);
@@ -184,17 +258,21 @@ export default function AppPage() {
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (showQuiz || showDeepDive) return;
       if (e.key === "ArrowDown" || e.key === "j") goToNext();
       if (e.key === "ArrowUp" || e.key === "k") goToPrev();
       if (e.key === "s" && currentCard) toggleSave(currentCard.id);
+      if (e.key === "e" && currentCard) setShowDeepDive(true);
       if (e.key === "Escape") {
         setShowSaved(false);
         setShowTopicSelector(false);
+        setShowDeepDive(false);
+        setShowCollections(false);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [goToNext, goToPrev, currentCard]);
+  }, [goToNext, goToPrev, currentCard, showQuiz, showDeepDive]);
 
   const savedCardsList = contentLibrary.filter((card) => savedCards.has(card.id));
   const topicCounts = getTopicCounts();
@@ -224,30 +302,27 @@ export default function AppPage() {
             </span>
           </Link>
           <div className="flex items-center gap-2">
-            {/* Subscription badge */}
-            {!isSubscribed && user && (
-              <button
-                onClick={() => setShowPaywall(true)}
-                className="px-2 py-1 rounded-full text-xs font-bold bg-[#4D9E8A]/20 text-[#4D9E8A]"
-              >
-                {viewsRemaining > 0 ? `${viewsRemaining} free` : "Upgrade"}
-              </button>
-            )}
-            {isSubscribed && (
-              <span className="px-2 py-1 rounded-full text-xs font-bold bg-[#007A5E] text-white">
-                PRO
-              </span>
-            )}
+            {/* Streak Badge */}
             <button
-              onClick={() => setShowTopicSelector(!showTopicSelector)}
+              onClick={() => setShowStreakModal(true)}
+              className="px-2 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-orange-500 to-red-500 text-white flex items-center gap-1"
+            >
+              {getStreakEmoji(streak.currentStreak)} {streak.currentStreak}
+            </button>
+            
+            {/* Collections */}
+            <button
+              onClick={() => setShowCollections(!showCollections)}
               className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide transition-all ${
-                showTopicSelector
+                showCollections
                   ? "bg-[#007A5E] text-white"
                   : "bg-white/10 text-white/70 hover:bg-white/20"
               }`}
             >
-              Topics
+              📚
             </button>
+            
+            {/* Saved */}
             <button
               onClick={() => setShowSaved(!showSaved)}
               className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide transition-all ${
@@ -258,6 +333,7 @@ export default function AppPage() {
             >
               ★ {savedCards.size}
             </button>
+            
             {/* User menu */}
             <div className="relative">
               <button
@@ -274,17 +350,6 @@ export default function AppPage() {
                         {user.email}
                       </div>
                       <hr className="border-white/10 my-1" />
-                      {!isSubscribed && (
-                        <button
-                          onClick={() => {
-                            setShowUserMenu(false);
-                            setShowPaywall(true);
-                          }}
-                          className="w-full px-3 py-2 text-left text-sm hover:bg-white/10 rounded-lg text-[#4D9E8A]"
-                        >
-                          ⭐ Upgrade to Pro
-                        </button>
-                      )}
                       <button
                         onClick={() => {
                           signOut();
@@ -314,9 +379,9 @@ export default function AppPage() {
       <div className="fixed top-14 left-0 right-0 z-40 bg-[#1a1a1a]/80 backdrop-blur-sm border-b border-white/5">
         <div className="max-w-lg mx-auto px-4 py-2 flex gap-2 overflow-x-auto scrollbar-hide">
           <button
-            onClick={() => setSelectedTopic(null)}
+            onClick={() => { setSelectedTopic(null); setSelectedCollection(null); }}
             className={`px-3 py-1 rounded-full text-xs font-bold uppercase whitespace-nowrap transition-all ${
-              selectedTopic === null
+              selectedTopic === null && selectedCollection === null
                 ? "bg-[#007A5E] text-white"
                 : "bg-white/10 text-white/60 hover:text-white"
             }`}
@@ -326,7 +391,7 @@ export default function AppPage() {
           {topics.map((topic) => (
             <button
               key={topic}
-              onClick={() => setSelectedTopic(topic)}
+              onClick={() => { setSelectedTopic(topic); setSelectedCollection(null); }}
               className={`px-3 py-1 rounded-full text-xs font-bold uppercase whitespace-nowrap transition-all ${
                 selectedTopic === topic
                   ? "bg-[#007A5E] text-white"
@@ -339,87 +404,168 @@ export default function AppPage() {
         </div>
       </div>
 
-      {/* Topic Selector Modal */}
-      {showTopicSelector && (
+      {/* Streak Modal */}
+      {showStreakModal && (
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl max-w-sm w-full p-6 text-center text-white"
+          >
+            <div className="text-6xl mb-4">{getStreakEmoji(streak.currentStreak)}</div>
+            <h2 className="font-impact text-4xl uppercase mb-2">
+              {streak.currentStreak} Day Streak!
+            </h2>
+            <p className="text-lg opacity-90 mb-4">{getStreakMessage(streak.currentStreak)}</p>
+            <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
+              <div className="bg-white/20 rounded-xl p-3">
+                <div className="text-2xl font-bold">{streak.longestStreak}</div>
+                <div className="opacity-80">Best Streak</div>
+              </div>
+              <div className="bg-white/20 rounded-xl p-3">
+                <div className="text-2xl font-bold">{streak.totalDays}</div>
+                <div className="opacity-80">Total Days</div>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowStreakModal(false)}
+              className="w-full py-3 bg-white text-orange-600 rounded-full font-bold uppercase"
+            >
+              Keep Going!
+            </button>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Collections Modal */}
+      {showCollections && (
         <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
           <div className="bg-[#1a1a1a] border border-white/10 rounded-2xl max-w-md w-full max-h-[80vh] overflow-auto">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="font-impact text-2xl uppercase text-[#007A5E]">
-                  Choose Topics
+                  Collections
                 </h2>
                 <button
-                  onClick={() => setShowTopicSelector(false)}
+                  onClick={() => setShowCollections(false)}
                   className="text-white/40 hover:text-white text-2xl"
                 >
                   ×
                 </button>
               </div>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={() => {
-                    setSelectedTopic(null);
-                    setShowTopicSelector(false);
-                  }}
-                  className={`p-4 rounded-xl text-left transition-all ${
-                    selectedTopic === null
-                      ? "bg-[#007A5E] text-white"
-                      : "bg-white/5 hover:bg-white/10"
-                  }`}
-                >
-                  <span className="text-2xl mb-2 block">🌟</span>
-                  <span className="font-bold block">All Topics</span>
-                  <span className="text-xs opacity-60">{contentLibrary.length} cards</span>
-                </button>
-                {topics.map((topic) => (
+              <div className="space-y-3">
+                {collections.map((collection) => (
                   <button
-                    key={topic}
+                    key={collection.id}
                     onClick={() => {
-                      setSelectedTopic(topic);
-                      setShowTopicSelector(false);
+                      setSelectedCollection(collection);
+                      setSelectedTopic(null);
+                      setShowCollections(false);
                     }}
-                    className={`p-4 rounded-xl text-left transition-all ${
-                      selectedTopic === topic
-                        ? "bg-[#007A5E] text-white"
-                        : "bg-white/5 hover:bg-white/10"
+                    className={`w-full p-4 rounded-xl text-left transition-all ${
+                      selectedCollection?.id === collection.id
+                        ? "ring-2 ring-[#007A5E]"
+                        : ""
                     }`}
+                    style={{ backgroundColor: `${collection.color}20` }}
                   >
-                    <span className="text-2xl mb-2 block">
-                      {topic === "philosophy" && "🏛️"}
-                      {topic === "stoicism" && "🗿"}
-                      {topic === "psychology" && "🧠"}
-                      {topic === "business" && "💼"}
-                      {topic === "science" && "🔬"}
-                      {topic === "history" && "📜"}
-                      {topic === "productivity" && "⚡"}
-                      {topic === "creativity" && "🎨"}
-                      {topic === "mindfulness" && "🧘"}
-                      {topic === "leadership" && "👑"}
-                      {topic === "relationships" && "💝"}
-                    </span>
-                    <span className="font-bold block capitalize">{topic}</span>
-                    <span className="text-xs opacity-60">{topicCounts[topic]} cards</span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-3xl">{collection.emoji}</span>
+                      <div>
+                        <span className="font-bold block">{collection.name}</span>
+                        <span className="text-xs opacity-60">
+                          {collection.description} • {collection.cardIds.length} cards
+                        </span>
+                      </div>
+                    </div>
                   </button>
                 ))}
               </div>
               
-              {/* Stats */}
+              {/* Quiz Stats */}
               <div className="mt-6 pt-6 border-t border-white/10">
-                <div className="text-center text-sm opacity-60">
-                  <p>📖 {viewedCards.size} cards viewed</p>
-                  <p>✨ {unseenCount} new cards waiting</p>
-                  {viewedCards.size > 0 && (
-                    <button
-                      onClick={clearViewHistory}
-                      className="mt-2 text-[#007A5E] underline text-xs"
-                    >
-                      Reset view history
-                    </button>
-                  )}
+                <h3 className="font-bold text-sm uppercase text-white/60 mb-3">Quiz Stats</h3>
+                <div className="grid grid-cols-3 gap-2 text-center">
+                  <div className="bg-white/5 rounded-lg p-3">
+                    <div className="text-xl font-bold text-[#007A5E]">{quizStats.totalAnswered}</div>
+                    <div className="text-xs opacity-60">Answered</div>
+                  </div>
+                  <div className="bg-white/5 rounded-lg p-3">
+                    <div className="text-xl font-bold text-[#007A5E]">{getAccuracyPercentage(quizStats)}%</div>
+                    <div className="text-xs opacity-60">Accuracy</div>
+                  </div>
+                  <div className="bg-white/5 rounded-lg p-3">
+                    <div className="text-xl font-bold text-[#007A5E]">{quizStats.bestStreak}</div>
+                    <div className="text-xs opacity-60">Best Run</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Quiz Modal */}
+      {showQuiz && quizQuestion && (
+        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-[#EACCD4] text-[#007A5E] rounded-2xl max-w-md w-full p-6"
+          >
+            <div className="text-center mb-4">
+              <span className="text-4xl">🧠</span>
+              <h2 className="font-impact text-2xl uppercase mt-2">Who Said This?</h2>
+            </div>
+            
+            <blockquote className="text-lg italic border-l-4 border-[#007A5E] pl-4 mb-6">
+              "{quizQuestion.quote}"
+            </blockquote>
+            
+            {!quizAnswer ? (
+              <div className="space-y-2">
+                {quizQuestion.options.map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => handleQuizAnswer(option)}
+                    className="w-full p-4 rounded-xl bg-white/50 hover:bg-white/70 text-left font-bold transition-all"
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center">
+                {quizAnswer === quizQuestion.correctAuthor ? (
+                  <div className="mb-4">
+                    <div className="text-5xl mb-2">🎉</div>
+                    <p className="font-bold text-xl">Correct!</p>
+                    <p className="text-sm opacity-70">From "{quizQuestion.book}"</p>
+                  </div>
+                ) : (
+                  <div className="mb-4">
+                    <div className="text-5xl mb-2">😅</div>
+                    <p className="font-bold text-xl">Not quite!</p>
+                    <p className="text-sm opacity-70">
+                      It was {quizQuestion.correctAuthor} in "{quizQuestion.book}"
+                    </p>
+                  </div>
+                )}
+                <div className="text-sm mb-4">
+                  Streak: {quizStats.streak} | Accuracy: {getAccuracyPercentage(quizStats)}%
+                </div>
+                <button
+                  onClick={() => {
+                    setShowQuiz(false);
+                    setQuizAnswer(null);
+                  }}
+                  className="w-full py-3 bg-[#007A5E] text-[#EACCD4] rounded-full font-bold uppercase"
+                >
+                  Continue Reading
+                </button>
+              </div>
+            )}
+          </motion.div>
         </div>
       )}
 
@@ -493,9 +639,11 @@ export default function AppPage() {
                       <span className="bg-[#007A5E] text-[#EACCD4] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
                         ◆ {currentCard.topic[0]}
                       </span>
-                      <span className="bg-white/80 text-[#007A5E] px-2 py-1 rounded-full text-xs font-bold">
-                        {currentCard.read_time_seconds}s
-                      </span>
+                      {selectedCollection && (
+                        <span className="bg-white/80 text-[#007A5E] px-2 py-1 rounded-full text-xs font-bold">
+                          {selectedCollection.emoji}
+                        </span>
+                      )}
                     </div>
 
                     {/* Save Badge */}
@@ -503,15 +651,6 @@ export default function AppPage() {
                       <div className="absolute top-4 right-4 z-10">
                         <span className="bg-[#007A5E] text-[#EACCD4] px-3 py-1 rounded-full text-xs font-bold">
                           ★ Saved
-                        </span>
-                      </div>
-                    )}
-
-                    {/* New Badge */}
-                    {!viewedCards.has(currentCard.id) && (
-                      <div className="absolute top-4 right-4 z-10">
-                        <span className="bg-[#4D9E8A] text-white px-3 py-1 rounded-full text-xs font-bold animate-pulse">
-                          ✨ New
                         </span>
                       </div>
                     )}
@@ -543,8 +682,16 @@ export default function AppPage() {
                         {currentCard.insight}
                       </p>
 
+                      {/* Deep Dive Button */}
+                      <button
+                        onClick={() => setShowDeepDive(true)}
+                        className="text-sm text-[#007A5E]/60 hover:text-[#007A5E] mt-2 underline"
+                      >
+                        Learn more about this quote →
+                      </button>
+
                       {/* Actions */}
-                      <div className="flex gap-3 mt-4">
+                      <div className="flex gap-2 mt-4">
                         <button
                           onClick={() => toggleSave(currentCard.id)}
                           className={`flex-1 py-3 rounded-full font-bold uppercase text-sm tracking-wide transition-all ${
@@ -554,6 +701,24 @@ export default function AppPage() {
                           }`}
                         >
                           {savedCards.has(currentCard.id) ? "★ Saved" : "◆ Save"}
+                        </button>
+                        <button
+                          onClick={handleShare}
+                          disabled={isSharing}
+                          className="px-4 py-3 rounded-full border-2 border-[#007A5E] text-[#007A5E] hover:bg-[#007A5E] hover:text-[#EACCD4] transition-all"
+                        >
+                          {isSharing ? "..." : "📤"}
+                        </button>
+                        <button
+                          onClick={handleCopy}
+                          className="px-4 py-3 rounded-full border-2 border-[#007A5E] text-[#007A5E] hover:bg-[#007A5E] hover:text-[#EACCD4] transition-all relative"
+                        >
+                          📋
+                          {showCopied && (
+                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded">
+                              Copied!
+                            </span>
+                          )}
                         </button>
                       </div>
                     </div>
@@ -575,9 +740,9 @@ export default function AppPage() {
             {feed.length === 0 && (
               <div className="h-full flex items-center justify-center text-white/40 text-center">
                 <div>
-                  <p className="text-lg mb-2">No cards in this topic yet</p>
+                  <p className="text-lg mb-2">No cards in this selection</p>
                   <button
-                    onClick={() => setSelectedTopic(null)}
+                    onClick={() => { setSelectedTopic(null); setSelectedCollection(null); }}
                     className="text-[#007A5E] underline"
                   >
                     View all cards
@@ -589,12 +754,89 @@ export default function AppPage() {
         </div>
       )}
 
+      {/* Deep Dive Modal */}
+      {showDeepDive && currentCard && (
+        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 overflow-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-[#EACCD4] text-[#007A5E] rounded-2xl max-w-lg w-full max-h-[90vh] overflow-auto"
+          >
+            <div className="p-6">
+              <button
+                onClick={() => setShowDeepDive(false)}
+                className="absolute top-4 right-4 text-[#007A5E]/40 hover:text-[#007A5E] text-2xl"
+              >
+                ×
+              </button>
+              
+              <div className="flex items-center gap-2 mb-4">
+                <span className="bg-[#007A5E] text-[#EACCD4] px-3 py-1 rounded-full text-xs font-bold uppercase">
+                  {currentCard.topic[0]}
+                </span>
+                <span className="text-sm opacity-60">{currentCard.read_time_seconds}s read</span>
+              </div>
+              
+              <h2 className="font-impact text-3xl uppercase mb-1">{currentCard.author}</h2>
+              <p className="font-times italic text-xl mb-6 opacity-80">{currentCard.book}</p>
+              
+              <blockquote className="text-xl leading-relaxed mb-6 border-l-4 border-[#007A5E] pl-4">
+                &ldquo;{currentCard.quote}&rdquo;
+              </blockquote>
+              
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-bold uppercase text-sm mb-2">💡 Key Insight</h3>
+                  <p className="opacity-80">{currentCard.insight}</p>
+                </div>
+                
+                <div>
+                  <h3 className="font-bold uppercase text-sm mb-2">📚 About the Book</h3>
+                  <p className="opacity-80">
+                    "{currentCard.book}" by {currentCard.author} is a foundational text in the {currentCard.topic[0]} space. 
+                    This quote captures one of its central themes.
+                  </p>
+                </div>
+                
+                <div>
+                  <h3 className="font-bold uppercase text-sm mb-2">🔗 Related Topics</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {currentCard.topic.map(t => (
+                      <span key={t} className="bg-[#007A5E]/20 px-3 py-1 rounded-full text-sm capitalize">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex gap-2 mt-6">
+                <button
+                  onClick={() => toggleSave(currentCard.id)}
+                  className="flex-1 py-3 bg-[#007A5E] text-[#EACCD4] rounded-full font-bold uppercase"
+                >
+                  {savedCards.has(currentCard.id) ? "★ Saved" : "◆ Save This"}
+                </button>
+                <button
+                  onClick={() => setShowDeepDive(false)}
+                  className="px-6 py-3 border-2 border-[#007A5E] rounded-full font-bold uppercase"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
       {/* Navigation Hints */}
-      {!showSaved && !showTopicSelector && !showPaywall && (
+      {!showSaved && !showTopicSelector && !showPaywall && !showQuiz && !showDeepDive && (
         <div className="fixed bottom-4 left-0 right-0 flex justify-center gap-4 text-white/20 text-xs">
           <span>↑↓ Navigate</span>
           <span>•</span>
           <span>Double-tap to save</span>
+          <span>•</span>
+          <span>E to expand</span>
         </div>
       )}
 
@@ -630,48 +872,25 @@ export default function AppPage() {
                   <span className="text-4xl font-impact">$5</span>
                   <span className="font-times italic opacity-70">/month</span>
                 </div>
-                <p className="text-sm opacity-70 mb-4">Paid in USDC on Base</p>
                 <ul className="text-sm space-y-2 text-left">
                   <li className="flex items-center gap-2">
                     <span className="text-[#007A5E]">✓</span> Unlimited daily reads
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-[#007A5E]">✓</span> Full library access (136+ cards)
+                    <span className="text-[#007A5E]">✓</span> All collections access
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-[#007A5E]">✓</span> Sync across devices
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-[#007A5E]">✓</span> New cards added weekly
+                    <span className="text-[#007A5E]">✓</span> Quiz mode + stats
                   </li>
                 </ul>
               </div>
 
-              {user ? (
-                <Link
-                  href="/subscribe"
-                  className="block w-full py-4 bg-[#007A5E] text-[#EACCD4] rounded-full font-bold uppercase tracking-widest hover:bg-[#004a39] transition-all"
-                >
-                  Subscribe Now
-                </Link>
-              ) : (
-                <Link
-                  href="/auth?redirect=/subscribe"
-                  className="block w-full py-4 bg-[#007A5E] text-[#EACCD4] rounded-full font-bold uppercase tracking-widest hover:bg-[#004a39] transition-all"
-                >
-                  Sign in to Subscribe
-                </Link>
-              )}
-
-              <button
-                onClick={() => {
-                  setShowPaywall(false);
-                  setShowFeedback(true);
-                }}
-                className="mt-4 text-sm opacity-60 hover:opacity-100"
+              <Link
+                href="/subscribe"
+                className="block w-full py-4 bg-[#007A5E] text-[#EACCD4] rounded-full font-bold uppercase tracking-widest"
               >
-                Maybe later
-              </button>
+                Subscribe Now
+              </Link>
             </div>
           </motion.div>
         </div>
@@ -701,22 +920,15 @@ export default function AppPage() {
               {!feedbackSubmitted ? (
                 <>
                   <div className="text-4xl mb-3">💬</div>
-                  <h2 className="font-impact text-2xl uppercase mb-2">
-                    Quick question
+                  <h2 className="font-impact text-2xl uppercase mb-6">
+                    Quick feedback
                   </h2>
-                  <p className="font-times italic text-base mb-6 opacity-80">
-                    What's holding you back from subscribing?
-                  </p>
 
                   <div className="space-y-2 mb-4">
                     {[
                       { value: "too_expensive", label: "💰 Too expensive" },
-                      { value: "not_sure_value", label: "🤔 Not sure it's worth it yet" },
-                      { value: "just_browsing", label: "👀 Just browsing for now" },
-                      { value: "want_more_topics", label: "📚 Want more topics first" },
-                      { value: "prefer_free", label: "🆓 Prefer free content" },
-                      { value: "payment_friction", label: "💳 Crypto payment is confusing" },
-                      { value: "later", label: "⏰ Will subscribe later" },
+                      { value: "not_sure_value", label: "🤔 Not sure it's worth it" },
+                      { value: "just_browsing", label: "👀 Just browsing" },
                       { value: "other", label: "✍️ Other" },
                     ].map((option) => (
                       <button
@@ -758,33 +970,17 @@ export default function AppPage() {
                     disabled={!feedbackReason}
                     className={`w-full py-3 rounded-full font-bold uppercase tracking-wide text-sm transition-all ${
                       feedbackReason
-                        ? "bg-[#007A5E] text-[#EACCD4] hover:bg-[#004a39]"
+                        ? "bg-[#007A5E] text-[#EACCD4]"
                         : "bg-[#007A5E]/30 text-[#EACCD4]/50 cursor-not-allowed"
                     }`}
                   >
                     Submit
                   </button>
-
-                  <button
-                    onClick={() => {
-                      setShowFeedback(false);
-                      setFeedbackReason(null);
-                      setFeedbackOther("");
-                    }}
-                    className="w-full mt-3 text-sm opacity-60 hover:opacity-100"
-                  >
-                    Skip
-                  </button>
                 </>
               ) : (
                 <div className="text-center py-4">
                   <div className="text-5xl mb-4">🙏</div>
-                  <h2 className="font-impact text-2xl uppercase mb-2">
-                    Thanks!
-                  </h2>
-                  <p className="font-times italic text-base opacity-80 mb-6">
-                    Your feedback helps us improve
-                  </p>
+                  <h2 className="font-impact text-2xl uppercase mb-2">Thanks!</h2>
                   <button
                     onClick={() => {
                       setShowFeedback(false);
@@ -792,9 +988,9 @@ export default function AppPage() {
                       setFeedbackOther("");
                       setFeedbackSubmitted(false);
                     }}
-                    className="py-3 px-8 bg-[#007A5E] text-[#EACCD4] rounded-full font-bold uppercase tracking-wide text-sm"
+                    className="py-3 px-8 bg-[#007A5E] text-[#EACCD4] rounded-full font-bold uppercase"
                   >
-                    Continue Reading
+                    Continue
                   </button>
                 </div>
               )}
