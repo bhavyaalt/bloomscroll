@@ -5082,6 +5082,1760 @@ export const contentLibrary: Card[] = [
     35
   ),
 
+
+  // ============================================
+  // YUVAL NOAH HARARI (15 cards)
+  // ============================================
+  makeCard(
+    "Yuval Noah Harari",
+    "Sapiens",
+    ["history", "philosophy", "science"],
+    "The ability to create fiction is the most unique feature of Sapiens language.",
+    "Stories unite strangers. Nations, religions, corporations—all are shared fictions. The power to create and believe in myths makes human cooperation possible at scale.",
+    50
+  ),
+  makeCard(
+    "Yuval Noah Harari",
+    "Sapiens",
+    ["history", "philosophy", "evolution"],
+    "We did not domesticate wheat. It domesticated us.",
+    "Agriculture seemed like progress but tied us to land, increased labor, and created hierarchies. What looks like advancement often comes with hidden costs.",
+    45
+  ),
+  makeCard(
+    "Yuval Noah Harari",
+    "Sapiens",
+    ["history", "happiness", "philosophy"],
+    "One of history's few iron laws is that luxuries tend to become necessities and to spawn new obligations.",
+    "Each convenience creates new expectations. Smartphones went from luxury to necessity in a decade. Progress is a treadmill, not a ladder.",
+    45
+  ),
+  makeCard(
+    "Yuval Noah Harari",
+    "21 Lessons for the 21st Century",
+    ["philosophy", "technology", "future"],
+    "In a world deluged by irrelevant information, clarity is power.",
+    "Information is abundant; wisdom is scarce. The challenge isn't access to data—it's making sense of it. Filter ruthlessly.",
+    40
+  ),
+  makeCard(
+    "Yuval Noah Harari",
+    "Homo Deus",
+    ["philosophy", "technology", "future"],
+    "For the first time in history, more people die from eating too much than from eating too little.",
+    "We solved ancient problems and created new ones. Abundance is now a threat. The future's challenges will be novel.",
+    40
+  ),
+  makeCard(
+    "Yuval Noah Harari",
+    "21 Lessons for the 21st Century",
+    ["philosophy", "self-awareness", "mindfulness"],
+    "To know yourself is the hardest thing of all because the self is not a story.",
+    "We tell ourselves stories about who we are. But identity is fluid, constructed, constantly changing. The self you know is mostly fiction.",
+    45
+  ),
+  makeCard(
+    "Yuval Noah Harari",
+    "Sapiens",
+    ["history", "money", "society"],
+    "Money is the most universal and most efficient system of mutual trust ever devised.",
+    "Money works because we all believe in it. It's the ultimate shared fiction—a story so powerful it coordinates billions of strangers.",
+    40
+  ),
+  makeCard(
+    "Yuval Noah Harari",
+    "Homo Deus",
+    ["philosophy", "meaning", "religion"],
+    "Meaning is created when many people weave together a common network of stories.",
+    "Individual meaning is fragile. Collective meaning is robust. We need shared narratives to make life feel purposeful.",
+    40
+  ),
+  makeCard(
+    "Yuval Noah Harari",
+    "21 Lessons for the 21st Century",
+    ["philosophy", "education", "future"],
+    "The last thing a teacher needs to give her pupils is more information. They already have far too much of it.",
+    "Teach sense-making, not facts. Critical thinking, not memorization. The skill is filtering, not accumulating.",
+    40
+  ),
+
+  // ============================================
+  // DANIEL KAHNEMAN (15 cards)
+  // ============================================
+  makeCard(
+    "Daniel Kahneman",
+    "Thinking, Fast and Slow",
+    ["psychology", "decision-making", "bias"],
+    "A reliable way to make people believe in falsehoods is frequent repetition.",
+    "Familiarity breeds belief. We mistake ease of recall for truth. Repeated lies feel like facts. Guard against this.",
+    45
+  ),
+  makeCard(
+    "Daniel Kahneman",
+    "Thinking, Fast and Slow",
+    ["psychology", "decision-making", "systems"],
+    "Nothing in life is as important as you think it is while you are thinking about it.",
+    "The focusing illusion: what we attend to seems more significant than it is. Step back. Perspective reveals proportion.",
+    40
+  ),
+  makeCard(
+    "Daniel Kahneman",
+    "Thinking, Fast and Slow",
+    ["psychology", "decision-making", "bias"],
+    "We can be blind to the obvious, and we are also blind to our blindness.",
+    "Metacognition is hard. We don't know what we don't know—and we don't know that we don't know it. Double ignorance.",
+    45
+  ),
+  makeCard(
+    "Daniel Kahneman",
+    "Thinking, Fast and Slow",
+    ["psychology", "happiness", "memory"],
+    "We are not the same person throughout our life. The remembering self and the experiencing self do not have the same interests.",
+    "Two selves: one lives the moment, one tells the story. They often conflict. Which self are you optimizing for?",
+    50
+  ),
+  makeCard(
+    "Daniel Kahneman",
+    "Thinking, Fast and Slow",
+    ["psychology", "decision-making", "intuition"],
+    "Intuition is nothing more and nothing less than recognition.",
+    "Gut feelings aren't magic—they're pattern matching from experience. Trust intuition in domains where you have expertise.",
+    40
+  ),
+  makeCard(
+    "Daniel Kahneman",
+    "Thinking, Fast and Slow",
+    ["psychology", "overconfidence", "prediction"],
+    "The confidence people have in their beliefs is not a measure of the quality of evidence but of the coherence of the story.",
+    "Good stories feel true. But coherence isn't accuracy. The best narrative isn't necessarily the right one.",
+    50
+  ),
+  makeCard(
+    "Daniel Kahneman",
+    "Thinking, Fast and Slow",
+    ["psychology", "loss-aversion", "risk"],
+    "Losses loom larger than gains.",
+    "Losing $100 hurts more than gaining $100 feels good. Loss aversion shapes all our decisions. We're wired to avoid pain.",
+    35
+  ),
+  makeCard(
+    "Daniel Kahneman",
+    "Thinking, Fast and Slow",
+    ["psychology", "effort", "laziness"],
+    "Laziness is built deep into our nature.",
+    "System 2 thinking is effortful. We default to easy. Cognitive strain is uncomfortable. Accept this and design around it.",
+    35
+  ),
+  makeCard(
+    "Daniel Kahneman",
+    "Thinking, Fast and Slow",
+    ["psychology", "anchoring", "negotiation"],
+    "Any number that you are asked to consider as a possible solution to an estimation problem will induce an anchoring effect.",
+    "First numbers stick. In negotiations, whoever sets the anchor has power. Be aware of arbitrary starting points.",
+    45
+  ),
+  makeCard(
+    "Daniel Kahneman",
+    "Thinking, Fast and Slow",
+    ["psychology", "optimism", "planning"],
+    "The planning fallacy is the tendency to underestimate the time, costs, and risks of future actions.",
+    "We're systematically overoptimistic about projects. Use reference class forecasting—look at how similar projects actually went.",
+    45
+  ),
+
+  // ============================================
+  // MALCOLM GLADWELL (15 cards)
+  // ============================================
+  makeCard(
+    "Malcolm Gladwell",
+    "Outliers",
+    ["psychology", "success", "practice"],
+    "Practice isn't the thing you do once you're good. It's the thing you do that makes you good.",
+    "Talent is overrated. Hours of deliberate practice create expertise. The greats weren't born—they were made.",
+    40
+  ),
+  makeCard(
+    "Malcolm Gladwell",
+    "Outliers",
+    ["psychology", "success", "opportunity"],
+    "Success is not a random act. It arises out of a predictable and powerful set of circumstances and opportunities.",
+    "Genius alone isn't enough. Timing, culture, accumulated advantages—success has a hidden architecture beyond individual merit.",
+    45
+  ),
+  makeCard(
+    "Malcolm Gladwell",
+    "Blink",
+    ["psychology", "intuition", "decisions"],
+    "Truly successful decision-making relies on a balance between deliberate and instinctive thinking.",
+    "Neither pure analysis nor pure gut is optimal. Know when to trust each. Rapid cognition has power—and limits.",
+    40
+  ),
+  makeCard(
+    "Malcolm Gladwell",
+    "Blink",
+    ["psychology", "thin-slicing", "judgment"],
+    "We thin-slice whenever we meet a new person or have to make sense of something quickly.",
+    "First impressions are data-rich. In seconds, we extract patterns. This can be accurate—or dangerously biased.",
+    40
+  ),
+  makeCard(
+    "Malcolm Gladwell",
+    "The Tipping Point",
+    ["business", "influence", "networks"],
+    "The tipping point is that magic moment when an idea, trend, or social behavior crosses a threshold and spreads like wildfire.",
+    "Small changes can have outsized effects. Find leverage points. A few key people, a sticky message—that's how epidemics start.",
+    45
+  ),
+  makeCard(
+    "Malcolm Gladwell",
+    "The Tipping Point",
+    ["business", "influence", "connectors"],
+    "A very small number of people are linked to everyone else in a few steps, and the rest of us are linked to the world through those special few.",
+    "Connectors, Mavens, Salesmen—these archetypes spread ideas. Know them. Be one. Or find them for your cause.",
+    45
+  ),
+  makeCard(
+    "Malcolm Gladwell",
+    "David and Goliath",
+    ["psychology", "adversity", "strength"],
+    "Much of what we consider valuable in our world arises out of these kinds of lopsided conflicts.",
+    "Underdogs win more than we think. Apparent weakness can become advantage. Constraints breed innovation.",
+    40
+  ),
+  makeCard(
+    "Malcolm Gladwell",
+    "David and Goliath",
+    ["psychology", "adversity", "resilience"],
+    "Courage is not something that you already have that makes you brave when the tough times start. Courage is what you earn when you've been through the tough times.",
+    "Bravery isn't innate—it's forged. Hardship creates strength. What breaks some makes others unbreakable.",
+    45
+  ),
+  makeCard(
+    "Malcolm Gladwell",
+    "Talking to Strangers",
+    ["psychology", "trust", "communication"],
+    "We default to truth—that is, we assume the people we're dealing with are honest.",
+    "Truth default makes cooperation possible. But it also makes us vulnerable to deception. Trust but verify.",
+    40
+  ),
+
+  // ============================================
+  // ECKHART TOLLE (15 cards)
+  // ============================================
+  makeCard(
+    "Eckhart Tolle",
+    "The Power of Now",
+    ["spirituality", "mindfulness", "presence"],
+    "Realize deeply that the present moment is all you have. Make the NOW the primary focus of your life.",
+    "Past and future exist only in thought. Reality is always now. Presence is not a luxury—it's the only place life happens.",
+    40
+  ),
+  makeCard(
+    "Eckhart Tolle",
+    "The Power of Now",
+    ["spirituality", "ego", "identity"],
+    "The mind is a superb instrument if used rightly. Used wrongly, it becomes very destructive.",
+    "Mind as servant, not master. Thoughts are tools. Don't let the tool use you. Observe the thinker.",
+    40
+  ),
+  makeCard(
+    "Eckhart Tolle",
+    "The Power of Now",
+    ["spirituality", "suffering", "acceptance"],
+    "Whatever the present moment contains, accept it as if you had chosen it.",
+    "Resistance creates suffering. Acceptance creates peace. You can still act to change things—but from acceptance, not resistance.",
+    40
+  ),
+  makeCard(
+    "Eckhart Tolle",
+    "A New Earth",
+    ["spirituality", "ego", "awakening"],
+    "The primary cause of unhappiness is never the situation but your thoughts about it.",
+    "Events are neutral. Interpretation creates suffering. Change the story, change the experience.",
+    35
+  ),
+  makeCard(
+    "Eckhart Tolle",
+    "A New Earth",
+    ["spirituality", "ego", "identity"],
+    "You are not your thoughts. You are the awareness behind the thoughts.",
+    "Thought is content; awareness is context. You are the sky, not the clouds. This recognition is freedom.",
+    40
+  ),
+  makeCard(
+    "Eckhart Tolle",
+    "The Power of Now",
+    ["spirituality", "time", "presence"],
+    "Time isn't precious at all, because it is an illusion. What you perceive as precious is not time but the one point that is out of time: the Now.",
+    "We say time is precious while wasting the present worrying about future. The now is all that's real.",
+    45
+  ),
+  makeCard(
+    "Eckhart Tolle",
+    "A New Earth",
+    ["spirituality", "purpose", "being"],
+    "Your life has an inner purpose and an outer purpose. Inner purpose concerns Being. Outer purpose concerns doing.",
+    "What you do matters less than how you are while doing it. Inner purpose—presence—infuses outer action with meaning.",
+    45
+  ),
+  makeCard(
+    "Eckhart Tolle",
+    "The Power of Now",
+    ["spirituality", "pain", "suffering"],
+    "The pain that you create now is always some form of nonacceptance, some form of unconscious resistance to what is.",
+    "Pain is inevitable; suffering is optional. The gap between what is and what should be—that's where suffering lives.",
+    40
+  ),
+  makeCard(
+    "Eckhart Tolle",
+    "A New Earth",
+    ["spirituality", "relationships", "presence"],
+    "Relationships do not cause pain and unhappiness. They bring out the pain and unhappiness that is already in you.",
+    "Others don't create your dysfunction—they reveal it. Relationships are mirrors. Use them for self-knowledge.",
+    45
+  ),
+
+  // ============================================
+  // VIKTOR FRANKL (12 cards)
+  // ============================================
+  makeCard(
+    "Viktor Frankl",
+    "Man's Search for Meaning",
+    ["philosophy", "meaning", "suffering"],
+    "Those who have a 'why' to live, can bear with almost any 'how'.",
+    "Purpose sustains through suffering. Meaning isn't found—it's created. Even in hell, we can find reason to endure.",
+    45
+  ),
+  makeCard(
+    "Viktor Frankl",
+    "Man's Search for Meaning",
+    ["philosophy", "freedom", "choice"],
+    "Everything can be taken from a man but one thing: the last of the human freedoms—to choose one's attitude in any given set of circumstances.",
+    "External freedom can be stripped. Inner freedom cannot. In any situation, response is yours to choose.",
+    50
+  ),
+  makeCard(
+    "Viktor Frankl",
+    "Man's Search for Meaning",
+    ["philosophy", "meaning", "purpose"],
+    "Life is never made unbearable by circumstances, but only by lack of meaning and purpose.",
+    "Suffering without meaning is despair. Suffering with meaning is bearable. The question isn't why this happened—it's what for.",
+    45
+  ),
+  makeCard(
+    "Viktor Frankl",
+    "Man's Search for Meaning",
+    ["philosophy", "happiness", "meaning"],
+    "Happiness cannot be pursued; it must ensue.",
+    "Chase happiness and it flees. Pursue meaning and happiness follows. It's a byproduct, not a goal.",
+    35
+  ),
+  makeCard(
+    "Viktor Frankl",
+    "Man's Search for Meaning",
+    ["philosophy", "responsibility", "meaning"],
+    "Being human means being responsible.",
+    "Freedom implies responsibility. Meaning comes through obligation to something beyond yourself.",
+    35
+  ),
+  makeCard(
+    "Viktor Frankl",
+    "Man's Search for Meaning",
+    ["philosophy", "suffering", "dignity"],
+    "Even the helpless victim of a hopeless situation, facing a fate he cannot change, may rise above himself, may grow beyond himself, and by so doing change himself.",
+    "Circumstances may be unchangeable. Self is not. Even in tragedy, growth is possible. Dignity survives suffering.",
+    50
+  ),
+  makeCard(
+    "Viktor Frankl",
+    "Man's Search for Meaning",
+    ["philosophy", "love", "meaning"],
+    "Love is the ultimate and the highest goal to which man can aspire.",
+    "In the depths of suffering, the thought of loved ones sustains. Love transcends physical presence. It's meaning made incarnate.",
+    40
+  ),
+  makeCard(
+    "Viktor Frankl",
+    "Man's Search for Meaning",
+    ["philosophy", "despair", "meaning"],
+    "Despair is suffering without meaning.",
+    "Suffering + meaning = growth. Suffering - meaning = despair. The task is always to find the meaning.",
+    35
+  ),
+
+  // ============================================
+  // MIHALY CSIKSZENTMIHALYI (12 cards)
+  // ============================================
+  makeCard(
+    "Mihaly Csikszentmihalyi",
+    "Flow",
+    ["psychology", "happiness", "productivity"],
+    "The best moments in our lives are not the passive, receptive, relaxing times. The best moments usually occur when a person's body or mind is stretched to its limits.",
+    "Flow isn't ease—it's engaged challenge. Happiness comes from full absorption in demanding tasks, not from rest.",
+    50
+  ),
+  makeCard(
+    "Mihaly Csikszentmihalyi",
+    "Flow",
+    ["psychology", "focus", "experience"],
+    "Control of consciousness determines the quality of life.",
+    "What you attend to shapes your experience. Master attention, master life. Focus is freedom.",
+    40
+  ),
+  makeCard(
+    "Mihaly Csikszentmihalyi",
+    "Flow",
+    ["psychology", "challenge", "growth"],
+    "Flow experiences occur when there is a balance between challenge and skill.",
+    "Too easy = boredom. Too hard = anxiety. The sweet spot—slightly beyond current ability—is where flow lives.",
+    40
+  ),
+  makeCard(
+    "Mihaly Csikszentmihalyi",
+    "Flow",
+    ["psychology", "happiness", "goals"],
+    "People who learn to control inner experience will be able to determine the quality of their lives, which is as close as any of us can come to being happy.",
+    "Happiness isn't circumstances—it's inner state management. Control the inner, influence the outer.",
+    45
+  ),
+  makeCard(
+    "Mihaly Csikszentmihalyi",
+    "Flow",
+    ["psychology", "work", "meaning"],
+    "Work can be meaningful when it is freely chosen, when it allows the use of skill.",
+    "Same task, different experience. Choice and skill transform drudgery into craft. Meaning is in the doing.",
+    40
+  ),
+  makeCard(
+    "Mihaly Csikszentmihalyi",
+    "Flow",
+    ["psychology", "attention", "time"],
+    "When we are in flow, time seems to stop. We forget ourselves and become one with what we are doing.",
+    "Self-consciousness dissolves in deep engagement. Time dilates. Action and awareness merge. This is optimal experience.",
+    45
+  ),
+  makeCard(
+    "Mihaly Csikszentmihalyi",
+    "Flow",
+    ["psychology", "autotelic", "intrinsic"],
+    "The autotelic self transforms potentially entropic experience into flow.",
+    "Autotelic: doing for its own sake. Find intrinsic reward. Don't need external validation when the doing is enough.",
+    45
+  ),
+  makeCard(
+    "Mihaly Csikszentmihalyi",
+    "Flow",
+    ["psychology", "creativity", "complexity"],
+    "Creative individuals tend to be smart yet naive, playful yet disciplined.",
+    "Complexity is the mark of the creative mind. Holding opposites in tension. Both/and, not either/or.",
+    40
+  ),
+
+  // ============================================
+  // JORDAN PETERSON (12 cards)
+  // ============================================
+  makeCard(
+    "Jordan Peterson",
+    "12 Rules for Life",
+    ["psychology", "responsibility", "meaning"],
+    "Compare yourself to who you were yesterday, not to who someone else is today.",
+    "External comparison breeds envy. Internal comparison breeds growth. Your only competition is your past self.",
+    35
+  ),
+  makeCard(
+    "Jordan Peterson",
+    "12 Rules for Life",
+    ["psychology", "order", "chaos"],
+    "You must determine where you are going in your life, because you cannot get there unless you move in that direction.",
+    "Aim at something. Without a target, you drift. Purpose provides direction. Direction provides meaning.",
+    40
+  ),
+  makeCard(
+    "Jordan Peterson",
+    "12 Rules for Life",
+    ["psychology", "responsibility", "maturity"],
+    "Set your house in perfect order before you criticize the world.",
+    "Fix what you can control first. Clean your room. Then expand outward. Competence precedes criticism.",
+    35
+  ),
+  makeCard(
+    "Jordan Peterson",
+    "12 Rules for Life",
+    ["psychology", "truth", "integrity"],
+    "Tell the truth—or, at least, don't lie.",
+    "Each lie corrupts the soul. Truth builds, lies destroy. Start with not lying; truth becomes easier with practice.",
+    35
+  ),
+  makeCard(
+    "Jordan Peterson",
+    "Maps of Meaning",
+    ["psychology", "meaning", "mythology"],
+    "Meaning is the instinct that tells you where you are, and where you are is always an indication of what you should do.",
+    "Meaning isn't found in abstract principles—it's felt in the body. Listen to what calls you.",
+    45
+  ),
+  makeCard(
+    "Jordan Peterson",
+    "12 Rules for Life",
+    ["psychology", "suffering", "growth"],
+    "To stand up straight with your shoulders back is to accept the terrible responsibility of life.",
+    "Posture reflects attitude. Stand up—literally and metaphorically. Face existence. Carry your burden voluntarily.",
+    40
+  ),
+  makeCard(
+    "Jordan Peterson",
+    "Beyond Order",
+    ["psychology", "goals", "adventure"],
+    "If you can't even take care of yourself, you have nothing to offer.",
+    "Self-care isn't selfish—it's prerequisite. Empty cups can't fill others. Build yourself to give yourself.",
+    35
+  ),
+  makeCard(
+    "Jordan Peterson",
+    "12 Rules for Life",
+    ["relationships", "listening", "wisdom"],
+    "Assume that the person you are listening to might know something you don't.",
+    "True listening requires humility. Everyone knows something you don't. Conversation is opportunity for learning.",
+    40
+  ),
+
+  // ============================================
+  // SAM HARRIS (10 cards)
+  // ============================================
+  makeCard(
+    "Sam Harris",
+    "Waking Up",
+    ["spirituality", "mindfulness", "consciousness"],
+    "The feeling that we call 'I' is an illusion.",
+    "The self is a construction, not a fixed entity. Meditation reveals this. What you take to be you is a story told by neurons.",
+    45
+  ),
+  makeCard(
+    "Sam Harris",
+    "Waking Up",
+    ["spirituality", "happiness", "attention"],
+    "The reality of your life is always now. And to realize this is liberating.",
+    "Life happens only in this moment. Everything else is memory or imagination. Presence is the only reality.",
+    40
+  ),
+  makeCard(
+    "Sam Harris",
+    "Free Will",
+    ["philosophy", "free-will", "determinism"],
+    "You are not controlling the storm, and you are not lost in it. You are the storm.",
+    "The illusion of control is comforting but false. You are process, not pilot. This can be liberating once accepted.",
+    45
+  ),
+  makeCard(
+    "Sam Harris",
+    "Waking Up",
+    ["spirituality", "meditation", "practice"],
+    "There is nothing passive about mindfulness. One might even say that it expresses a specific kind of passion.",
+    "Meditation isn't spacing out—it's waking up. Intense attention to what is. Active, not passive. Engaged, not escaped.",
+    40
+  ),
+  makeCard(
+    "Sam Harris",
+    "The Moral Landscape",
+    ["philosophy", "ethics", "wellbeing"],
+    "Questions about values are really questions about the wellbeing of conscious creatures.",
+    "Morality isn't arbitrary—it's about flourishing. What increases wellbeing is good. Science can inform ethics.",
+    45
+  ),
+  makeCard(
+    "Sam Harris",
+    "Waking Up",
+    ["spirituality", "thought", "awareness"],
+    "The practice of meditation is a clearer way of seeing that thoughts are just thoughts.",
+    "You are not your thoughts. You have thoughts. Meditation creates distance. Observation creates freedom.",
+    40
+  ),
+  makeCard(
+    "Sam Harris",
+    "Lying",
+    ["philosophy", "honesty", "ethics"],
+    "Lying is the royal road to chaos.",
+    "Each lie requires more lies to sustain it. Truth is simpler than deception. Honesty is the foundation of trust.",
+    35
+  ),
+
+  // ============================================
+  // JOCKO WILLINK (12 cards)
+  // ============================================
+  makeCard(
+    "Jocko Willink",
+    "Extreme Ownership",
+    ["leadership", "responsibility", "accountability"],
+    "The leader is truly and ultimately responsible for everything the team does or fails to do.",
+    "No excuses. No blame. Everything is your responsibility. This isn't burden—it's power. Own it all.",
+    40
+  ),
+  makeCard(
+    "Jocko Willink",
+    "Extreme Ownership",
+    ["leadership", "ego", "humility"],
+    "Ego clouds and disrupts everything.",
+    "Ego prevents learning. Ego creates conflict. Ego blinds to reality. Check your ego—or it will check you.",
+    35
+  ),
+  makeCard(
+    "Jocko Willink",
+    "Discipline Equals Freedom",
+    ["productivity", "discipline", "freedom"],
+    "Discipline equals freedom.",
+    "Paradox: constraint creates liberation. Discipline in small things creates freedom in big things. Structure enables flow.",
+    35
+  ),
+  makeCard(
+    "Jocko Willink",
+    "Extreme Ownership",
+    ["leadership", "simplicity", "communication"],
+    "Simple, clear, concise plans and orders ensure everyone understands.",
+    "Complexity fails under pressure. Simplify relentlessly. If a plan can't be explained simply, it won't be executed properly.",
+    40
+  ),
+  makeCard(
+    "Jocko Willink",
+    "Extreme Ownership",
+    ["leadership", "decentralization", "trust"],
+    "Human beings are generally not capable of managing more than six to ten people.",
+    "Span of control is real. Build small teams with delegated authority. Trust people to execute. Don't micromanage.",
+    40
+  ),
+  makeCard(
+    "Jocko Willink",
+    "Discipline Equals Freedom",
+    ["productivity", "motivation", "action"],
+    "Don't expect to be motivated every day. Discipline is what gets you to the gym when motivation fails.",
+    "Motivation is unreliable. Discipline is dependable. Build systems that don't require feeling like it.",
+    35
+  ),
+  makeCard(
+    "Jocko Willink",
+    "Extreme Ownership",
+    ["leadership", "balance", "strategy"],
+    "A good leader has nothing to prove, but everything to prove.",
+    "Confident but not arrogant. Calm but not passive. Leaders balance opposites. Neither extreme works.",
+    40
+  ),
+  makeCard(
+    "Jocko Willink",
+    "The Dichotomy of Leadership",
+    ["leadership", "balance", "extremes"],
+    "Every good quality can become a bad quality when taken to the extreme.",
+    "Confidence becomes arrogance. Caution becomes paralysis. Virtue lies in balance. Know when enough is enough.",
+    40
+  ),
+
+  // ============================================
+  // RYAN HOLIDAY (15 cards)
+  // ============================================
+  makeCard(
+    "Ryan Holiday",
+    "The Obstacle Is the Way",
+    ["stoicism", "adversity", "growth"],
+    "The impediment to action advances action. What stands in the way becomes the way.",
+    "Marcus Aurelius knew: obstacles aren't detours—they're the path. Use difficulty as training ground.",
+    40
+  ),
+  makeCard(
+    "Ryan Holiday",
+    "Ego Is the Enemy",
+    ["stoicism", "ego", "humility"],
+    "Ego is the enemy of what you want and of what you have.",
+    "Ego prevents learning before success and breeds complacency after. Stay humble. Stay hungry. Stay learning.",
+    35
+  ),
+  makeCard(
+    "Ryan Holiday",
+    "The Daily Stoic",
+    ["stoicism", "control", "focus"],
+    "Focus on the things you can control, let go of everything else.",
+    "The dichotomy of control: some things are up to us, some aren't. Master this distinction. It's freedom.",
+    35
+  ),
+  makeCard(
+    "Ryan Holiday",
+    "Stillness Is the Key",
+    ["stoicism", "calm", "presence"],
+    "Stillness is the key to, well, just about everything.",
+    "In stillness we find clarity. In noise we find confusion. Cultivate inner quiet. Decisions improve. Life improves.",
+    35
+  ),
+  makeCard(
+    "Ryan Holiday",
+    "The Obstacle Is the Way",
+    ["stoicism", "perception", "mindset"],
+    "There is no good or bad without us, there is only perception.",
+    "Events are neutral. Our interpretation creates suffering or growth. Choose your frame wisely.",
+    40
+  ),
+  makeCard(
+    "Ryan Holiday",
+    "Ego Is the Enemy",
+    ["stoicism", "success", "character"],
+    "Success is intoxicating, yet to sustain it requires sobriety.",
+    "Success breeds complacency. Stay paranoid. Stay working. The moment you relax, decline begins.",
+    40
+  ),
+  makeCard(
+    "Ryan Holiday",
+    "The Daily Stoic",
+    ["stoicism", "time", "mortality"],
+    "You could leave life right now. Let that determine what you do and say and think.",
+    "Memento mori—remember death. Not morbid; clarifying. Limited time demands intentional living.",
+    40
+  ),
+  makeCard(
+    "Ryan Holiday",
+    "Discipline Is Destiny",
+    ["stoicism", "discipline", "character"],
+    "Discipline is the difference between what you want now and what you want most.",
+    "Temptation offers immediate gratification. Discipline serves ultimate goals. The choice defines you.",
+    35
+  ),
+  makeCard(
+    "Ryan Holiday",
+    "The Obstacle Is the Way",
+    ["stoicism", "action", "persistence"],
+    "Persistence and resistance are the only things that matter.",
+    "Keep pushing. Keep showing up. Persistence in effort, resistance to distraction. Simple formula, hard execution.",
+    35
+  ),
+  makeCard(
+    "Ryan Holiday",
+    "Stillness Is the Key",
+    ["stoicism", "relationships", "presence"],
+    "Be fully present. Be in the conversation. Be with the person in front of you.",
+    "Half-attention is no attention. Give people your full focus. Presence is the greatest gift.",
+    35
+  ),
+
+  // ============================================
+  // TIM FERRISS (10 cards)
+  // ============================================
+  makeCard(
+    "Tim Ferriss",
+    "The 4-Hour Workweek",
+    ["productivity", "lifestyle", "business"],
+    "What we fear doing most is usually what we most need to do.",
+    "Fear marks the path. The phone call you're avoiding, the conversation you're dreading—that's where growth is.",
+    40
+  ),
+  makeCard(
+    "Tim Ferriss",
+    "The 4-Hour Workweek",
+    ["productivity", "priorities", "elimination"],
+    "Being busy is a form of laziness—lazy thinking and indiscriminate action.",
+    "Activity isn't achievement. Busy-ness is often avoidance. Work on what matters. Eliminate the rest.",
+    40
+  ),
+  makeCard(
+    "Tim Ferriss",
+    "The 4-Hour Workweek",
+    ["productivity", "time", "design"],
+    "Focus on being productive instead of busy.",
+    "Hours worked ≠ value created. Results matter, not effort. Design systems that maximize output per input.",
+    35
+  ),
+  makeCard(
+    "Tim Ferriss",
+    "Tools of Titans",
+    ["productivity", "success", "patterns"],
+    "Success can be deconstructed. It can be learned. It can be taught.",
+    "Excellence isn't magic. It's patterns and practices. Study the successful, extract the principles, apply them.",
+    40
+  ),
+  makeCard(
+    "Tim Ferriss",
+    "Tribe of Mentors",
+    ["productivity", "fear", "action"],
+    "The most successful people I've interviewed have all experienced major failures.",
+    "Failure is tuition. Success stories always include failure chapters. Expect setbacks. Learn from them.",
+    40
+  ),
+  makeCard(
+    "Tim Ferriss",
+    "The 4-Hour Workweek",
+    ["productivity", "questions", "clarity"],
+    "Doing less is not being lazy. Don't accept the false choice between productivity and laziness.",
+    "Strategic laziness is wisdom. Work less on more important things. Quality over quantity of effort.",
+    35
+  ),
+  makeCard(
+    "Tim Ferriss",
+    "Tools of Titans",
+    ["productivity", "morning", "routine"],
+    "If you win the morning, you win the day.",
+    "First hours set the tone. Protect your morning routine. Don't give your best energy to email.",
+    35
+  ),
+
+  // ============================================
+  // JAMES CLEAR (10 cards)
+  // ============================================
+  makeCard(
+    "James Clear",
+    "Atomic Habits",
+    ["productivity", "habits", "improvement"],
+    "You do not rise to the level of your goals. You fall to the level of your systems.",
+    "Goals are useful for direction. Systems are useful for progress. Build better systems, get better results.",
+    40
+  ),
+  makeCard(
+    "James Clear",
+    "Atomic Habits",
+    ["productivity", "habits", "identity"],
+    "Every action you take is a vote for the type of person you wish to become.",
+    "Identity shapes behavior. Behavior shapes identity. Each choice casts a vote for who you're becoming.",
+    40
+  ),
+  makeCard(
+    "James Clear",
+    "Atomic Habits",
+    ["productivity", "habits", "compound"],
+    "Habits are the compound interest of self-improvement.",
+    "1% better daily = 37x better yearly. Tiny gains accumulate. Time amplifies the effects of habits.",
+    40
+  ),
+  makeCard(
+    "James Clear",
+    "Atomic Habits",
+    ["productivity", "habits", "environment"],
+    "Environment is the invisible hand that shapes human behavior.",
+    "Design your environment for success. Remove friction from good habits. Add friction to bad ones.",
+    35
+  ),
+  makeCard(
+    "James Clear",
+    "Atomic Habits",
+    ["productivity", "habits", "motivation"],
+    "You don't have to be the victim of your environment. You can also be the architect of it.",
+    "Don't rely on willpower. Change the context. Make the right thing the easy thing.",
+    35
+  ),
+  makeCard(
+    "James Clear",
+    "Atomic Habits",
+    ["productivity", "habits", "process"],
+    "The process of building habits is the process of becoming yourself.",
+    "We don't just build habits—we build identity. Each habit is a statement about who we are.",
+    40
+  ),
+  makeCard(
+    "James Clear",
+    "Atomic Habits",
+    ["productivity", "habits", "triggers"],
+    "Make it obvious. Make it attractive. Make it easy. Make it satisfying.",
+    "Four laws of behavior change. Apply them to build good habits, invert them to break bad ones.",
+    40
+  ),
+  makeCard(
+    "James Clear",
+    "Atomic Habits",
+    ["productivity", "habits", "boredom"],
+    "The greatest threat to success is not failure but boredom.",
+    "Novelty fades. Routines feel mundane. Masters fall in love with boredom. They show up when it's not exciting.",
+    40
+  ),
+
+  // ============================================
+  // CAL NEWPORT (12 cards)
+  // ============================================
+  makeCard(
+    "Cal Newport",
+    "Deep Work",
+    ["productivity", "focus", "attention"],
+    "Deep work is the ability to focus without distraction on a cognitively demanding task.",
+    "Shallow work is default. Deep work is rare. In the attention economy, focus is the ultimate competitive advantage.",
+    40
+  ),
+  makeCard(
+    "Cal Newport",
+    "Deep Work",
+    ["productivity", "distraction", "technology"],
+    "The ability to concentrate intensely is a skill that must be trained.",
+    "Focus isn't innate—it's trained. Like a muscle, it atrophies without use. Practice deep work to build capacity.",
+    40
+  ),
+  makeCard(
+    "Cal Newport",
+    "Digital Minimalism",
+    ["productivity", "technology", "simplicity"],
+    "Clutter is costly.",
+    "Every app, notification, and feature competes for attention. Subtract ruthlessly. Keep only what adds substantial value.",
+    35
+  ),
+  makeCard(
+    "Cal Newport",
+    "So Good They Can't Ignore You",
+    ["career", "skills", "mastery"],
+    "Follow your passion is dangerous advice.",
+    "Passion follows mastery, not the reverse. Get good at something valuable. Passion emerges from competence.",
+    40
+  ),
+  makeCard(
+    "Cal Newport",
+    "So Good They Can't Ignore You",
+    ["career", "skills", "value"],
+    "If you want a great job, you need something rare and valuable to offer in return.",
+    "Career capital: rare and valuable skills. Accumulate it before demanding dream conditions. Build leverage first.",
+    40
+  ),
+  makeCard(
+    "Cal Newport",
+    "Deep Work",
+    ["productivity", "boredom", "focus"],
+    "The ability to concentrate is a skill that gets valuable things done.",
+    "Deep work produces results shallow work cannot. Protect it. Schedule it. Guard it fiercely.",
+    35
+  ),
+  makeCard(
+    "Cal Newport",
+    "A World Without Email",
+    ["productivity", "communication", "workflow"],
+    "Email has replaced our workflows with an endless, unstructured back-and-forth.",
+    "Communication overload fragments attention. Create processes that minimize messaging. Batch communication.",
+    40
+  ),
+  makeCard(
+    "Cal Newport",
+    "Digital Minimalism",
+    ["productivity", "solitude", "reflection"],
+    "Solitude deprivation is a state in which you spend close to zero time alone with your own thoughts.",
+    "Constant connectivity eliminates reflection. Schedule solitude. Your best thinking needs quiet.",
+    40
+  ),
+
+  // ============================================
+  // AUSTIN KLEON (8 cards)
+  // ============================================
+  makeCard(
+    "Austin Kleon",
+    "Steal Like an Artist",
+    ["creativity", "originality", "influence"],
+    "Nothing is original. Steal from anywhere that resonates with inspiration or fuels your imagination.",
+    "All creative work builds on what came before. Influence isn't plagiarism—it's evolution. Collect inspirations.",
+    40
+  ),
+  makeCard(
+    "Austin Kleon",
+    "Steal Like an Artist",
+    ["creativity", "process", "identity"],
+    "You are, in fact, a mashup of what you choose to let into your life.",
+    "Curate your inputs. They become your outputs. You are what you consume. Choose wisely.",
+    35
+  ),
+  makeCard(
+    "Austin Kleon",
+    "Show Your Work",
+    ["creativity", "sharing", "process"],
+    "You don't have to be a genius. You just have to be generous.",
+    "Share your process. Help others. Generosity attracts opportunity. Give to get.",
+    35
+  ),
+  makeCard(
+    "Austin Kleon",
+    "Show Your Work",
+    ["creativity", "consistency", "visibility"],
+    "Consistently posting work online is a practice that makes you better.",
+    "Sharing creates accountability. Public commitment drives improvement. Ship regularly.",
+    35
+  ),
+  makeCard(
+    "Austin Kleon",
+    "Keep Going",
+    ["creativity", "persistence", "practice"],
+    "Every day is a fresh start. Every day is a chance to make something.",
+    "Forget yesterday's failures. Start again today. Consistency over intensity. Show up.",
+    35
+  ),
+  makeCard(
+    "Austin Kleon",
+    "Steal Like an Artist",
+    ["creativity", "imitation", "evolution"],
+    "Start copying what you love. Copy, copy, copy. At the end, you'll find yourself.",
+    "Imitation is how you learn. Through copying, you internalize. Your unique voice emerges from studying many voices.",
+    40
+  ),
+
+  // ============================================
+  // GEORGE ORWELL (8 cards)
+  // ============================================
+  makeCard(
+    "George Orwell",
+    "1984",
+    ["philosophy", "truth", "power"],
+    "Who controls the past controls the future. Who controls the present controls the past.",
+    "Memory is power. Those who define history define reality. Guard truth against manipulation.",
+    40
+  ),
+  makeCard(
+    "George Orwell",
+    "1984",
+    ["philosophy", "freedom", "thought"],
+    "Freedom is the freedom to say that two plus two make four. If that is granted, all else follows.",
+    "The foundation of freedom is truth. When basic facts are contested, liberty is in danger.",
+    40
+  ),
+  makeCard(
+    "George Orwell",
+    "Animal Farm",
+    ["philosophy", "equality", "power"],
+    "All animals are equal, but some animals are more equal than others.",
+    "Revolutions promising equality often create new hierarchies. Power corrupts ideals. Watch the powerful.",
+    40
+  ),
+  makeCard(
+    "George Orwell",
+    "Politics and the English Language",
+    ["writing", "clarity", "thinking"],
+    "If thought corrupts language, language can also corrupt thought.",
+    "Sloppy language enables sloppy thinking. Clarity in writing produces clarity in thought. Use precise words.",
+    45
+  ),
+  makeCard(
+    "George Orwell",
+    "1984",
+    ["philosophy", "truth", "reality"],
+    "The Party told you to reject the evidence of your eyes and ears. It was their final, most essential command.",
+    "Tyranny demands denial of reality. Trust your perception. When authorities deny the obvious, resist.",
+    45
+  ),
+  makeCard(
+    "George Orwell",
+    "Why I Write",
+    ["writing", "purpose", "honesty"],
+    "Good prose is like a windowpane.",
+    "Clear writing serves the reader. Ornate prose often hides weak thinking. Transparency over decoration.",
+    35
+  ),
+
+  // ============================================
+  // ADDITIONAL WISDOM (40 more cards)
+  // ============================================
+  makeCard(
+    "Annie Dillard",
+    "The Writing Life",
+    ["creativity", "time", "attention"],
+    "How we spend our days is, of course, how we spend our lives.",
+    "Life is days. Days are hours. What you do daily becomes your life. Attend to the small; it composes the large.",
+    40
+  ),
+  makeCard(
+    "Mary Oliver",
+    "Upstream",
+    ["philosophy", "attention", "life"],
+    "Attention is the beginning of devotion.",
+    "What you pay attention to, you love. What you love, you care for. Attention is the seed of all virtue.",
+    35
+  ),
+  makeCard(
+    "Rebecca Solnit",
+    "Hope in the Dark",
+    ["philosophy", "hope", "action"],
+    "Hope is not a lottery ticket. It's a hammer.",
+    "Hope isn't passive wishing—it's active building. Hope that motivates action. Hope as fuel, not fantasy.",
+    40
+  ),
+  makeCard(
+    "Ursula K. Le Guin",
+    "The Left Hand of Darkness",
+    ["philosophy", "truth", "perspective"],
+    "The only thing that makes life possible is permanent, intolerable uncertainty.",
+    "Certainty is illusion. Embrace not-knowing. In uncertainty we find freedom and possibility.",
+    40
+  ),
+  makeCard(
+    "Oliver Sacks",
+    "On the Move",
+    ["philosophy", "purpose", "work"],
+    "I cannot pretend I am without fear. But my predominant feeling is one of gratitude.",
+    "Fear and gratitude can coexist. Choose which to foreground. Gratitude transforms experience.",
+    40
+  ),
+  makeCard(
+    "Richard Bach",
+    "Illusions",
+    ["philosophy", "reality", "perception"],
+    "Argue for your limitations and sure enough, they're yours.",
+    "What you believe becomes your cage. Beliefs about limits create limits. Question your constraints.",
+    35
+  ),
+  makeCard(
+    "Hermann Hesse",
+    "Siddhartha",
+    ["spirituality", "wisdom", "experience"],
+    "Wisdom cannot be imparted. Wisdom that a wise man attempts to impart always sounds like foolishness.",
+    "Wisdom must be lived to be understood. Words point; they don't transfer. Your path must be walked.",
+    45
+  ),
+  makeCard(
+    "Hermann Hesse",
+    "Steppenwolf",
+    ["philosophy", "identity", "multiplicity"],
+    "Within you there is a stillness and a sanctuary to which you can retreat at any time.",
+    "Inner refuge exists. No matter the outer chaos, stillness awaits within. Learn to access it.",
+    40
+  ),
+  makeCard(
+    "Fyodor Dostoevsky",
+    "The Brothers Karamazov",
+    ["philosophy", "freedom", "responsibility"],
+    "Man is tormented by no greater anxiety than to find someone quickly to whom he can hand over that gift of freedom.",
+    "Freedom is burden. We seek to give it away—to leaders, ideologies, others. Reclaim it. Bear it.",
+    50
+  ),
+  makeCard(
+    "Albert Camus",
+    "The Myth of Sisyphus",
+    ["philosophy", "absurdism", "meaning"],
+    "One must imagine Sisyphus happy.",
+    "The absurd hero finds meaning in the struggle itself. The rock rolls down; he pushes again. The act is enough.",
+    40
+  ),
+  makeCard(
+    "Albert Camus",
+    "The Stranger",
+    ["philosophy", "authenticity", "society"],
+    "I may not have been sure about what really did interest me, but I was absolutely sure about what didn't.",
+    "Knowing what you don't want is knowledge. Elimination clarifies. Start with what's wrong.",
+    40
+  ),
+  makeCard(
+    "Jean-Paul Sartre",
+    "Being and Nothingness",
+    ["philosophy", "freedom", "existence"],
+    "We are condemned to be free.",
+    "Freedom isn't optional. We must choose—even not choosing is a choice. Radical freedom, radical responsibility.",
+    40
+  ),
+  makeCard(
+    "Jean-Paul Sartre",
+    "Existentialism Is a Humanism",
+    ["philosophy", "responsibility", "action"],
+    "Man is nothing else but what he makes of himself.",
+    "No fixed human nature. You are your actions. Not what you intend—what you do. Define yourself through deeds.",
+    40
+  ),
+  makeCard(
+    "Simone de Beauvoir",
+    "The Second Sex",
+    ["philosophy", "identity", "construction"],
+    "One is not born, but rather becomes, a woman.",
+    "Identity is constructed, not given. We are made through culture, not nature. This means we can remake ourselves.",
+    45
+  ),
+  makeCard(
+    "Hannah Arendt",
+    "The Human Condition",
+    ["philosophy", "action", "politics"],
+    "Action, the only activity that goes on directly between men, corresponds to the human condition of plurality.",
+    "Action is uniquely human. Through action we reveal who we are. In plurality we find meaning.",
+    45
+  ),
+  makeCard(
+    "Martin Heidegger",
+    "Being and Time",
+    ["philosophy", "death", "authenticity"],
+    "If I take death into my life, acknowledge it, and face it squarely, I will free myself from the anxiety of death.",
+    "Confronting mortality creates authenticity. Avoidance breeds anxiety. Face death to live fully.",
+    50
+  ),
+  makeCard(
+    "Ludwig Wittgenstein",
+    "Tractatus Logico-Philosophicus",
+    ["philosophy", "language", "limits"],
+    "The limits of my language mean the limits of my world.",
+    "Language shapes perception. New words create new worlds. Expand vocabulary, expand possibility.",
+    40
+  ),
+  makeCard(
+    "Bertrand Russell",
+    "The Conquest of Happiness",
+    ["philosophy", "happiness", "interest"],
+    "The secret of happiness is this: let your interests be as wide as possible.",
+    "Narrow focus breeds unhappiness. Diversify your curiosities. Multiple interests provide resilience.",
+    40
+  ),
+  makeCard(
+    "Alfred North Whitehead",
+    "Process and Reality",
+    ["philosophy", "learning", "wonder"],
+    "The art of progress is to preserve order amid change and to preserve change amid order.",
+    "Balance stability and growth. Too much order stagnates. Too much change destroys. Navigate between.",
+    45
+  ),
+  makeCard(
+    "William James",
+    "The Principles of Psychology",
+    ["psychology", "attention", "reality"],
+    "My experience is what I agree to attend to.",
+    "Attention creates experience. What you focus on becomes your world. Choose your focus deliberately.",
+    35
+  ),
+  makeCard(
+    "William James",
+    "Pragmatism",
+    ["philosophy", "truth", "practical"],
+    "Truth is what works.",
+    "Pragmatic truth: useful, effective, produces results. Abstract truth matters less than practical impact.",
+    35
+  ),
+  makeCard(
+    "John Dewey",
+    "Democracy and Education",
+    ["philosophy", "education", "experience"],
+    "Education is not preparation for life; education is life itself.",
+    "Learning isn't separate from living. Each moment teaches. Life itself is the curriculum.",
+    40
+  ),
+  makeCard(
+    "Iris Murdoch",
+    "The Sovereignty of Good",
+    ["philosophy", "attention", "goodness"],
+    "Attention is the effort to counteract states of illusion.",
+    "We see what we're prepared to see. Attention breaks through bias. Good attention reveals reality.",
+    45
+  ),
+  makeCard(
+    "Martha Nussbaum",
+    "Upheavals of Thought",
+    ["philosophy", "emotion", "intelligence"],
+    "Emotions are not just the fuel that powers the psychological mechanism of a reasoning creature.",
+    "Emotions are intelligent. They contain judgments about value. Don't dismiss them—examine them.",
+    45
+  ),
+  makeCard(
+    "Charles Taylor",
+    "Sources of the Self",
+    ["philosophy", "identity", "meaning"],
+    "We are selves only in that certain issues matter for us.",
+    "What you care about defines who you are. No concerns, no self. Identity is structured by values.",
+    45
+  ),
+  makeCard(
+    "Michael Sandel",
+    "Justice",
+    ["philosophy", "justice", "society"],
+    "A just society is not one that maximizes utility. It's one that honors each person's dignity.",
+    "People aren't means to aggregate happiness. Dignity is non-negotiable. Justice respects individual worth.",
+    45
+  ),
+  makeCard(
+    "Robert Nozick",
+    "Anarchy, State, and Utopia",
+    ["philosophy", "freedom", "rights"],
+    "Individuals have rights, and there are things no person or group may do to them.",
+    "Rights are boundaries. They limit what can be done to you—even for good causes. Individual sovereignty matters.",
+    45
+  ),
+  makeCard(
+    "John Rawls",
+    "A Theory of Justice",
+    ["philosophy", "justice", "fairness"],
+    "Justice is the first virtue of social institutions.",
+    "Fair society matters more than efficient society. Justice precedes other values. Get the foundation right.",
+    45
+  ),
+  makeCard(
+    "Wendell Berry",
+    "The Art of the Commonplace",
+    ["philosophy", "place", "community"],
+    "The mind that is not baffled is not employed.",
+    "Comfort with confusion is wisdom. The best thinking happens at the edge of understanding. Stay puzzled.",
+    40
+  ),
+  makeCard(
+    "Wendell Berry",
+    "What Are People For?",
+    ["philosophy", "work", "meaning"],
+    "We have lived by the assumption that what was good for us would be good for the world.",
+    "Self-interest doesn't automatically serve common good. Consider wider impact. Think beyond self.",
+    40
+  ),
+  makeCard(
+    "E.F. Schumacher",
+    "Small Is Beautiful",
+    ["philosophy", "economics", "scale"],
+    "Small is beautiful.",
+    "Bigger isn't always better. Human scale matters. Appropriate technology serves; gigantic technology dominates.",
+    35
+  ),
+  makeCard(
+    "Ivan Illich",
+    "Deschooling Society",
+    ["philosophy", "education", "institutions"],
+    "School is the advertising agency which makes you believe you need society as it is.",
+    "Institutions shape beliefs about what's needed. Question institutional assumptions. Learning happens everywhere.",
+    45
+  ),
+  makeCard(
+    "Christopher Alexander",
+    "A Pattern Language",
+    ["design", "patterns", "building"],
+    "Every pattern describes a problem which occurs over and over again, and then describes the core of the solution.",
+    "Solutions have structure. Identify recurring patterns. Apply proven templates. Don't reinvent constantly.",
+    45
+  ),
+  makeCard(
+    "Edward Tufte",
+    "The Visual Display of Quantitative Information",
+    ["design", "data", "clarity"],
+    "Graphical excellence is that which gives to the viewer the greatest number of ideas in the shortest time.",
+    "Information design serves understanding. Clarity over decoration. Respect the audience's time and intelligence.",
+    40
+  ),
+  makeCard(
+    "Donald Norman",
+    "The Design of Everyday Things",
+    ["design", "usability", "humans"],
+    "Good design is actually a lot harder to notice than poor design.",
+    "Great design is invisible. It just works. When you notice design, something went wrong.",
+    40
+  ),
+  makeCard(
+    "Dieter Rams",
+    "Less but Better",
+    ["design", "simplicity", "quality"],
+    "Less, but better.",
+    "Subtract until only essence remains. Quality over quantity. Everything should have purpose or go.",
+    35
+  ),
+  makeCard(
+    "John Maeda",
+    "The Laws of Simplicity",
+    ["design", "simplicity", "complexity"],
+    "Simplicity is about subtracting the obvious and adding the meaningful.",
+    "Simplicity isn't absence—it's essence. Remove the unnecessary, emphasize what matters. Curate ruthlessly.",
+    40
+  ),
+  makeCard(
+    "Alain de Botton",
+    "The Consolations of Philosophy",
+    ["philosophy", "wisdom", "life"],
+    "The greatest problem of human life is how to live.",
+    "Philosophy's real question: how should I live? Abstract debates matter less than practical wisdom.",
+    40
+  ),
+  makeCard(
+    "Alain de Botton",
+    "Status Anxiety",
+    ["philosophy", "success", "comparison"],
+    "Status anxiety is the worry that we are in danger of failing to conform to the ideals of success.",
+    "We suffer from others' judgments. Status seeking is exhausting. Define success internally or be forever anxious.",
+    45
+  ),
+  makeCard(
+    "Nassim Taleb",
+    "The Bed of Procrustes",
+    ["philosophy", "knowledge", "limits"],
+    "An idea starts to be interesting when you get scared of taking it to its logical conclusion.",
+    "Intellectual courage: follow thoughts where they lead. Comfortable conclusions are often incomplete.",
+    40
+  ),
+
+
+  // ============================================
+  // ANCIENT WISDOM (20 cards)
+  // ============================================
+  makeCard(
+    "Lao Tzu",
+    "Tao Te Ching",
+    ["philosophy", "wisdom", "simplicity"],
+    "A journey of a thousand miles begins with a single step.",
+    "Start where you are. Small actions compound. Don't be paralyzed by the scale of the journey.",
+    30
+  ),
+  makeCard(
+    "Lao Tzu",
+    "Tao Te Ching",
+    ["philosophy", "wisdom", "flexibility"],
+    "The stiff and unbending is the disciple of death. The soft and yielding is the disciple of life.",
+    "Rigidity breaks. Flexibility endures. The willow survives the storm; the oak snaps. Adapt.",
+    40
+  ),
+  makeCard(
+    "Lao Tzu",
+    "Tao Te Ching",
+    ["philosophy", "leadership", "humility"],
+    "When the best leader's work is done, the people say, 'We did it ourselves.'",
+    "Great leaders enable. They don't dominate. Success should feel like team achievement, not leader's glory.",
+    40
+  ),
+  makeCard(
+    "Lao Tzu",
+    "Tao Te Ching",
+    ["philosophy", "knowledge", "wisdom"],
+    "He who knows others is wise. He who knows himself is enlightened.",
+    "External knowledge is common. Self-knowledge is rare and more valuable. Turn the gaze inward.",
+    35
+  ),
+  makeCard(
+    "Confucius",
+    "Analects",
+    ["philosophy", "learning", "practice"],
+    "I hear and I forget. I see and I remember. I do and I understand.",
+    "Learning requires action. Knowledge without practice fades. Understanding comes through doing.",
+    35
+  ),
+  makeCard(
+    "Confucius",
+    "Analects",
+    ["philosophy", "self-improvement", "standards"],
+    "When you see a good person, think of becoming like her. When you see someone not so good, reflect on your own weak points.",
+    "Others are mirrors. Good examples inspire. Bad examples warn. All encounters teach.",
+    40
+  ),
+  makeCard(
+    "Confucius",
+    "Analects",
+    ["philosophy", "character", "reputation"],
+    "The superior man is modest in his speech, but exceeds in his actions.",
+    "Talk is cheap. Let actions speak. Under-promise, over-deliver. Substance over style.",
+    35
+  ),
+  makeCard(
+    "Sun Tzu",
+    "The Art of War",
+    ["strategy", "preparation", "victory"],
+    "Every battle is won before it is fought.",
+    "Preparation determines outcome. Victory is earned in training. The fight itself is just the reveal.",
+    35
+  ),
+  makeCard(
+    "Sun Tzu",
+    "The Art of War",
+    ["strategy", "knowledge", "competition"],
+    "Know yourself and you will win all battles.",
+    "Self-knowledge is strategic advantage. Know your strengths, weaknesses, tendencies. Self-awareness is power.",
+    35
+  ),
+  makeCard(
+    "Sun Tzu",
+    "The Art of War",
+    ["strategy", "adaptability", "tactics"],
+    "In the midst of chaos, there is also opportunity.",
+    "Disorder creates openings. While others panic, the prepared act. See opportunity in disruption.",
+    35
+  ),
+  makeCard(
+    "Buddha",
+    "Dhammapada",
+    ["spirituality", "mind", "thoughts"],
+    "The mind is everything. What you think you become.",
+    "Thoughts shape reality. Mind is the precursor to experience. Tend your mental garden carefully.",
+    35
+  ),
+  makeCard(
+    "Buddha",
+    "Dhammapada",
+    ["spirituality", "attachment", "suffering"],
+    "Attachment is the root of all suffering.",
+    "Clinging causes pain. Let go and pain releases. This doesn't mean don't care—it means hold loosely.",
+    35
+  ),
+  makeCard(
+    "Buddha",
+    "Dhammapada",
+    ["spirituality", "action", "consequence"],
+    "What we are today comes from our thoughts of yesterday, and our present thoughts build our life of tomorrow.",
+    "Causation is mental first. Today's thoughts create tomorrow's reality. Think with intention.",
+    40
+  ),
+  makeCard(
+    "Plato",
+    "The Republic",
+    ["philosophy", "knowledge", "reality"],
+    "We can easily forgive a child who is afraid of the dark; the real tragedy of life is when men are afraid of the light.",
+    "Truth can be frightening. Many prefer comfortable darkness to uncomfortable illumination. Choose light.",
+    45
+  ),
+  makeCard(
+    "Aristotle",
+    "Nicomachean Ethics",
+    ["philosophy", "virtue", "habit"],
+    "We are what we repeatedly do. Excellence, then, is not an act, but a habit.",
+    "Character is crystallized habit. You don't become excellent through one act but through consistent practice.",
+    40
+  ),
+  makeCard(
+    "Aristotle",
+    "Politics",
+    ["philosophy", "happiness", "purpose"],
+    "Happiness depends upon ourselves.",
+    "External fortune affects happiness less than internal disposition. Happiness is skill, not circumstance.",
+    35
+  ),
+  makeCard(
+    "Socrates",
+    "Apology",
+    ["philosophy", "wisdom", "humility"],
+    "I know that I know nothing.",
+    "Wisdom begins with acknowledging ignorance. The wise know their limits. Certainty is often foolishness.",
+    35
+  ),
+  makeCard(
+    "Heraclitus",
+    "Fragments",
+    ["philosophy", "change", "wisdom"],
+    "No man ever steps in the same river twice, for it's not the same river and he's not the same man.",
+    "Everything flows. Change is the only constant. Don't cling to permanence—it doesn't exist.",
+    40
+  ),
+  makeCard(
+    "Plutarch",
+    "Moralia",
+    ["philosophy", "education", "character"],
+    "The mind is not a vessel to be filled but a fire to be kindled.",
+    "Education isn't information transfer—it's inspiration. Light fires, don't fill buckets.",
+    40
+  ),
+
+  // ============================================
+  // MODERN BUSINESS WISDOM (30 cards)
+  // ============================================
+  makeCard(
+    "Peter Thiel",
+    "Zero to One",
+    ["business", "innovation", "contrarian"],
+    "What important truth do very few people agree with you on?",
+    "Contrarian correctness creates value. If everyone agrees, there's no alpha. Find unpopular truths.",
+    40
+  ),
+  makeCard(
+    "Peter Thiel",
+    "Zero to One",
+    ["business", "competition", "monopoly"],
+    "Competition is for losers.",
+    "In perfect competition, profits are zero. Build monopolies through innovation. Be unique, not competitive.",
+    40
+  ),
+  makeCard(
+    "Peter Thiel",
+    "Zero to One",
+    ["business", "secrets", "opportunity"],
+    "Every great company is built around a secret that's hidden from the outside.",
+    "Valuable companies see what others miss. Find secrets—things true but not widely known. That's where value hides.",
+    45
+  ),
+  makeCard(
+    "Marc Andreessen",
+    "Interviews",
+    ["business", "markets", "product"],
+    "Product-market fit means being in a good market with a product that can satisfy that market.",
+    "Great product + bad market = failure. Mediocre product + great market = success. Market trumps everything.",
+    40
+  ),
+  makeCard(
+    "Ben Horowitz",
+    "The Hard Thing About Hard Things",
+    ["business", "leadership", "adversity"],
+    "There are no silver bullets, only lead ones.",
+    "No easy answers exist. Success requires grinding through problems. Stop looking for shortcuts.",
+    35
+  ),
+  makeCard(
+    "Ben Horowitz",
+    "The Hard Thing About Hard Things",
+    ["business", "leadership", "truth"],
+    "Take care of the people, the products, and the profits—in that order.",
+    "Sequence matters. People enable products. Products enable profits. Get the order right.",
+    35
+  ),
+  makeCard(
+    "Andy Grove",
+    "High Output Management",
+    ["business", "management", "leverage"],
+    "A manager's output = the output of his organization + the output of neighboring organizations under his influence.",
+    "Managers are multipliers. Your job isn't doing—it's enabling others to do more. Maximize leverage.",
+    45
+  ),
+  makeCard(
+    "Andy Grove",
+    "Only the Paranoid Survive",
+    ["business", "strategy", "change"],
+    "Business success contains the seeds of its own destruction.",
+    "Success breeds complacency. What works stops working. Constant vigilance required. Stay paranoid.",
+    40
+  ),
+  makeCard(
+    "Clayton Christensen",
+    "The Innovator's Dilemma",
+    ["business", "innovation", "disruption"],
+    "Disruptive technologies typically enable new markets to emerge.",
+    "Disruption comes from below. Big players miss it because it looks like a toy. Watch the edges.",
+    45
+  ),
+  makeCard(
+    "Clayton Christensen",
+    "How Will You Measure Your Life?",
+    ["business", "purpose", "meaning"],
+    "The job to be done is the fundamental unit of analysis.",
+    "People don't buy products—they hire them for jobs. Understand the job; design the solution.",
+    40
+  ),
+  makeCard(
+    "Jeff Bezos",
+    "Shareholder Letters",
+    ["business", "customers", "long-term"],
+    "We are genuinely customer-centric. We start with the customer and we work backwards.",
+    "Customer obsession over competitor obsession. Start with needs, not capabilities. Work backwards.",
+    35
+  ),
+  makeCard(
+    "Jeff Bezos",
+    "Shareholder Letters",
+    ["business", "decisions", "reversibility"],
+    "Some decisions are one-way doors; others are two-way doors.",
+    "One-way doors deserve deliberation. Two-way doors deserve speed. Know which type you face.",
+    40
+  ),
+  makeCard(
+    "Charlie Munger",
+    "Poor Charlie's Almanack",
+    ["business", "thinking", "inversion"],
+    "Invert, always invert.",
+    "Instead of asking how to succeed, ask how to fail—then avoid those things. Inversion reveals what's hidden.",
+    35
+  ),
+  makeCard(
+    "Charlie Munger",
+    "Poor Charlie's Almanack",
+    ["business", "learning", "models"],
+    "You've got to have models in your head. And you've got to array your experience on this latticework of models.",
+    "Mental models are tools. Collect many from many fields. Reality is multidisciplinary; thinking should be too.",
+    45
+  ),
+  makeCard(
+    "Warren Buffett",
+    "Shareholder Letters",
+    ["finance", "investing", "patience"],
+    "The stock market is a device for transferring money from the impatient to the patient.",
+    "Patience is competitive advantage. Most people can't wait. If you can, you win. Time arbitrage.",
+    40
+  ),
+  makeCard(
+    "Warren Buffett",
+    "Shareholder Letters",
+    ["finance", "risk", "understanding"],
+    "Risk comes from not knowing what you're doing.",
+    "Real risk is ignorance. Knowledge reduces risk. Stay within your circle of competence.",
+    35
+  ),
+  makeCard(
+    "Warren Buffett",
+    "Shareholder Letters",
+    ["finance", "habits", "compounding"],
+    "Chains of habit are too light to be felt until they are too heavy to be broken.",
+    "Small habits seem insignificant until they compound. Start right. Bad habits become prisons.",
+    40
+  ),
+  makeCard(
+    "Ray Dalio",
+    "Principles",
+    ["business", "principles", "systems"],
+    "Principles are fundamental truths that serve as the foundations for behavior.",
+    "Write down your principles. They create consistency. Without explicit principles, you decide randomly.",
+    40
+  ),
+  makeCard(
+    "Ray Dalio",
+    "Principles",
+    ["business", "truth", "radical-transparency"],
+    "Radical truth and radical transparency are the foundations for meaningful work and relationships.",
+    "Honest feedback, even when painful. Transparency builds trust. The truth hurts short-term, heals long-term.",
+    40
+  ),
+  makeCard(
+    "Ray Dalio",
+    "Principles",
+    ["business", "mistakes", "learning"],
+    "Pain + Reflection = Progress.",
+    "Pain is signal. Reflection extracts the lesson. Without reflection, pain is just pain. Make it productive.",
+    35
+  ),
+  makeCard(
+    "Patrick Lencioni",
+    "The Five Dysfunctions of a Team",
+    ["business", "teams", "trust"],
+    "Trust is the foundation of real teamwork.",
+    "Without trust, teams play politics. With trust, they collaborate. Trust is the first domino.",
+    35
+  ),
+  makeCard(
+    "Patrick Lencioni",
+    "The Five Dysfunctions of a Team",
+    ["business", "conflict", "teams"],
+    "All great relationships require productive conflict to grow.",
+    "Artificial harmony stagnates. Productive conflict improves. Teams need to debate, not avoid.",
+    40
+  ),
+  makeCard(
+    "Kim Scott",
+    "Radical Candor",
+    ["leadership", "feedback", "care"],
+    "Radical Candor is caring personally while challenging directly.",
+    "Care enough to be honest. Ruinous empathy avoids truth. Obnoxious aggression lacks care. Balance both.",
+    40
+  ),
+  makeCard(
+    "Eric Ries",
+    "The Lean Startup",
+    ["business", "startups", "learning"],
+    "The only way to win is to learn faster than anyone else.",
+    "Speed of learning is the advantage. Build, measure, learn—fast. Validated learning trumps vanity metrics.",
+    40
+  ),
+  makeCard(
+    "Eric Ries",
+    "The Lean Startup",
+    ["business", "mvp", "experimentation"],
+    "If you cannot fail, you cannot learn.",
+    "Failure is the tuition for learning. Design experiments that can fail. Safe bets teach nothing.",
+    35
+  ),
+  makeCard(
+    "Reed Hastings",
+    "No Rules Rules",
+    ["business", "freedom", "culture"],
+    "Adequate performance gets a generous severance package.",
+    "High-talent density requires high standards. Good enough isn't good enough. Exceptional or out.",
+    40
+  ),
+  makeCard(
+    "Bill Campbell",
+    "Trillion Dollar Coach",
+    ["leadership", "coaching", "people"],
+    "Your title makes you a manager. Your people make you a leader.",
+    "Authority is given; leadership is earned. Focus on people. They determine your effectiveness.",
+    35
+  ),
+  makeCard(
+    "Ed Catmull",
+    "Creativity, Inc.",
+    ["business", "creativity", "failure"],
+    "If you aren't experiencing failure, then you are making a far worse mistake: You are being driven by the desire to avoid it.",
+    "Fear of failure prevents innovation. Embrace failure as information. Safe is the riskiest strategy.",
+    45
+  ),
+  makeCard(
+    "Daniel Pink",
+    "Drive",
+    ["business", "motivation", "autonomy"],
+    "Control leads to compliance; autonomy leads to engagement.",
+    "Motivation 3.0: autonomy, mastery, purpose. Carrots and sticks work for simple tasks. Creative work needs intrinsic drivers.",
+    45
+  ),
+  makeCard(
+    "Daniel Pink",
+    "Drive",
+    ["business", "mastery", "motivation"],
+    "Mastery is the desire to get better at something that matters.",
+    "Mastery is endless pursuit, never attained. The asymptote is the point—always approaching, never arriving.",
+    40
+  ),
+
 ];
 
 // Export utility functions
