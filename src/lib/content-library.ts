@@ -5081,14 +5081,6 @@ export const contentLibrary: Card[] = [
     "Fixed mindset loses to growth mindset. Humility beats arrogance. Stay curious. Keep learning. Always.",
     35
   ),
-  makeCard(
-    "Reed Hastings",
-    "No Rules Rules",
-    ["business", "freedom", "responsibility"],
-    "Lead with context, not control.",
-    "Talented people don't need micromanagement. They need information. Give context, grant autonomy, expect results.",
-    40
-  ),
 
 ];
 
