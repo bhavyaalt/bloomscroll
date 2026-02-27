@@ -31,7 +31,7 @@ interface Preferences {
 }
 
 export default function AppPage() {
-  const { user, isSubscribed, viewsRemaining, signOut } = useAuth();
+  const { user, profile, isSubscribed, viewsRemaining, signOut, updateWallet } = useAuth();
   
   const [currentIndex, setCurrentIndex] = useState(0);
   const [savedCards, setSavedCards] = useState<Set<string>>(new Set());
@@ -69,6 +69,12 @@ export default function AppPage() {
   // Share feedback
   const [showCopied, setShowCopied] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
+  
+  // Settings/Wallet
+  const [showSettings, setShowSettings] = useState(false);
+  const [walletInput, setWalletInput] = useState("");
+  const [walletSaving, setWalletSaving] = useState(false);
+  const [walletSaved, setWalletSaved] = useState(false);
 
   // Load saved cards, viewed cards, and preferences from localStorage
   useEffect(() => {
@@ -250,6 +256,22 @@ export default function AppPage() {
     setQuizStats(newStats);
   };
 
+  const handleSaveWallet = async () => {
+    if (!walletInput.trim()) return;
+    // Basic validation - check if it looks like an Ethereum address
+    if (!/^0x[a-fA-F0-9]{40}$/.test(walletInput.trim())) {
+      alert("Please enter a valid Ethereum address (0x...)");
+      return;
+    }
+    setWalletSaving(true);
+    const success = await updateWallet(walletInput.trim());
+    setWalletSaving(false);
+    if (success) {
+      setWalletSaved(true);
+      setTimeout(() => setWalletSaved(false), 2000);
+    }
+  };
+
   const clearViewHistory = () => {
     setViewedCards(new Set());
     localStorage.removeItem(VIEW_STORAGE_KEY);
@@ -344,12 +366,27 @@ export default function AppPage() {
               </button>
               {showUserMenu && (
                 <div className="absolute right-0 top-10 bg-[#1a1a1a] border border-white/10 rounded-xl p-2 min-w-[160px] shadow-xl">
-                  {user ? (
+                  {user || profile ? (
                     <>
                       <div className="px-3 py-2 text-xs text-white/40 truncate">
-                        {user.email}
+                        {user?.email || profile?.fc_username || "User"}
                       </div>
+                      {profile?.wallet_address && (
+                        <div className="px-3 py-1 text-xs text-white/30 truncate">
+                          {profile.wallet_address.slice(0, 6)}...{profile.wallet_address.slice(-4)}
+                        </div>
+                      )}
                       <hr className="border-white/10 my-1" />
+                      <button
+                        onClick={() => {
+                          setShowSettings(true);
+                          setShowUserMenu(false);
+                          setWalletInput(profile?.wallet_address || "");
+                        }}
+                        className="w-full px-3 py-2 text-left text-sm hover:bg-white/10 rounded-lg text-white/70"
+                      >
+                        ⚙️ Settings
+                      </button>
                       <button
                         onClick={() => {
                           signOut();
@@ -994,6 +1031,107 @@ export default function AppPage() {
                   </button>
                 </div>
               )}
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Settings Modal */}
+      {showSettings && (
+        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-[#EACCD4] text-[#007A5E] rounded-2xl max-w-md w-full overflow-hidden"
+          >
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="font-impact text-2xl uppercase">Settings</h2>
+                <button
+                  onClick={() => setShowSettings(false)}
+                  className="text-[#007A5E]/40 hover:text-[#007A5E] text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Account Info */}
+              <div className="mb-6">
+                <h3 className="font-bold uppercase text-sm mb-2 opacity-60">Account</h3>
+                <div className="bg-white/50 rounded-xl p-4">
+                  {user?.email && (
+                    <p className="text-sm mb-2">
+                      <span className="opacity-60">Email:</span> {user.email}
+                    </p>
+                  )}
+                  {profile?.fc_username && (
+                    <p className="text-sm mb-2">
+                      <span className="opacity-60">Farcaster:</span> @{profile.fc_username}
+                    </p>
+                  )}
+                  <p className="text-sm">
+                    <span className="opacity-60">Status:</span>{" "}
+                    <span className={isSubscribed ? "text-green-600 font-bold" : ""}>
+                      {isSubscribed ? "Pro ⭐" : "Free"}
+                    </span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Wallet Settings */}
+              <div className="mb-6">
+                <h3 className="font-bold uppercase text-sm mb-2 opacity-60">Wallet Address</h3>
+                <p className="text-xs opacity-60 mb-3">
+                  Connect a wallet to receive rewards and make payments
+                </p>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={walletInput}
+                    onChange={(e) => setWalletInput(e.target.value)}
+                    placeholder="0x..."
+                    className="flex-1 px-4 py-3 rounded-xl bg-white/50 text-[#007A5E] placeholder-[#007A5E]/40 text-sm font-mono"
+                  />
+                  <button
+                    onClick={handleSaveWallet}
+                    disabled={walletSaving}
+                    className="px-4 py-3 bg-[#007A5E] text-[#EACCD4] rounded-xl font-bold text-sm disabled:opacity-50"
+                  >
+                    {walletSaving ? "..." : walletSaved ? "✓" : "Save"}
+                  </button>
+                </div>
+                {profile?.wallet_address && (
+                  <p className="text-xs opacity-60 mt-2">
+                    Current: {profile.wallet_address.slice(0, 10)}...{profile.wallet_address.slice(-8)}
+                  </p>
+                )}
+              </div>
+
+              {/* Stats */}
+              <div>
+                <h3 className="font-bold uppercase text-sm mb-2 opacity-60">Your Stats</h3>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="bg-white/50 rounded-xl p-3 text-center">
+                    <div className="text-xl font-bold">{streak.currentStreak}</div>
+                    <div className="text-xs opacity-60">Day Streak</div>
+                  </div>
+                  <div className="bg-white/50 rounded-xl p-3 text-center">
+                    <div className="text-xl font-bold">{viewedCards.size}</div>
+                    <div className="text-xs opacity-60">Cards Read</div>
+                  </div>
+                  <div className="bg-white/50 rounded-xl p-3 text-center">
+                    <div className="text-xl font-bold">{savedCards.size}</div>
+                    <div className="text-xs opacity-60">Saved</div>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setShowSettings(false)}
+                className="w-full mt-6 py-3 bg-[#007A5E] text-[#EACCD4] rounded-full font-bold uppercase"
+              >
+                Done
+              </button>
             </div>
           </motion.div>
         </div>

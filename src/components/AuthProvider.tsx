@@ -10,6 +10,7 @@ import {
   canViewContent,
   linkFarcasterToProfile,
   linkEmailToFarcasterProfile,
+  linkWallet,
   FarcasterUser
 } from "@/lib/supabase";
 import { useFarcaster } from "./FarcasterProvider";
@@ -27,6 +28,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   linkFarcaster: () => Promise<boolean>;
   linkEmail: (email: string) => Promise<boolean>;
+  updateWallet: (walletAddress: string) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -42,6 +44,7 @@ const AuthContext = createContext<AuthContextType>({
   signOut: async () => {},
   linkFarcaster: async () => false,
   linkEmail: async () => false,
+  updateWallet: async () => false,
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -202,6 +205,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return false;
   };
 
+  // Update wallet address
+  const updateWallet = async (walletAddress: string): Promise<boolean> => {
+    if (!profile) return false;
+    try {
+      const updated = await linkWallet(profile.id, walletAddress);
+      if (updated) {
+        setProfile(updated);
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.error('Error updating wallet:', err);
+      return false;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -217,6 +236,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signOut: handleSignOut,
         linkFarcaster,
         linkEmail,
+        updateWallet,
       }}
     >
       {children}
