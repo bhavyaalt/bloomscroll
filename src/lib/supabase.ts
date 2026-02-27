@@ -48,7 +48,7 @@ export async function getSession() {
 
 export interface UserProfile {
   id: string;
-  email: string;
+  email?: string;
   wallet_address?: string;
   preferences?: {
     topics: string[];
@@ -59,13 +59,19 @@ export interface UserProfile {
   daily_views_count: number;
   daily_views_reset_at: string;
   created_at: string;
+  // Farcaster fields
+  fid?: number;
+  fc_username?: string;
+  fc_display_name?: string;
+  fc_pfp_url?: string;
+  auth_method?: 'email' | 'farcaster' | 'both';
 }
 
 // Get or create user profile
 export async function getOrCreateProfile(userId: string, email: string): Promise<UserProfile | null> {
   // Try to get existing profile
   let { data: profile, error } = await supabase
-    .from('profiles')
+    .from('bloomscroll_profiles')
     .select('*')
     .eq('id', userId)
     .single();
@@ -81,7 +87,7 @@ export async function getOrCreateProfile(userId: string, email: string): Promise
     };
 
     const { data: created, error: createError } = await supabase
-      .from('profiles')
+      .from('bloomscroll_profiles')
       .insert(newProfile)
       .select()
       .single();
@@ -104,13 +110,138 @@ export async function getOrCreateProfile(userId: string, email: string): Promise
 // Update user profile
 export async function updateProfile(userId: string, updates: Partial<UserProfile>) {
   const { data, error } = await supabase
-    .from('profiles')
+    .from('bloomscroll_profiles')
     .update(updates)
     .eq('id', userId)
     .select()
     .single();
 
   if (error) throw error;
+  return data;
+}
+
+// ============================================
+// FARCASTER AUTH FUNCTIONS
+// ============================================
+
+export interface FarcasterUser {
+  fid: number;
+  username?: string;
+  displayName?: string;
+  pfpUrl?: string;
+  walletAddress?: string;
+}
+
+// Get or create profile by Farcaster ID
+export async function getOrCreateFarcasterProfile(fcUser: FarcasterUser): Promise<UserProfile | null> {
+  // Try to get existing profile by FID
+  let { data: profile, error } = await supabase
+    .from('bloomscroll_profiles')
+    .select('*')
+    .eq('fid', fcUser.fid)
+    .single();
+
+  if (error && error.code === 'PGRST116') {
+    // Profile doesn't exist, create it
+    const newProfile = {
+      id: `fc_${fcUser.fid}`, // Use fc_ prefix for Farcaster-only users
+      fid: fcUser.fid,
+      fc_username: fcUser.username,
+      fc_display_name: fcUser.displayName,
+      fc_pfp_url: fcUser.pfpUrl,
+      wallet_address: fcUser.walletAddress?.toLowerCase(),
+      auth_method: 'farcaster' as const,
+      subscription_status: 'free' as const,
+      daily_views_count: 0,
+      daily_views_reset_at: new Date().toISOString(),
+    };
+
+    const { data: created, error: createError } = await supabase
+      .from('bloomscroll_profiles')
+      .insert(newProfile)
+      .select()
+      .single();
+
+    if (createError) {
+      console.error('Error creating Farcaster profile:', createError);
+      return null;
+    }
+    return created;
+  }
+
+  if (error) {
+    console.error('Error fetching Farcaster profile:', error);
+    return null;
+  }
+
+  // Update profile with latest Farcaster info
+  if (profile) {
+    const updates: Partial<UserProfile> = {
+      fc_username: fcUser.username,
+      fc_display_name: fcUser.displayName,
+      fc_pfp_url: fcUser.pfpUrl,
+    };
+    if (fcUser.walletAddress) {
+      updates.wallet_address = fcUser.walletAddress.toLowerCase();
+    }
+    await supabase.from('bloomscroll_profiles').update(updates).eq('fid', fcUser.fid);
+  }
+
+  return profile;
+}
+
+// Get profile by FID
+export async function getProfileByFid(fid: number): Promise<UserProfile | null> {
+  const { data, error } = await supabase
+    .from('bloomscroll_profiles')
+    .select('*')
+    .eq('fid', fid)
+    .single();
+
+  if (error) return null;
+  return data;
+}
+
+// Link Farcaster to existing email account
+export async function linkFarcasterToProfile(userId: string, fcUser: FarcasterUser): Promise<UserProfile | null> {
+  const { data, error } = await supabase
+    .from('bloomscroll_profiles')
+    .update({
+      fid: fcUser.fid,
+      fc_username: fcUser.username,
+      fc_display_name: fcUser.displayName,
+      fc_pfp_url: fcUser.pfpUrl,
+      wallet_address: fcUser.walletAddress?.toLowerCase(),
+      auth_method: 'both',
+    })
+    .eq('id', userId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error linking Farcaster:', error);
+    return null;
+  }
+  return data;
+}
+
+// Link email to existing Farcaster account
+export async function linkEmailToFarcasterProfile(fid: number, email: string): Promise<UserProfile | null> {
+  const { data, error } = await supabase
+    .from('bloomscroll_profiles')
+    .update({
+      email,
+      auth_method: 'both',
+    })
+    .eq('fid', fid)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error linking email:', error);
+    return null;
+  }
+  return data;
   return data;
 }
 
@@ -137,7 +268,7 @@ export interface Subscription {
 // Check if user has active subscription
 export async function checkSubscription(userId: string): Promise<boolean> {
   const { data, error } = await supabase
-    .from('profiles')
+    .from('bloomscroll_profiles')
     .select('subscription_status, subscription_expires_at')
     .eq('id', userId)
     .single();
@@ -170,7 +301,7 @@ export async function recordSubscription(
 
   // Update profile with subscription
   const { error } = await supabase
-    .from('profiles')
+    .from('bloomscroll_profiles')
     .update({
       wallet_address: walletAddress.toLowerCase(),
       subscription_status: 'active',
@@ -184,7 +315,7 @@ export async function recordSubscription(
   }
 
   // Also record in subscriptions table for history
-  await supabase.from('subscriptions').insert({
+  await supabase.from('bloomscroll_subscriptions').insert({
     user_id: userId,
     wallet_address: walletAddress.toLowerCase(),
     tx_hash: txHash,
@@ -213,7 +344,7 @@ export async function canViewContent(userId: string): Promise<{ allowed: boolean
 
   // Check daily views for free users
   const { data: profile, error } = await supabase
-    .from('profiles')
+    .from('bloomscroll_profiles')
     .select('daily_views_count, daily_views_reset_at')
     .eq('id', userId)
     .single();
@@ -246,7 +377,7 @@ export async function canViewContent(userId: string): Promise<{ allowed: boolean
 // Increment view count
 export async function incrementViewCount(userId: string) {
   const { data: profile } = await supabase
-    .from('profiles')
+    .from('bloomscroll_profiles')
     .select('daily_views_count')
     .eq('id', userId)
     .single();
@@ -264,7 +395,7 @@ export async function incrementViewCount(userId: string) {
 
 export async function getSavedCards(userId: string): Promise<string[]> {
   const { data, error } = await supabase
-    .from('saved_cards')
+    .from('bloomscroll_saved_cards')
     .select('card_id')
     .eq('user_id', userId);
 
@@ -274,7 +405,7 @@ export async function getSavedCards(userId: string): Promise<string[]> {
 
 export async function saveCard(userId: string, cardId: string) {
   const { error } = await supabase
-    .from('saved_cards')
+    .from('bloomscroll_saved_cards')
     .upsert({ user_id: userId, card_id: cardId });
   
   if (error) console.error('Error saving card:', error);
@@ -282,10 +413,41 @@ export async function saveCard(userId: string, cardId: string) {
 
 export async function unsaveCard(userId: string, cardId: string) {
   const { error } = await supabase
-    .from('saved_cards')
+    .from('bloomscroll_saved_cards')
     .delete()
     .eq('user_id', userId)
     .eq('card_id', cardId);
   
   if (error) console.error('Error unsaving card:', error);
+}
+
+// ============================================
+// FEEDBACK FUNCTIONS
+// ============================================
+
+export interface PaywallFeedback {
+  id?: string;
+  user_id?: string;
+  reason: string;
+  other_text?: string;
+  cards_viewed: number;
+  created_at?: string;
+}
+
+export async function submitPaywallFeedback(feedback: PaywallFeedback): Promise<boolean> {
+  const { error } = await supabase
+    .from('bloomscroll_paywall_feedback')
+    .insert({
+      user_id: feedback.user_id || null,
+      reason: feedback.reason,
+      other_text: feedback.other_text || null,
+      cards_viewed: feedback.cards_viewed,
+      created_at: new Date().toISOString(),
+    });
+
+  if (error) {
+    console.error('Error submitting feedback:', error);
+    return false;
+  }
+  return true;
 }

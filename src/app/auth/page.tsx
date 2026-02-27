@@ -44,8 +44,8 @@ function AuthContent() {
       <header className="border-b border-[#007A5E]/20">
         <div className="max-w-4xl mx-auto px-6 h-16 flex items-center">
           <Link href="/" className="flex items-baseline">
-            <span className="font-impact text-2xl uppercase tracking-tighter">Bloom</span>
-            <span className="font-times italic text-2xl">scroll</span>
+            <span className="font-impact text-2xl uppercase tracking-tighter">Scroll</span>
+            <span className="font-times italic text-2xl">bliss</span>
           </Link>
         </div>
       </header>
@@ -86,7 +86,7 @@ function AuthContent() {
             // Sign in form
             <>
               <div className="text-center mb-8">
-                <h1 className="font-impact text-4xl uppercase mb-4">Sign in to Bloomscroll</h1>
+                <h1 className="font-impact text-4xl uppercase mb-4">Sign in to Scrollbliss</h1>
                 <p className="font-times italic text-xl opacity-80">
                   No password needed. We&apos;ll email you a magic link.
                 </p>

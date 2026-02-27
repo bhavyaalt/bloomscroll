@@ -5,10 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { pay, getPaymentStatus } from "@base-org/account";
 import { useAuth } from "@/components/AuthProvider";
+import { useFarcaster } from "@/components/FarcasterProvider";
 import { recordSubscription } from "@/lib/supabase";
 
-// Your receiving wallet address
-const PAYMENT_ADDRESS = "0x3b9aeF954F97E2Fce9A65Ee6BC0a7fA426128C94";
+// Your receiving wallet address (bhavyagor.eth)
+const PAYMENT_ADDRESS = "0x13aD115e356Cbcb7438CD114d8b182347B338738";
 const SUBSCRIPTION_AMOUNT = "5.00"; // $5 USDC
 const IS_TESTNET = true; // Set to false for mainnet
 
@@ -16,18 +17,20 @@ type PaymentStatus = "idle" | "pending" | "verifying" | "success" | "error";
 
 export default function SubscribePage() {
   const router = useRouter();
-  const { user, loading, isSubscribed, refreshProfile } = useAuth();
+  const { user, profile, loading, isSubscribed, isAuthenticated, refreshProfile } = useAuth();
+  const { isInFrame, walletAddress: fcWallet, username, displayName, pfpUrl, requestWallet } = useFarcaster();
   
   const [status, setStatus] = useState<PaymentStatus>("idle");
   const [error, setError] = useState<string | null>(null);
   const [txHash, setTxHash] = useState<string | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<"base" | "farcaster">("base");
 
-  // Redirect if not logged in
+  // Redirect if not authenticated (email or Farcaster)
   useEffect(() => {
-    if (!loading && !user) {
+    if (!loading && !isAuthenticated) {
       router.push("/auth?redirect=/subscribe");
     }
-  }, [user, loading, router]);
+  }, [isAuthenticated, loading, router]);
 
   // Redirect if already subscribed
   useEffect(() => {
@@ -37,7 +40,7 @@ export default function SubscribePage() {
   }, [isSubscribed, router]);
 
   const handlePayment = async () => {
-    if (!user) return;
+    if (!profile) return;
     
     setStatus("pending");
     setError(null);
@@ -75,7 +78,7 @@ export default function SubscribePage() {
         if (paymentStatus === "completed") {
           // Record subscription in database
           const success = await recordSubscription(
-            user.id,
+            profile.id,
             walletAddress,
             payment.id,
             SUBSCRIPTION_AMOUNT
@@ -123,8 +126,8 @@ export default function SubscribePage() {
       <header className="border-b border-[#007A5E]/20">
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-baseline">
-            <span className="font-impact text-2xl uppercase tracking-tighter">Bloom</span>
-            <span className="font-times italic text-2xl">scroll</span>
+            <span className="font-impact text-2xl uppercase tracking-tighter">Scroll</span>
+            <span className="font-times italic text-2xl">bliss</span>
           </Link>
           <Link href="/app" className="text-sm font-bold uppercase hover:opacity-70">
             Back to App
@@ -140,7 +143,7 @@ export default function SubscribePage() {
             <div className="w-20 h-20 bg-[#007A5E] rounded-full flex items-center justify-center mx-auto mb-6">
               <span className="text-4xl text-[#EACCD4]">✓</span>
             </div>
-            <h1 className="font-impact text-4xl uppercase mb-4">Welcome to Bloomscroll Pro!</h1>
+            <h1 className="font-impact text-4xl uppercase mb-4">Welcome to Scrollbliss Pro!</h1>
             <p className="font-times italic text-xl mb-8 opacity-80">
               Your subscription is now active.
             </p>
@@ -164,7 +167,7 @@ export default function SubscribePage() {
                 Membership
               </span>
               <h1 className="font-impact text-5xl uppercase mb-4">
-                Unlock Bloomscroll Pro
+                Unlock Scrollbliss Pro
               </h1>
               <p className="font-times italic text-xl opacity-80">
                 Infinite wisdom for the price of a coffee.
@@ -172,6 +175,11 @@ export default function SubscribePage() {
               {user && (
                 <p className="text-sm opacity-60 mt-4">
                   Logged in as {user.email}
+                </p>
+              )}
+              {!user && isInFrame && (displayName || username) && (
+                <p className="text-sm opacity-60 mt-4">
+                  Connected as @{username || displayName}
                 </p>
               )}
             </div>
@@ -216,6 +224,49 @@ export default function SubscribePage() {
                 {/* Payment Button */}
                 {status === "idle" || status === "error" ? (
                   <div className="space-y-4">
+                    {/* Farcaster User Info */}
+                    {isInFrame && (displayName || username) && (
+                      <div className="flex items-center gap-3 p-3 bg-[#007A5E]/10 rounded-lg mb-4">
+                        {pfpUrl && (
+                          <img src={pfpUrl} alt="" className="w-10 h-10 rounded-full" />
+                        )}
+                        <div>
+                          <p className="font-bold">{displayName || username}</p>
+                          {fcWallet && (
+                            <p className="text-xs opacity-60">
+                              {fcWallet.slice(0, 6)}...{fcWallet.slice(-4)}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Payment Method Tabs - only show if in Farcaster */}
+                    {isInFrame && (
+                      <div className="flex gap-2 mb-4">
+                        <button
+                          onClick={() => setPaymentMethod("farcaster")}
+                          className={`flex-1 py-2 px-4 rounded-lg font-bold text-sm transition-all ${
+                            paymentMethod === "farcaster"
+                              ? "bg-[#855DCD] text-white"
+                              : "bg-white/50 text-[#007A5E]"
+                          }`}
+                        >
+                          🟣 Farcaster Wallet
+                        </button>
+                        <button
+                          onClick={() => setPaymentMethod("base")}
+                          className={`flex-1 py-2 px-4 rounded-lg font-bold text-sm transition-all ${
+                            paymentMethod === "base"
+                              ? "bg-[#0052FF] text-white"
+                              : "bg-white/50 text-[#007A5E]"
+                          }`}
+                        >
+                          🔵 Base Pay
+                        </button>
+                      </div>
+                    )}
+
                     <button
                       onClick={handlePayment}
                       className="w-full py-4 bg-[#007A5E] text-[#EACCD4] font-bold uppercase tracking-widest hover:bg-[#004a39] transition-all hover:scale-[1.02] shadow-lg"
@@ -223,7 +274,10 @@ export default function SubscribePage() {
                       Pay $5 USDC
                     </button>
                     <p className="text-xs text-center opacity-60">
-                      Powered by Base Pay • Gas-free checkout
+                      {isInFrame && paymentMethod === "farcaster" 
+                        ? "Pay with your connected Farcaster wallet"
+                        : "Powered by Base Pay • Gas-free checkout"
+                      }
                     </p>
                   </div>
                 ) : status === "pending" ? (

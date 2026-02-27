@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import Link from "next/link";
 import { useAuth } from "@/components/AuthProvider";
-import { incrementViewCount } from "@/lib/supabase";
+import { incrementViewCount, submitPaywallFeedback } from "@/lib/supabase";
 import { 
   contentLibrary, 
   Card, 
@@ -15,10 +15,10 @@ import {
 } from "@/lib/content-library";
 
 const SWIPE_THRESHOLD = 100;
-const VIEW_STORAGE_KEY = "bloomscroll_viewed_cards";
-const SAVE_STORAGE_KEY = "bloomscroll_saved_cards";
-const PREFERENCES_KEY = "bloomscroll_preferences";
-const ONBOARDING_KEY = "bloomscroll_onboarding_complete";
+const VIEW_STORAGE_KEY = "scrollbliss_viewed_cards";
+const SAVE_STORAGE_KEY = "scrollbliss_saved_cards";
+const PREFERENCES_KEY = "scrollbliss_preferences";
+const ONBOARDING_KEY = "scrollbliss_onboarding_complete";
 
 interface Preferences {
   topics: string[];
@@ -36,6 +36,10 @@ export default function AppPage() {
   const [showSaved, setShowSaved] = useState(false);
   const [showTopicSelector, setShowTopicSelector] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [feedbackReason, setFeedbackReason] = useState<string | null>(null);
+  const [feedbackOther, setFeedbackOther] = useState("");
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [direction, setDirection] = useState(0);
   const [feed, setFeed] = useState<Card[]>([]);
@@ -660,11 +664,140 @@ export default function AppPage() {
               )}
 
               <button
-                onClick={() => setShowPaywall(false)}
+                onClick={() => {
+                  setShowPaywall(false);
+                  setShowFeedback(true);
+                }}
                 className="mt-4 text-sm opacity-60 hover:opacity-100"
               >
                 Maybe later
               </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Feedback Modal */}
+      {showFeedback && (
+        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-[#EACCD4] text-[#007A5E] rounded-2xl max-w-md w-full overflow-hidden"
+          >
+            <div className="p-6">
+              <button
+                onClick={() => {
+                  setShowFeedback(false);
+                  setFeedbackReason(null);
+                  setFeedbackOther("");
+                  setFeedbackSubmitted(false);
+                }}
+                className="absolute top-4 right-4 text-[#007A5E]/40 hover:text-[#007A5E] text-2xl"
+              >
+                ×
+              </button>
+
+              {!feedbackSubmitted ? (
+                <>
+                  <div className="text-4xl mb-3">💬</div>
+                  <h2 className="font-impact text-2xl uppercase mb-2">
+                    Quick question
+                  </h2>
+                  <p className="font-times italic text-base mb-6 opacity-80">
+                    What's holding you back from subscribing?
+                  </p>
+
+                  <div className="space-y-2 mb-4">
+                    {[
+                      { value: "too_expensive", label: "💰 Too expensive" },
+                      { value: "not_sure_value", label: "🤔 Not sure it's worth it yet" },
+                      { value: "just_browsing", label: "👀 Just browsing for now" },
+                      { value: "want_more_topics", label: "📚 Want more topics first" },
+                      { value: "prefer_free", label: "🆓 Prefer free content" },
+                      { value: "payment_friction", label: "💳 Crypto payment is confusing" },
+                      { value: "later", label: "⏰ Will subscribe later" },
+                      { value: "other", label: "✍️ Other" },
+                    ].map((option) => (
+                      <button
+                        key={option.value}
+                        onClick={() => setFeedbackReason(option.value)}
+                        className={`w-full text-left px-4 py-3 rounded-xl text-sm transition-all ${
+                          feedbackReason === option.value
+                            ? "bg-[#007A5E] text-[#EACCD4]"
+                            : "bg-white/50 hover:bg-white/70"
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {feedbackReason === "other" && (
+                    <textarea
+                      value={feedbackOther}
+                      onChange={(e) => setFeedbackOther(e.target.value)}
+                      placeholder="Tell us more..."
+                      className="w-full px-4 py-3 rounded-xl bg-white/50 text-[#007A5E] placeholder-[#007A5E]/50 text-sm mb-4 resize-none"
+                      rows={3}
+                    />
+                  )}
+
+                  <button
+                    onClick={async () => {
+                      if (feedbackReason) {
+                        await submitPaywallFeedback({
+                          user_id: user?.id,
+                          reason: feedbackReason,
+                          other_text: feedbackReason === "other" ? feedbackOther : undefined,
+                          cards_viewed: viewedCards.size,
+                        });
+                        setFeedbackSubmitted(true);
+                      }
+                    }}
+                    disabled={!feedbackReason}
+                    className={`w-full py-3 rounded-full font-bold uppercase tracking-wide text-sm transition-all ${
+                      feedbackReason
+                        ? "bg-[#007A5E] text-[#EACCD4] hover:bg-[#004a39]"
+                        : "bg-[#007A5E]/30 text-[#EACCD4]/50 cursor-not-allowed"
+                    }`}
+                  >
+                    Submit
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setShowFeedback(false);
+                      setFeedbackReason(null);
+                      setFeedbackOther("");
+                    }}
+                    className="w-full mt-3 text-sm opacity-60 hover:opacity-100"
+                  >
+                    Skip
+                  </button>
+                </>
+              ) : (
+                <div className="text-center py-4">
+                  <div className="text-5xl mb-4">🙏</div>
+                  <h2 className="font-impact text-2xl uppercase mb-2">
+                    Thanks!
+                  </h2>
+                  <p className="font-times italic text-base opacity-80 mb-6">
+                    Your feedback helps us improve
+                  </p>
+                  <button
+                    onClick={() => {
+                      setShowFeedback(false);
+                      setFeedbackReason(null);
+                      setFeedbackOther("");
+                      setFeedbackSubmitted(false);
+                    }}
+                    className="py-3 px-8 bg-[#007A5E] text-[#EACCD4] rounded-full font-bold uppercase tracking-wide text-sm"
+                  >
+                    Continue Reading
+                  </button>
+                </div>
+              )}
             </div>
           </motion.div>
         </div>

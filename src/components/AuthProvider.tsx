@@ -2,7 +2,17 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { User, Session } from "@supabase/supabase-js";
-import { supabase, UserProfile, getOrCreateProfile, canViewContent } from "@/lib/supabase";
+import { 
+  supabase, 
+  UserProfile, 
+  getOrCreateProfile, 
+  getOrCreateFarcasterProfile,
+  canViewContent,
+  linkFarcasterToProfile,
+  linkEmailToFarcasterProfile,
+  FarcasterUser
+} from "@/lib/supabase";
+import { useFarcaster } from "./FarcasterProvider";
 
 interface AuthContextType {
   user: User | null;
@@ -11,8 +21,12 @@ interface AuthContextType {
   loading: boolean;
   isSubscribed: boolean;
   viewsRemaining: number;
+  isAuthenticated: boolean;
+  authMethod: 'email' | 'farcaster' | 'both' | null;
   refreshProfile: () => Promise<void>;
   signOut: () => Promise<void>;
+  linkFarcaster: () => Promise<boolean>;
+  linkEmail: (email: string) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -22,8 +36,12 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
   isSubscribed: false,
   viewsRemaining: 5,
+  isAuthenticated: false,
+  authMethod: null,
   refreshProfile: async () => {},
   signOut: async () => {},
+  linkFarcaster: async () => false,
+  linkEmail: async () => false,
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -34,34 +52,64 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [viewsRemaining, setViewsRemaining] = useState(5);
 
-  const refreshProfile = async () => {
-    if (!user) return;
-    
-    const userProfile = await getOrCreateProfile(user.id, user.email || "");
-    setProfile(userProfile);
+  // Get Farcaster context
+  const { isSDKLoaded, isInFrame, fid, username, displayName, pfpUrl, walletAddress } = useFarcaster();
 
-    // Check subscription status
-    const { allowed, remaining, isSubscribed: subStatus } = await canViewContent(user.id);
-    setIsSubscribed(subStatus);
-    setViewsRemaining(remaining);
+  // Determine if user is authenticated (either email or Farcaster)
+  const isAuthenticated = !!user || (isInFrame && !!fid);
+  const authMethod = profile?.auth_method || (user ? 'email' : (fid ? 'farcaster' : null));
+
+  const refreshProfile = async () => {
+    if (user) {
+      // Email-authenticated user
+      const userProfile = await getOrCreateProfile(user.id, user.email || "");
+      setProfile(userProfile);
+      if (userProfile) {
+        const { remaining, isSubscribed: subStatus } = await canViewContent(userProfile.id);
+        setIsSubscribed(subStatus);
+        setViewsRemaining(remaining);
+      }
+    } else if (fid) {
+      // Farcaster-authenticated user
+      const fcUser: FarcasterUser = {
+        fid,
+        username: username || undefined,
+        displayName: displayName || undefined,
+        pfpUrl: pfpUrl || undefined,
+        walletAddress: walletAddress || undefined,
+      };
+      const userProfile = await getOrCreateFarcasterProfile(fcUser);
+      setProfile(userProfile);
+      if (userProfile) {
+        const { remaining, isSubscribed: subStatus } = await canViewContent(userProfile.id);
+        setIsSubscribed(subStatus);
+        setViewsRemaining(remaining);
+      }
+    }
   };
 
+  // Handle Supabase auth
   useEffect(() => {
-    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        getOrCreateProfile(session.user.id, session.user.email || "").then(setProfile);
-        canViewContent(session.user.id).then(({ remaining, isSubscribed: subStatus }) => {
-          setIsSubscribed(subStatus);
-          setViewsRemaining(remaining);
+        getOrCreateProfile(session.user.id, session.user.email || "").then((p) => {
+          setProfile(p);
+          if (p) {
+            canViewContent(p.id).then(({ remaining, isSubscribed: subStatus }) => {
+              setIsSubscribed(subStatus);
+              setViewsRemaining(remaining);
+            });
+          }
         });
       }
-      setLoading(false);
+      // Only set loading false if not waiting for Farcaster SDK
+      if (!isInFrame) {
+        setLoading(false);
+      }
     });
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         setSession(session);
@@ -70,32 +118,88 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (session?.user) {
           const userProfile = await getOrCreateProfile(session.user.id, session.user.email || "");
           setProfile(userProfile);
-          
-          const { remaining, isSubscribed: subStatus } = await canViewContent(session.user.id);
-          setIsSubscribed(subStatus);
-          setViewsRemaining(remaining);
-        } else {
+          if (userProfile) {
+            const { remaining, isSubscribed: subStatus } = await canViewContent(userProfile.id);
+            setIsSubscribed(subStatus);
+            setViewsRemaining(remaining);
+          }
+        } else if (!fid) {
+          // Only clear if no Farcaster identity either
           setProfile(null);
           setIsSubscribed(false);
           setViewsRemaining(5);
         }
-        
-        setLoading(false);
       }
     );
 
-    return () => {
-      subscription.unsubscribe();
-    };
+    return () => subscription.unsubscribe();
   }, []);
+
+  // Handle Farcaster auth - auto-login when in frame with FID
+  useEffect(() => {
+    if (isSDKLoaded && isInFrame && fid && !user) {
+      // In Farcaster frame, auto-create/fetch profile
+      const fcUser: FarcasterUser = {
+        fid,
+        username: username || undefined,
+        displayName: displayName || undefined,
+        pfpUrl: pfpUrl || undefined,
+        walletAddress: walletAddress || undefined,
+      };
+      getOrCreateFarcasterProfile(fcUser).then((p) => {
+        setProfile(p);
+        if (p) {
+          canViewContent(p.id).then(({ remaining, isSubscribed: subStatus }) => {
+            setIsSubscribed(subStatus);
+            setViewsRemaining(remaining);
+          });
+        }
+        setLoading(false);
+      });
+    } else if (isSDKLoaded) {
+      setLoading(false);
+    }
+  }, [isSDKLoaded, isInFrame, fid, username, displayName, pfpUrl, walletAddress, user]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
     setSession(null);
-    setProfile(null);
-    setIsSubscribed(false);
-    setViewsRemaining(5);
+    // Keep Farcaster profile if in frame
+    if (!isInFrame) {
+      setProfile(null);
+      setIsSubscribed(false);
+      setViewsRemaining(5);
+    }
+  };
+
+  // Link Farcaster to existing email account
+  const linkFarcaster = async (): Promise<boolean> => {
+    if (!user || !fid) return false;
+    const fcUser: FarcasterUser = {
+      fid,
+      username: username || undefined,
+      displayName: displayName || undefined,
+      pfpUrl: pfpUrl || undefined,
+      walletAddress: walletAddress || undefined,
+    };
+    const updated = await linkFarcasterToProfile(user.id, fcUser);
+    if (updated) {
+      setProfile(updated);
+      return true;
+    }
+    return false;
+  };
+
+  // Link email to existing Farcaster account
+  const linkEmail = async (email: string): Promise<boolean> => {
+    if (!fid) return false;
+    const updated = await linkEmailToFarcasterProfile(fid, email);
+    if (updated) {
+      setProfile(updated);
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -107,8 +211,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         isSubscribed,
         viewsRemaining,
+        isAuthenticated,
+        authMethod,
         refreshProfile,
         signOut: handleSignOut,
+        linkFarcaster,
+        linkEmail,
       }}
     >
       {children}

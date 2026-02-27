@@ -8,8 +8,8 @@ const Navigation = () => {
     <nav className="sticky top-0 z-50 bg-[#EACCD4] border-b border-[#007A5E]/20 backdrop-blur-sm bg-opacity-95">
       <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
         <Link href="/" className="flex items-baseline group">
-          <span className="font-impact text-3xl uppercase tracking-tighter group-hover:tracking-normal transition-all duration-300">Bloom</span>
-          <span className="font-times italic text-3xl font-normal ml-0.5">scroll</span>
+          <span className="font-impact text-3xl uppercase tracking-tighter group-hover:tracking-normal transition-all duration-300">Scroll</span>
+          <span className="font-times italic text-3xl font-normal ml-0.5">bliss</span>
         </Link>
         <div className="hidden md:flex items-center gap-8 font-bold text-sm tracking-wide uppercase">
           <a href="#features" className="hover:text-[#004a39] hover:underline decoration-1 underline-offset-4">Manifesto</a>
@@ -38,11 +38,11 @@ const Hero = () => {
             <span className="text-xs font-times italic">Est. 2024</span>
           </div>
           <h1 className="text-7xl md:text-8xl lg:text-9xl leading-[0.85] font-impact uppercase tracking-tight">
-            Don&apos;t Doom<br />
-            <span className="font-times italic font-normal tracking-normal text-6xl md:text-7xl lg:text-8xl block mt-2 ml-2">Just Bloom</span>
+            Scroll<br />
+            <span className="font-times italic font-normal tracking-normal text-6xl md:text-7xl lg:text-8xl block mt-2 ml-2">Into Bliss</span>
           </h1>
           <p className="text-xl md:text-2xl font-times italic max-w-xl leading-relaxed opacity-90">
-            Replace the infinite scroll with infinite wisdom.
+            Replace mindless scrolling with meaningful wisdom.
             <span className="not-italic font-helvetica text-lg block mt-4 opacity-80">
               Digestible 60-second summaries of history&apos;s greatest ideas, delivered daily to your phone.
             </span>
@@ -129,7 +129,7 @@ const Features = () => {
             <div className="w-12 h-12 border border-[#007A5E] flex items-center justify-center mb-8 font-times italic text-2xl group-hover:bg-[#007A5E] group-hover:text-[#EACCD4] transition-colors">
               i
             </div>
-            <h3 className="font-impact text-3xl uppercase mb-4">Daily Drops</h3>
+            <h3 className="font-impact text-3xl uppercase mb-4">Daily Bliss</h3>
             <p className="text-lg opacity-80 leading-relaxed">
               Wake up to one curated idea. No endless feeds, no algorithm chasing your attention. Just one powerful thought to start your day.
             </p>
@@ -198,7 +198,7 @@ const Library = () => {
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
           <div>
             <h2 className="font-impact text-6xl md:text-8xl uppercase leading-none mb-4">The Library</h2>
-            <p className="font-times italic text-2xl md:text-3xl text-[#4D9E8A]">Timeless wisdom for modern chaos.</p>
+            <p className="font-times italic text-2xl md:text-3xl text-[#4D9E8A]">Timeless wisdom for modern minds.</p>
           </div>
           <a href="#" className="text-[#EACCD4] border-b border-[#EACCD4] pb-1 uppercase font-bold text-sm tracking-widest hover:text-[#4D9E8A] hover:border-[#4D9E8A] transition-colors">
             Explore Archive →
@@ -311,11 +311,11 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 md:col-span-2">
             <a href="#" className="flex items-baseline mb-6">
-              <span className="font-impact text-5xl uppercase tracking-tighter">Bloom</span>
-              <span className="font-times italic text-5xl font-normal ml-1 text-[#4D9E8A]">scroll</span>
+              <span className="font-impact text-5xl uppercase tracking-tighter">Scroll</span>
+              <span className="font-times italic text-5xl font-normal ml-1 text-[#4D9E8A]">bliss</span>
             </a>
             <p className="max-w-sm font-times italic text-lg opacity-70">
-              Cultivating the garden of the mind in the digital age.
+              Scroll into bliss. Your daily dose of wisdom.
             </p>
           </div>
           <div>
@@ -338,7 +338,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="border-t border-[#EACCD4]/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-bold uppercase tracking-widest opacity-40">
-          <div>© 2024 Bloomscroll Inc.</div>
+          <div>© 2024 Scrollbliss</div>
           <div className="flex gap-6">
             <a href="#" className="hover:text-[#4D9E8A]">Privacy</a>
             <a href="#" className="hover:text-[#4D9E8A]">Terms</a>

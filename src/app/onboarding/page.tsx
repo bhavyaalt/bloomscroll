@@ -289,7 +289,7 @@ export default function OnboardingPage() {
                     onClick={handleComplete}
                     className="flex-1 py-4 rounded-full font-bold uppercase tracking-widest bg-[#007A5E] text-[#EACCD4] hover:bg-[#004a39] shadow-lg transition-all"
                   >
-                    Start Bloomscrolling →
+                    Start Scrollblissing →
                   </button>
                 </div>
                 {selectedGoals.length === 0 && (

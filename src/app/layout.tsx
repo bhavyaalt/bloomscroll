@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/components/AuthProvider";
+import { FarcasterProvider } from "@/components/FarcasterProvider";
+
+const appUrl = process.env.NEXT_PUBLIC_URL || "https://scrollbliss.com";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://bloomscroll.xyz"),
-  title: "Bloomscroll — Don't Doom, Just Bloom",
+  metadataBase: new URL(appUrl),
+  title: "Scrollbliss — Scroll Into Bliss",
   description:
-    "Replace the infinite scroll with infinite wisdom. Digestible 60-second summaries of history's greatest ideas, delivered daily. Philosophy, history, science — curated for curious minds. $5/month in USDC on Base.",
+    "Replace mindless scrolling with meaningful wisdom. Digestible 60-second summaries of history's greatest ideas, delivered daily. Philosophy, history, science — curated for curious minds.",
   keywords: [
-    "bloomscroll",
+    "scrollbliss",
     "doomscrolling alternative",
     "bite-sized learning",
     "book summaries",
@@ -23,34 +26,36 @@ export const metadata: Metadata = {
     "base",
     "crypto subscription",
     "60 second reads",
+    "farcaster",
+    "mini app",
   ],
-  authors: [{ name: "Bloomscroll" }],
-  creator: "Bloomscroll",
-  publisher: "Bloomscroll",
+  authors: [{ name: "Scrollbliss" }],
+  creator: "Scrollbliss",
+  publisher: "Scrollbliss",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://bloomscroll.xyz",
-    siteName: "Bloomscroll",
-    title: "Bloomscroll — Don't Doom, Just Bloom",
+    url: appUrl,
+    siteName: "Scrollbliss",
+    title: "Scrollbliss — Scroll Into Bliss",
     description:
-      "Replace the infinite scroll with infinite wisdom. 60-second summaries of history's greatest ideas. Philosophy, history, science — curated daily.",
+      "Replace mindless scrolling with meaningful wisdom. 60-second summaries of history's greatest ideas. Philosophy, history, science — curated daily.",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Bloomscroll - Don't Doom, Just Bloom",
+        alt: "Scrollbliss - Scroll Into Bliss",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Bloomscroll — Don't Doom, Just Bloom",
+    title: "Scrollbliss — Scroll Into Bliss",
     description:
-      "Replace the infinite scroll with infinite wisdom. 60-second summaries of history's greatest ideas.",
+      "Replace mindless scrolling with meaningful wisdom. 60-second summaries of history's greatest ideas.",
     images: ["/og-image.png"],
-    creator: "@bloomscroll",
+    creator: "@scrollbliss",
   },
   robots: {
     index: true,
@@ -64,7 +69,15 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://bloomscroll.xyz",
+    canonical: appUrl,
+  },
+  // Farcaster Frame metadata
+  other: {
+    "fc:frame": "vNext",
+    "fc:frame:image": `${appUrl}/og-image.png`,
+    "fc:frame:button:1": "✨ Scroll Into Bliss",
+    "fc:frame:button:1:action": "launch_frame",
+    "fc:frame:button:1:target": appUrl,
   },
 };
 
@@ -76,14 +89,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <meta name="theme-color" content="#007A5E" />
       </head>
       <body className="antialiased">
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <FarcasterProvider>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </FarcasterProvider>
       </body>
     </html>
   );

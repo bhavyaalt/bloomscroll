@@ -1,0 +1,34 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#1a1a1a"/>
+  
+  <!-- Decorative circles -->
+  <circle cx="100" cy="100" r="200" fill="#007A5E" opacity="0.1"/>
+  <circle cx="1100" cy="530" r="250" fill="#4D9E8A" opacity="0.1"/>
+  
+  <!-- Main card -->
+  <rect x="100" y="115" width="500" height="400" rx="24" fill="#EACCD4"/>
+  
+  <!-- Bliss sparkle icon on card -->
+  <circle cx="350" cy="280" r="80" fill="#007A5E" opacity="0.2"/>
+  <circle cx="350" cy="280" r="60" fill="#007A5E" opacity="0.3"/>
+  <circle cx="350" cy="280" r="40" fill="#007A5E"/>
+  <text x="350" y="295" font-size="40" text-anchor="middle" fill="#EACCD4">✨</text>
+  
+  <!-- Decorative lines -->
+  <line x1="250" y1="380" x2="450" y2="380" stroke="#007A5E" stroke-width="2" opacity="0.3"/>
+  <line x1="280" y1="400" x2="420" y2="400" stroke="#007A5E" stroke-width="2" opacity="0.2"/>
+  
+  <!-- Text content -->
+  <text x="700" y="240" font-family="Impact, sans-serif" font-size="72" fill="#EACCD4" letter-spacing="-2">SCROLL</text>
+  <text x="700" y="310" font-family="Times New Roman, serif" font-style="italic" font-size="60" fill="#4D9E8A">bliss</text>
+  
+  <text x="700" y="400" font-family="Impact, sans-serif" font-size="28" fill="white" opacity="0.9">SCROLL INTO BLISS</text>
+  
+  <text x="700" y="460" font-family="Arial, sans-serif" font-size="20" fill="white" opacity="0.6">60-second wisdom from history's greatest minds</text>
+  <text x="700" y="490" font-family="Arial, sans-serif" font-size="20" fill="white" opacity="0.6">Philosophy • History • Science • Psychology</text>
+  
+  <!-- CTA badge -->
+  <rect x="700" y="520" width="220" height="50" rx="25" fill="#007A5E"/>
+  <text x="810" y="552" font-family="Arial, sans-serif" font-size="18" fill="#EACCD4" text-anchor="middle" font-weight="bold">✨ START SCROLLING</text>
+</svg>

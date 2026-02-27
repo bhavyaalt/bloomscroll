@@ -1,0 +1,18 @@
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjAsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIn0",
+    "payload": "eyJkb21haW4iOiJzY3JvbGxibGlzcy5jb20ifQ",
+    "signature": "placeholder"
+  },
+  "frame": {
+    "version": "1",
+    "name": "Scrollbliss",
+    "iconUrl": "https://scrollbliss.com/icon.png",
+    "homeUrl": "https://scrollbliss.com",
+    "imageUrl": "https://scrollbliss.com/og-image.png",
+    "buttonTitle": "Scroll Into Bliss",
+    "splashImageUrl": "https://scrollbliss.com/splash.png",
+    "splashBackgroundColor": "#1a1a1a",
+    "webhookUrl": "https://scrollbliss.com/api/webhook"
+  }
+}
