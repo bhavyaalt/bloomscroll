@@ -185,55 +185,51 @@ const Features = () => (
 /* ─── Testimonials ─── */
 const testimonials = [
   {
-    quote: "I replaced my morning TikTok habit with BloomScroll. Three weeks in, and I actually look forward to my commute.",
-    name: "Sarah K.",
-    role: "Product Designer",
+    quote: "BloomScroll completely changed my relationship with my phone. Instead of feeling drained after an hour on social media, I feel inspired by the gentle affirmations.",
+    name: "Sarah Jenkins",
+    role: "Content Creator",
   },
   {
-    quote: "Finally, an app that respects my time. 60 seconds of Seneca beats 60 minutes of doom.",
-    name: "James R.",
+    quote: "The AI detection is surprisingly accurate. It knows exactly when I'm doomscrolling and redirects my focus with just the right message. I've gained back 2 hours daily.",
+    name: "David Chen",
     role: "Software Engineer",
   },
   {
-    quote: "My team does a \u2018card of the day\u2019 standup starter. It\u2019s become our favorite ritual.",
-    name: "Priya M.",
-    role: "Team Lead",
-  },
-  {
-    quote: "I\u2019ve read more philosophy in 2 months of BloomScroll than in 4 years of college.",
-    name: "Alex T.",
-    role: "Graduate Student",
+    quote: "Visualizing my progress as a growing garden makes mindfulness feel rewarding. It's the only app that has actually helped me stick to my digital detox goals.",
+    name: "Elena Rodriguez",
+    role: "Student",
   },
 ];
 
 const Testimonials = () => (
-  <section className="px-6 md:px-20 lg:px-40 py-24 bg-white">
-    <div className="text-center mb-12">
-      <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
-        Loved by mindful readers
+  <section className="px-6 md:px-20 lg:px-40 py-24 bg-bglight">
+    <div className="text-center mb-14">
+      <p className="text-primary font-bold text-sm uppercase tracking-[0.2em] mb-4">
+        Community Impact
+      </p>
+      <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-slate-900" style={{ fontFamily: "Georgia, serif" }}>
+        Real Stories from our Garden
       </h2>
-      <p className="text-slate-500 text-lg mt-3">
-        See what our community has to say.
+      <p className="text-slate-500 text-lg mt-4 max-w-xl mx-auto">
+        See how BloomScroll is helping people reclaim their attention and find digital peace.
       </p>
     </div>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
       {testimonials.map((t, i) => (
         <div
           key={i}
-          className="p-6 rounded-2xl bg-bglight border border-sage/20 hover:border-primary/50 transition-all"
+          className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all"
         >
-          <p className="text-slate-700 leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
-            &ldquo;{t.quote}&rdquo;
-          </p>
-          <div className="flex items-center gap-3">
-            <div className="size-10 rounded-full bg-primary/15 flex items-center justify-center text-primary font-bold text-sm">
-              {t.name.charAt(0)}
-            </div>
+          <div className="flex items-center gap-3 mb-5">
+            <div className="size-12 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex-shrink-0" />
             <div>
-              <span className="font-semibold text-sm text-slate-900">{t.name}</span>
-              <span className="text-sm text-slate-400 ml-2">{t.role}</span>
+              <p className="font-bold text-sm text-slate-900">{t.name}</p>
+              <p className="text-xs text-primary font-semibold uppercase tracking-wider">{t.role}</p>
             </div>
           </div>
+          <p className="text-slate-600 leading-relaxed text-sm" style={{ fontFamily: "Georgia, serif" }}>
+            &ldquo;{t.quote}&rdquo;
+          </p>
         </div>
       ))}
     </div>

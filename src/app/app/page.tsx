@@ -182,7 +182,7 @@ export default function AppPage() {
     if (profile) {
       getPinnedCards(profile.id).then(pins =>
         setPinnedCards(new Set(pins.map(p => p.card_id)))
-      );
+      ).catch(() => {});
     }
   }, [profile]);
 
@@ -376,22 +376,30 @@ export default function AppPage() {
 
   const handleConfirmPin = async (note: string) => {
     if (!cardToPin || !profile) return;
-    await pinCard(profile.id, cardToPin.id, note || undefined);
-    setPinnedCards(prev => new Set([...prev, cardToPin.id]));
+    try {
+      await pinCard(profile.id, cardToPin.id, note || undefined);
+      setPinnedCards(prev => new Set([...prev, cardToPin.id]));
+      sounds.save();
+      haptic("medium");
+    } catch (err) {
+      console.error("Error pinning card:", err);
+    }
     setShowPinModal(false);
     setCardToPin(null);
-    sounds.save();
-    haptic("medium");
   };
 
   const handleUnpin = async (cardId: string) => {
     if (!profile) return;
-    await unpinCard(profile.id, cardId);
-    setPinnedCards(prev => {
-      const s = new Set(prev);
-      s.delete(cardId);
-      return s;
-    });
+    try {
+      await unpinCard(profile.id, cardId);
+      setPinnedCards(prev => {
+        const s = new Set(prev);
+        s.delete(cardId);
+        return s;
+      });
+    } catch (err) {
+      console.error("Error unpinning card:", err);
+    }
   };
 
   // Derive ref username for share attribution

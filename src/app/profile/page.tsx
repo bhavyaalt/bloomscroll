@@ -78,7 +78,7 @@ export default function ProfilePage() {
     setStreakFreezeActive(s.streakFreezeActive ?? false);
     if (profile?.wallet_address) setWalletInput(profile.wallet_address);
     if (profile?.id) {
-      getPinnedCards(profile.id).then(setPinnedCards);
+      getPinnedCards(profile.id).then(setPinnedCards).catch(() => {});
     }
   }, [profile]);
 
@@ -601,7 +601,7 @@ export default function ProfilePage() {
               className="bg-white border border-softclay/20 rounded-2xl p-6 mb-6 shadow-sm"
             >
               <button
-                onClick={() => { signOut(); window.location.href = "/"; }}
+                onClick={async () => { try { await signOut(); } catch {} window.location.href = "/"; }}
                 className="w-full py-3 border border-softclay/30 rounded-xl text-softclay hover:bg-softclay/5 transition-all text-sm font-bold"
               >
                 Sign Out
