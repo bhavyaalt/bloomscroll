@@ -84,8 +84,7 @@ export const REGION_NAMES: Record<Region, string> = {
 export function detectRegionFromHeaders(headers: Headers): Region {
   const country = 
     headers.get('x-vercel-ip-country') || 
-    headers.get('cf-ipcountry') || 
-    'US';
+    headers.get('cf-ipcountry');
   
   if (country === 'IN') return 'IN';
   if (country === 'US') return 'US';
@@ -107,7 +106,7 @@ export async function detectRegionClient(): Promise<Region> {
         timezone.startsWith('America/Denver')) {
       return 'US';
     }
-  } catch (e) {
+  } catch {
   }
   
   // Then try IP-based detection
@@ -122,7 +121,7 @@ export async function detectRegionClient(): Promise<Region> {
       if (country === 'IN') return 'IN';
       if (country === 'US') return 'US';
     }
-  } catch (e) {
+  } catch {
   }
   
   // Final fallback - check language

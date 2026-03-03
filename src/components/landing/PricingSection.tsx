@@ -2,11 +2,15 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { PRICING, detectRegionClient, formatPrice, Region } from "@/lib/pricing";
+import { PRICING, detectRegionClient, Region } from "@/lib/pricing";
+import { useAuth } from "@/components/AuthProvider";
 
 export function PricingSection() {
+  const { isAuthenticated } = useAuth();
   const [region, setRegion] = useState<Region>("US");
   const [loading, setLoading] = useState(true);
+  const freeHref = isAuthenticated ? "/app" : "/auth?redirect=/app";
+  const freeLabel = isAuthenticated ? "Start Reading" : "Sign In to Start";
 
   useEffect(() => {
     detectRegionClient().then((r) => {
@@ -60,10 +64,10 @@ export function PricingSection() {
               </li>
             </ul>
             <Link
-              href="/auth?redirect=/app"
+              href={freeHref}
               className="w-full py-4 rounded-xl border-2 border-sage font-bold text-center hover:bg-sage/10 transition-colors mt-8 text-slate-700 block"
             >
-              Sign In to Start
+              {freeLabel}
             </Link>
           </div>
         </div>

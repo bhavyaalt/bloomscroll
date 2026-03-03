@@ -7,12 +7,15 @@ import {
   REGION_NAMES,
   Region,
   detectRegionClient,
-  calculateYearlySavings,
 } from "@/lib/pricing";
+import { useAuth } from "@/components/AuthProvider";
 
 export default function Pricing() {
+  const { isAuthenticated } = useAuth();
   const [region, setRegion] = useState<Region>("OTHER");
   const [loaded, setLoaded] = useState(false);
+  const freeHref = isAuthenticated ? "/app" : "/auth?redirect=/app";
+  const freeLabel = isAuthenticated ? "Start Reading" : "Sign In to Start";
 
   useEffect(() => {
     detectRegionClient().then((r) => {
@@ -23,7 +26,6 @@ export default function Pricing() {
 
   const pricing = PRICING[region];
   const monthly = pricing.monthly;
-  const savings = calculateYearlySavings(region);
 
   return (
     <section id="pricing" className="px-6 md:px-20 lg:px-40 py-24">
@@ -77,10 +79,10 @@ export default function Pricing() {
               </li>
             </ul>
             <Link
-              href="/auth?redirect=/app"
+              href={freeHref}
               className="w-full py-4 rounded-xl border-2 border-sage font-bold text-center hover:bg-sage/10 transition-colors mt-8 text-slate-700 block"
             >
-              Sign In to Start
+              {freeLabel}
             </Link>
           </div>
         </div>

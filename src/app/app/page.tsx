@@ -52,12 +52,13 @@ const SWIPE_THRESHOLD = 100;
 const VIEW_STORAGE_KEY = "bloomscroll_viewed_cards";
 const SAVE_STORAGE_KEY = "bloomscroll_saved_cards";
 const PREFERENCES_KEY = "bloomscroll_preferences";
+const FREE_DAILY_READ_LIMIT = 5;
 const FREE_SAVE_LIMIT = 10;
 const FREE_PIN_LIMIT = 3;
 
 export default function AppPage() {
   const router = useRouter();
-  const { user, profile, loading, isAuthenticated, isSubscribed, viewsRemaining, signOut, updateWallet } = useAuth();
+  const { user, profile, loading, isAuthenticated, isSubscribed, viewsRemaining, signOut, updateWallet, refreshProfile } = useAuth();
   const { notify } = useNotifications();
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -128,6 +129,7 @@ export default function AppPage() {
   const [showPinModal, setShowPinModal] = useState(false);
   const [cardToPin, setCardToPin] = useState<Card | null>(null);
   const [upsellContext, setUpsellContext] = useState<"save_limit" | "pin_limit" | null>(null);
+  const [dailyLimitPrompted, setDailyLimitPrompted] = useState(false);
 
   // Achievements & Leaderboard state
   const [showAchievements, setShowAchievements] = useState(false);
@@ -228,6 +230,22 @@ export default function AppPage() {
     }
   }, [dailyProgress.read, dailyProgress.goal, dailyProgress.completed, isAuthenticated, loading]);
 
+  useEffect(() => {
+    if (loading || !isAuthenticated || isSubscribed || viewsRemaining > 0 || dailyLimitPrompted) return;
+    notify({
+      title: "Daily free reading complete",
+      message: "Upgrade to Pro for unlimited reading, audio mode, and review.",
+      tone: "info",
+    });
+    setDailyLimitPrompted(true);
+  }, [dailyLimitPrompted, isAuthenticated, isSubscribed, loading, notify, viewsRemaining]);
+
+  useEffect(() => {
+    if (viewsRemaining > 0) {
+      setDailyLimitPrompted(false);
+    }
+  }, [viewsRemaining]);
+
   // Generate smart feed
   useEffect(() => {
     if (loading || !isAuthenticated) return;
@@ -294,14 +312,15 @@ export default function AppPage() {
         localStorage.setItem(VIEW_STORAGE_KEY, JSON.stringify([...newViewed]));
         recordCardRead(card.id, card.topic);
         if (profile && !isSubscribed) {
-          incrementViewCount(profile.id);
+          incrementViewCount(profile.id).then(() => refreshProfile()).catch(() => {});
         }
         setDailyProgress(getDailyProgress());
       }
     }
-  }, [currentIndex, feed, isLoaded]);
+  }, [currentIndex, feed, isLoaded, isSubscribed, profile, refreshProfile]);
 
   const currentCard = feed[currentIndex];
+  const freeReadLimitReached = !isSubscribed && viewsRemaining <= 0;
 
   const goToNext = useCallback(() => {
     if (currentIndex < feed.length - 1) {
@@ -656,6 +675,45 @@ export default function AppPage() {
           onRemove={toggleSave}
           onUpgrade={() => handleUpgrade("saved_cards_view")}
         />
+      ) : freeReadLimitReached ? (
+        <div className="flex-1 px-3 sm:px-4 pt-20 sm:pt-24 pb-6 flex items-start justify-center">
+          <div className="w-full max-w-2xl rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0.04))] p-6 sm:p-8 text-center shadow-2xl shadow-black/20">
+            <span className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
+              Free limit reached
+            </span>
+            <h1 className="mt-4 font-impact text-3xl sm:text-4xl uppercase text-primary">
+              Your daily reads are done
+            </h1>
+            <p className="mt-3 text-sm sm:text-base text-white/65 max-w-md mx-auto">
+              Free accounts get {FREE_DAILY_READ_LIMIT} cards per day. Upgrade to Pro to keep reading without a cap and unlock review, audio, and deeper book browsing.
+            </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-3 text-left">
+              {[
+                "Unlimited daily reading",
+                "Audio mode and book browsing",
+                "Review queue that helps memory stick",
+              ].map((point) => (
+                <div key={point} className="rounded-2xl border border-white/8 bg-white/5 px-4 py-4 text-sm text-white/75">
+                  {point}
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+              <button
+                onClick={() => handleUpgrade("feed_controls")}
+                className="inline-flex items-center justify-center rounded-full h-12 px-6 bg-primary text-[#102219] text-sm font-bold uppercase tracking-[0.18em]"
+              >
+                Upgrade to Pro
+              </button>
+              <button
+                onClick={() => setShowSaved(true)}
+                className="inline-flex items-center justify-center rounded-full h-12 px-6 border border-white/10 bg-white/5 text-sm font-bold uppercase tracking-[0.18em] text-white/80"
+              >
+                Open library
+              </button>
+            </div>
+          </div>
+        </div>
       ) : (
         <CardFeed
           currentCard={currentCard}
@@ -676,6 +734,8 @@ export default function AppPage() {
           feedLength={feed.length}
           hasChapter={!!currentCard?.chapter}
           isSubscribed={isSubscribed}
+          viewsRemaining={viewsRemaining}
+          freeDailyLimit={FREE_DAILY_READ_LIMIT}
           reviewDueCount={reviewDueCount}
           dailyCard={dailyCard}
           onDismissDailyCard={handleDismissDailyCard}

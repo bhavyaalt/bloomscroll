@@ -1,11 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import { Navigation } from "@/components/landing/Navigation";
 import { FAQ } from "@/components/landing/FAQ";
 import { EmailCapture } from "@/components/landing/EmailCapture";
 import Pricing from "@/components/landing/Pricing";
+import { useAuth } from "@/components/AuthProvider";
 
 /* ─── Hero ─── */
-const Hero = () => (
+const Hero = ({ ctaHref, ctaLabel }: { ctaHref: string; ctaLabel: string }) => (
   <section className="px-6 md:px-20 lg:px-40 py-16 md:py-24">
     <div className="flex flex-col gap-10 lg:flex-row items-center lg:gap-16">
       {/* Left copy */}
@@ -26,10 +29,10 @@ const Hero = () => (
         </div>
         <div className="flex flex-col sm:flex-row gap-4">
           <Link
-            href="/auth?redirect=/app"
+            href={ctaHref}
             className="flex min-w-[180px] cursor-pointer items-center justify-center rounded-xl h-14 px-8 bg-primary text-bgdark text-lg font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all"
           >
-            Sign In to Start
+            {ctaLabel}
           </Link>
           <Link
             href="#how-it-works"
@@ -301,7 +304,7 @@ const BeforeAfter = () => (
 /* Pricing is now a client component imported from @/components/landing/Pricing */
 
 /* ─── CTA ─── */
-const CTA = () => (
+const CTA = ({ ctaHref, ctaLabel }: { ctaHref: string; ctaLabel: string }) => (
   <section className="px-6 md:px-20 lg:px-40 py-24 mb-20">
     <div className="bg-slate-900 rounded-[2rem] md:rounded-[3rem] p-12 md:p-20 text-center flex flex-col items-center gap-8 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-full opacity-10 botanical-pattern pointer-events-none" />
@@ -316,10 +319,10 @@ const CTA = () => (
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
           <Link
-            href="/auth?redirect=/app"
+            href={ctaHref}
             className="flex items-center justify-center gap-3 rounded-2xl h-16 px-10 bg-primary text-bgdark text-xl font-bold transition-transform hover:scale-105"
           >
-            Sign In to Start
+            {ctaLabel}
             <svg className="size-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
             </svg>
@@ -343,7 +346,7 @@ const TrustBadges = () => (
 );
 
 /* ─── Footer ─── */
-const Footer = () => (
+const Footer = ({ appHref }: { appHref: string }) => (
   <footer className="px-6 md:px-20 lg:px-40 py-12 border-t border-sage/20">
     <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
       <div className="flex flex-col gap-4">
@@ -359,7 +362,7 @@ const Footer = () => (
       </div>
       <div className="flex flex-col gap-4">
         <h4 className="font-bold text-slate-900">Product</h4>
-        <Link href="/auth?redirect=/app" className="text-sm text-slate-500 hover:text-primary transition-colors">Web Reader</Link>
+        <Link href={appHref} className="text-sm text-slate-500 hover:text-primary transition-colors">Web Reader</Link>
         <a href="#features" className="text-sm text-slate-500 hover:text-primary transition-colors">Features</a>
         <Link href="/subscribe" className="text-sm text-slate-500 hover:text-primary transition-colors">Pricing</Link>
       </div>
@@ -387,10 +390,14 @@ const Footer = () => (
 
 /* ─── Page ─── */
 export default function HomePage() {
+  const { isAuthenticated } = useAuth();
+  const appHref = isAuthenticated ? "/app" : "/auth?redirect=/app";
+  const ctaLabel = isAuthenticated ? "Start Reading" : "Sign In to Start";
+
   return (
     <div className="bg-bglight text-slate-900 min-h-screen flex flex-col botanical-pattern" style={{ fontFamily: "'Lexend', sans-serif" }}>
       <Navigation />
-      <Hero />
+      <Hero ctaHref={appHref} ctaLabel={ctaLabel} />
       <SocialProof />
       <HowItWorks />
       <Features />
@@ -399,8 +406,8 @@ export default function HomePage() {
       <Pricing />
       <FAQ />
       <TrustBadges />
-      <CTA />
-      <Footer />
+      <CTA ctaHref={appHref} ctaLabel={ctaLabel} />
+      <Footer appHref={appHref} />
     </div>
   );
 }

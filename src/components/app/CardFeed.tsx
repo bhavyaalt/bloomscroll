@@ -23,6 +23,8 @@ interface CardFeedProps {
   feedLength: number;
   hasChapter: boolean;
   isSubscribed: boolean;
+  viewsRemaining: number;
+  freeDailyLimit: number;
   reviewDueCount: number;
   dailyCard?: Card | null;
   onDismissDailyCard?: () => void;
@@ -124,6 +126,8 @@ export default function CardFeed({
   feedLength,
   hasChapter,
   isSubscribed,
+  viewsRemaining,
+  freeDailyLimit,
   reviewDueCount,
   onDragEnd,
   onDoubleTap,
@@ -142,9 +146,15 @@ export default function CardFeed({
   onClearFilters,
   onShowSubscribe,
 }: CardFeedProps) {
-  const progressPercent = Math.min((dailyProgress.read / dailyProgress.goal) * 100, 100);
+  const freeReadsUsed = Math.max(0, freeDailyLimit - viewsRemaining);
+  const progressPercent = isSubscribed
+    ? Math.min((dailyProgress.read / dailyProgress.goal) * 100, 100)
+    : Math.min((freeReadsUsed / freeDailyLimit) * 100, 100);
   const savedProgressPercent = isSubscribed ? 100 : Math.min((savedCount / saveLimit) * 100, 100);
   const pinnedProgressPercent = isSubscribed ? 100 : Math.min((pinnedCount / pinLimit) * 100, 100);
+  const progressLabel = isSubscribed
+    ? (dailyProgress.read > 0 ? `${dailyProgress.read}/${dailyProgress.goal} cards today` : "Start your session")
+    : `${freeReadsUsed}/${freeDailyLimit} free reads used`;
 
   return (
     <div className="fixed inset-0 pt-12 sm:pt-14 pb-0 px-3 sm:px-4 touch-pan-y flex flex-col">
@@ -396,7 +406,7 @@ export default function CardFeed({
                     {dailyProgress.completed && <span title="Goal reached!">✓</span>}
                   </span>
                   <span className="text-primary/70">
-                    {dailyProgress.read > 0 ? `${dailyProgress.read}/${dailyProgress.goal} cards today` : "Start your session"}
+                    {progressLabel}
                   </span>
                 </div>
                 <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden">
@@ -410,55 +420,35 @@ export default function CardFeed({
               </div>
 
               {!isSubscribed && (
-                <div className="mt-3 rounded-2xl border border-[#007A5E]/15 bg-white/45 p-3 text-[#007A5E] flex-shrink-0">
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#007A5E]/65">
-                        BloomScroll Pro
-                      </p>
-                      <p className="mt-1 text-sm font-semibold">
-                        Turn this into a personal wisdom system
-                      </p>
+                <div className="mt-3 rounded-2xl border border-[#007A5E]/12 bg-[#f4e7eb] px-3 py-2.5 text-[#007A5E] flex-shrink-0">
+                  <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+                    <span className="shrink-0 rounded-full bg-[#007A5E] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white">
+                      Pro
+                    </span>
+                    <div className="shrink-0 rounded-full bg-white/70 px-3 py-1.5 text-[11px]">
+                      <span className="font-semibold">Library</span> {savedCount}/{saveLimit}
+                      <span className="ml-2 inline-block h-1.5 w-10 overflow-hidden rounded-full bg-[#007A5E]/10 align-middle">
+                        <span className="block h-full rounded-full bg-[#007A5E]" style={{ width: `${savedProgressPercent}%` }} />
+                      </span>
+                    </div>
+                    <div className="shrink-0 rounded-full bg-white/70 px-3 py-1.5 text-[11px]">
+                      <span className="font-semibold">Garden</span> {pinnedCount}/{pinLimit}
+                      <span className="ml-2 inline-block h-1.5 w-10 overflow-hidden rounded-full bg-[#007A5E]/10 align-middle">
+                        <span className="block h-full rounded-full bg-[#007A5E]" style={{ width: `${pinnedProgressPercent}%` }} />
+                      </span>
+                    </div>
+                    <div className="shrink-0 rounded-full bg-white/70 px-3 py-1.5 text-[11px]">
+                      <span className="font-semibold">Review</span>{" "}
+                      <span className="text-[#007A5E]/65">
+                        {reviewDueCount > 0 ? `${reviewDueCount} ready` : "unlock memory mode"}
+                      </span>
                     </div>
                     <button
                       onClick={onShowSubscribe}
-                      className="rounded-full bg-[#007A5E] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-white"
+                      className="shrink-0 rounded-full border border-[#007A5E]/18 bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-[#007A5E]"
                     >
                       Upgrade
                     </button>
-                  </div>
-
-                  <div className="mt-3 grid grid-cols-2 gap-2 text-[11px]">
-                    <div className="rounded-xl bg-[#007A5E]/7 px-3 py-2">
-                      <div className="flex items-center justify-between font-semibold">
-                        <span>Library</span>
-                        <span>{savedCount}/{saveLimit}</span>
-                      </div>
-                      <div className="mt-1 h-1 rounded-full bg-[#007A5E]/10">
-                        <div className="h-full rounded-full bg-[#007A5E]" style={{ width: `${savedProgressPercent}%` }} />
-                      </div>
-                      <p className="mt-1 text-[#007A5E]/60">Unlock unlimited saved cards.</p>
-                    </div>
-                    <div className="rounded-xl bg-[#007A5E]/7 px-3 py-2">
-                      <div className="flex items-center justify-between font-semibold">
-                        <span>Garden</span>
-                        <span>{pinnedCount}/{pinLimit}</span>
-                      </div>
-                      <div className="mt-1 h-1 rounded-full bg-[#007A5E]/10">
-                        <div className="h-full rounded-full bg-[#007A5E]" style={{ width: `${pinnedProgressPercent}%` }} />
-                      </div>
-                      <p className="mt-1 text-[#007A5E]/60">Keep every quote worth revisiting.</p>
-                    </div>
-                    <div className="rounded-xl bg-[#007A5E]/7 px-3 py-2">
-                      <div className="font-semibold">Remember what you read</div>
-                      <p className="mt-1 text-[#007A5E]/60">
-                        {reviewDueCount > 0 ? `${reviewDueCount} cards ready for review with Pro.` : "Build a review queue that sticks."}
-                      </p>
-                    </div>
-                    <div className="rounded-xl bg-[#007A5E]/7 px-3 py-2">
-                      <div className="font-semibold">Go deeper by book</div>
-                      <p className="mt-1 text-[#007A5E]/60">Browse full books, audio mode, and premium reading.</p>
-                    </div>
                   </div>
                 </div>
               )}
