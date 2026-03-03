@@ -125,12 +125,15 @@ export async function getOrCreateProfile(
   email: string,
   metadata?: { displayName?: string; avatarUrl?: string }
 ): Promise<UserProfile | null> {
+  console.log('[getOrCreateProfile] Looking up userId:', userId);
   // Try to get existing profile
   let { data: profile, error } = await supabase
     .from('bloomscroll_profiles')
     .select('*')
     .eq('id', userId)
     .single();
+  
+  console.log('[getOrCreateProfile] Result:', { profile: profile ? { id: profile.id, subscription_status: profile.subscription_status } : null, error });
 
   if (error && error.code === 'PGRST116') {
     // Profile doesn't exist, create it

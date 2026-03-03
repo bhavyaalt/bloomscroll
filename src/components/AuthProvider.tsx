@@ -96,18 +96,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Handle Supabase auth
   useEffect(() => {
+    console.log('[AuthProvider] Initializing...');
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('[AuthProvider] Got session:', session?.user?.email);
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
         const meta = session.user.user_metadata;
+        console.log('[AuthProvider] Fetching profile for:', session.user.id);
         getOrCreateProfile(session.user.id, session.user.email || "", {
           displayName: meta?.full_name || meta?.name,
           avatarUrl: meta?.avatar_url || meta?.picture,
         }).then((p) => {
+          console.log('[AuthProvider] Got profile:', p?.id, 'subscription_status:', p?.subscription_status);
           setProfile(p);
           if (p) {
+            console.log('[AuthProvider] Checking subscription for profile:', p.id);
             canViewContent(p.id).then(({ remaining, isSubscribed: subStatus }) => {
+              console.log('[AuthProvider] canViewContent result:', { remaining, subStatus });
               setIsSubscribed(subStatus);
               setViewsRemaining(remaining);
             });
@@ -123,18 +129,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('[AuthProvider] Auth state changed:', event, session?.user?.email);
         setSession(session);
         setUser(session?.user ?? null);
 
         if (session?.user) {
           const meta = session.user.user_metadata;
+          console.log('[AuthProvider] onAuthStateChange - fetching profile for:', session.user.id);
           const userProfile = await getOrCreateProfile(session.user.id, session.user.email || "", {
             displayName: meta?.full_name || meta?.name,
             avatarUrl: meta?.avatar_url || meta?.picture,
           });
+          console.log('[AuthProvider] onAuthStateChange - got profile:', userProfile?.id, 'status:', userProfile?.subscription_status);
           setProfile(userProfile);
           if (userProfile) {
             const { remaining, isSubscribed: subStatus } = await canViewContent(userProfile.id);
+            console.log('[AuthProvider] onAuthStateChange - canViewContent:', { remaining, subStatus });
             setIsSubscribed(subStatus);
             setViewsRemaining(remaining);
           }
