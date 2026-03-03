@@ -33,31 +33,30 @@ export default function SubscribePage() {
     });
   }, []);
 
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      router.push("/auth?redirect=/subscribe");
-    }
-  }, [isAuthenticated, loading, router]);
-
   // Redirect if already subscribed
   useEffect(() => {
-    if (isSubscribed) {
+    if (!loading && isSubscribed) {
       router.push("/app");
     }
-  }, [isSubscribed, router]);
+  }, [isSubscribed, loading, router]);
 
   const pricing = PRICING[region];
   const plan = pricing[billingCycle];
   const savings = calculateYearlySavings(region);
 
   const handleCheckout = () => {
+    // If not authenticated, redirect to auth first
+    if (!isAuthenticated) {
+      router.push("/auth?redirect=/subscribe");
+      return;
+    }
+    
     const successUrl = `${window.location.origin}/subscribe/success`;
     const checkoutUrl = getCheckoutUrl(plan.productId, user?.email || undefined, successUrl);
     window.location.href = checkoutUrl;
   };
 
-  if (loading || detectingRegion) {
+  if (detectingRegion) {
     return (
       <div className="min-h-screen bg-bglight flex items-center justify-center">
         <div className="animate-pulse text-4xl font-bold text-bgdark">
@@ -244,9 +243,10 @@ export default function SubscribePage() {
             {/* CTA Button */}
             <button
               onClick={handleCheckout}
-              className="w-full py-4 bg-[#007A5E] text-[#EACCD4] font-bold uppercase tracking-widest text-lg hover:bg-[#004a39] transition-all hover:scale-[1.02] rounded-xl shadow-lg"
+              disabled={loading}
+              className="w-full py-4 bg-[#007A5E] text-[#EACCD4] font-bold uppercase tracking-widest text-lg hover:bg-[#004a39] transition-all hover:scale-[1.02] rounded-xl shadow-lg disabled:opacity-50"
             >
-              Get Pro Now
+              {loading ? "Loading..." : isAuthenticated ? "Get Pro Now" : "Sign In & Get Pro"}
             </button>
 
             <p className="text-xs text-center opacity-60 mt-4">
