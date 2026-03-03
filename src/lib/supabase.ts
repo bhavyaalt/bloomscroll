@@ -18,7 +18,8 @@ export const supabase: SupabaseClient = new Proxy({} as SupabaseClient, {
     if (!supabaseInstance) {
       supabaseInstance = createSupabaseClient();
     }
-    return (supabaseInstance as Record<string, unknown>)[prop as string];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (supabaseInstance as any)[prop];
   }
 });
 
