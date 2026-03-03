@@ -43,7 +43,7 @@ function SubscribeContent() {
   useEffect(() => {
     if (!loading && isAuthenticated && autoCheckout && !autoCheckoutFiredRef.current) {
       autoCheckoutFiredRef.current = true;
-      const successUrl = `${window.location.origin}/subscribe/success`;
+      const successUrl = `${window.location.origin}/subscribe/success?billing=${billingCycle}`;
       const pricing = PRICING[region];
       const plan = pricing[billingCycle];
       const checkoutUrl = getCheckoutUrl(plan.productId, user?.email || undefined, successUrl);
@@ -71,7 +71,7 @@ function SubscribeContent() {
   };
 
   const handleCheckout = () => {
-    const successUrl = `${window.location.origin}/subscribe/success`;
+    const successUrl = `${window.location.origin}/subscribe/success?billing=${billingCycle}`;
     const checkoutUrl = getCheckoutUrl(plan.productId, user?.email || undefined, successUrl);
     window.location.href = checkoutUrl;
   };

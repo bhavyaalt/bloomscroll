@@ -1,13 +1,16 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense, useRef } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAuth } from "@/components/AuthProvider";
 
 function SuccessContent() {
-  const { refreshProfile, isSubscribed } = useAuth();
+  const { user, refreshProfile, isSubscribed } = useAuth();
+  const searchParams = useSearchParams();
   const [checking, setChecking] = useState(true);
+  const activationAttempted = useRef(false);
 
   useEffect(() => {
     // Refresh profile to get updated subscription status
@@ -23,14 +26,41 @@ function SuccessContent() {
 
     checkSubscription();
 
+    // Fallback: After 5 seconds, if still not subscribed, try to activate via API
+    const fallbackTimeout = setTimeout(async () => {
+      if (!activationAttempted.current && user?.email) {
+        activationAttempted.current = true;
+        try {
+          // Get billing cycle from URL or default to yearly
+          const billingCycle = searchParams.get('billing') || 'yearly';
+          
+          const response = await fetch('/api/activate-subscription', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: user.email, billingCycle }),
+          });
+          
+          if (response.ok) {
+            console.log('Subscription activated via fallback');
+            await refreshProfile();
+          }
+        } catch (error) {
+          console.error('Fallback activation failed:', error);
+        }
+      }
+    }, 5000);
+
     // Stop polling after 30 seconds
     setTimeout(() => {
       clearInterval(interval);
       setChecking(false);
     }, 30000);
 
-    return () => clearInterval(interval);
-  }, [refreshProfile]);
+    return () => {
+      clearInterval(interval);
+      clearTimeout(fallbackTimeout);
+    };
+  }, [refreshProfile, user, searchParams]);
 
   return (
     <div className="min-h-screen bg-[#EACCD4] text-[#007A5E] flex items-center justify-center">
