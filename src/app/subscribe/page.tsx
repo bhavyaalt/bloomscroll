@@ -52,7 +52,8 @@ export default function SubscribePage() {
   const savings = calculateYearlySavings(region);
 
   const handleCheckout = () => {
-    const checkoutUrl = getCheckoutUrl(plan.productId, user?.email || undefined);
+    const successUrl = `${window.location.origin}/subscribe/success`;
+    const checkoutUrl = getCheckoutUrl(plan.productId, user?.email || undefined, successUrl);
     window.location.href = checkoutUrl;
   };
 
@@ -191,10 +192,20 @@ export default function SubscribePage() {
           className="bg-white border-2 border-[#007A5E] rounded-2xl overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,122,94,1)] mb-8"
         >
           <div className="p-8 md:p-10">
+            {/* Discount Badge */}
+            <div className="flex justify-center mb-4">
+              <span className="bg-red-500 text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+                {pricing.discountPercent}% OFF
+              </span>
+            </div>
+
             {/* Price */}
             <div className="text-center mb-8">
               <div className="flex items-baseline justify-center gap-2">
-                <span className="text-6xl md:text-7xl font-impact">
+                <span className="text-2xl line-through opacity-40">
+                  {pricing.symbol}{plan.originalPrice}
+                </span>
+                <span className="text-6xl md:text-7xl font-impact text-[#007A5E]">
                   {pricing.symbol}{plan.price}
                 </span>
                 <span className="font-times italic text-xl opacity-70">

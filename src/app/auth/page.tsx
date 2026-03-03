@@ -16,6 +16,11 @@ function AuthContent() {
   const [error, setError] = useState<string | null>(null);
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
 
+  // Set redirect cookie so callback knows where to go
+  useEffect(() => {
+    document.cookie = `auth_redirect=${redirectTo}; path=/; max-age=600; SameSite=Lax`;
+  }, [redirectTo]);
+
   // Check if already logged in
   useEffect(() => {
     getSession().then((session) => {

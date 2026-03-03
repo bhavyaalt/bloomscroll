@@ -344,8 +344,8 @@ const Pricing = () => (
 
       {/* Pro */}
       <div className="flex flex-col p-8 rounded-3xl border-2 border-primary bg-bglight shadow-2xl shadow-primary/10 relative overflow-hidden transform md:scale-105 z-10">
-        <div className="absolute top-0 right-0 bg-primary text-bgdark font-bold text-[10px] uppercase tracking-widest px-6 py-2 rounded-bl-xl">
-          Best Value
+        <div className="absolute top-0 right-0 bg-red-500 text-white font-bold text-[10px] uppercase tracking-widest px-4 py-2 rounded-bl-xl">
+          17% OFF
         </div>
         <div className="flex flex-col gap-6 h-full">
           <div className="flex flex-col gap-2">
@@ -353,7 +353,8 @@ const Pricing = () => (
             <p className="text-slate-500 text-sm">Unlock the full power of daily wisdom.</p>
           </div>
           <div className="flex items-baseline gap-1">
-            <span className="text-4xl font-black text-primary">$5</span>
+            <span className="text-xl line-through text-slate-400">$5.99</span>
+            <span className="text-4xl font-black text-primary">$4.99</span>
             <span className="text-slate-400 font-medium">/month</span>
           </div>
           <ul className="flex flex-col gap-4 mt-4 flex-grow">
