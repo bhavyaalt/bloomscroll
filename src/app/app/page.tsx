@@ -565,6 +565,7 @@ export default function AppPage() {
           dailyProgress={dailyProgress}
           feedLength={feed.length}
           hasChapter={!!currentCard?.chapter}
+          isSubscribed={isSubscribed}
           dailyCard={dailyCard}
           onDismissDailyCard={handleDismissDailyCard}
           onShareDailyCard={handleShareDailyCard}
@@ -580,6 +581,7 @@ export default function AppPage() {
           onToggleAudio={toggleAudioMode}
           onToggleAutoScroll={() => setAutoScroll(!autoScroll)}
           onClearFilters={() => { setSelectedTopic(null); setSelectedCollection(null); }}
+          onShowSubscribe={() => window.location.href = '/subscribe'}
         />
       )}
 

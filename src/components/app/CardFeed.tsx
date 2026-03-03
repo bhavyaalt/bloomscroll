@@ -18,6 +18,7 @@ interface CardFeedProps {
   dailyProgress: DailyProgress;
   feedLength: number;
   hasChapter: boolean;
+  isSubscribed: boolean;
   dailyCard?: Card | null;
   onDismissDailyCard?: () => void;
   onShareDailyCard?: (e: React.MouseEvent) => void;
@@ -33,6 +34,7 @@ interface CardFeedProps {
   onToggleAudio: () => void;
   onToggleAutoScroll: () => void;
   onClearFilters: () => void;
+  onShowSubscribe?: () => void;
 }
 
 /* ── SVG Icon Components ── */
@@ -112,6 +114,7 @@ export default function CardFeed({
   dailyProgress,
   feedLength,
   hasChapter,
+  isSubscribed,
   onDragEnd,
   onDoubleTap,
   onToggleSave,
@@ -127,6 +130,7 @@ export default function CardFeed({
   onDismissDailyCard,
   onShareDailyCard,
   onClearFilters,
+  onShowSubscribe,
 }: CardFeedProps) {
   const progressPercent = Math.min((dailyProgress.read / dailyProgress.goal) * 100, 100);
 
@@ -259,26 +263,32 @@ export default function CardFeed({
                         <BookmarkIcon />
                       </button>
                       <button
-                        onClick={onToggleAudio}
-                        className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all ${
+                        onClick={isSubscribed ? onToggleAudio : onShowSubscribe}
+                        className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all relative ${
                           audioMode
                             ? "bg-[#007A5E] text-white"
-                            : "bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E]"
+                            : isSubscribed
+                              ? "bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E]"
+                              : "bg-[#007A5E]/5 text-[#007A5E]/40"
                         }`}
-                        title={audioMode ? "Stop audio" : "Read aloud"}
+                        title={isSubscribed ? (audioMode ? "Stop audio" : "Read aloud") : "Pro feature"}
                       >
                         <VolumeIcon active={audioMode || isSpeaking} />
+                        {!isSubscribed && <span className="absolute -top-1 -right-1 text-[8px] bg-[#007A5E] text-white px-1 rounded">PRO</span>}
                       </button>
                       <button
-                        onClick={onToggleAutoScroll}
-                        className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all ${
+                        onClick={isSubscribed ? onToggleAutoScroll : onShowSubscribe}
+                        className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all relative ${
                           autoScroll
                             ? "bg-[#007A5E] text-white"
-                            : "bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E]"
+                            : isSubscribed
+                              ? "bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E]"
+                              : "bg-[#007A5E]/5 text-[#007A5E]/40"
                         }`}
-                        title={autoScroll ? "Stop auto-scroll" : "Auto-scroll"}
+                        title={isSubscribed ? (autoScroll ? "Stop auto-scroll" : "Auto-scroll") : "Pro feature"}
                       >
                         <PlayIcon active={autoScroll} />
+                        {!isSubscribed && <span className="absolute -top-1 -right-1 text-[8px] bg-[#007A5E] text-white px-1 rounded">PRO</span>}
                       </button>
                     </div>
 
