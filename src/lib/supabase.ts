@@ -55,8 +55,27 @@ export async function signInWithEmail(email: string) {
 
 // Sign out
 export async function signOut() {
-  const { error } = await supabase.auth.signOut();
-  if (error) throw error;
+  try {
+    // Clear local storage first
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('supabase.auth.token');
+      // Clear all supabase-related storage
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('sb-')) localStorage.removeItem(key);
+      });
+    }
+    const { error } = await supabase.auth.signOut({ scope: 'global' });
+    if (error) {
+      console.error('Sign out error:', error);
+      throw error;
+    }
+  } catch (err) {
+    console.error('Sign out failed:', err);
+    // Force reload anyway
+    if (typeof window !== 'undefined') {
+      window.location.href = '/';
+    }
+  }
 }
 
 // Get current user
@@ -322,25 +341,37 @@ export interface Subscription {
 
 // Check if user has active subscription
 export async function checkSubscription(userId: string): Promise<boolean> {
+  console.log('[checkSubscription] Checking for userId:', userId);
+  
   const { data, error } = await supabase
     .from('bloomscroll_profiles')
     .select('subscription_status, subscription_expires_at')
     .eq('id', userId)
     .single();
 
-  if (error || !data) return false;
+  console.log('[checkSubscription] Result:', { data, error });
 
-  if (data.subscription_status !== 'active') return false;
+  if (error || !data) {
+    console.log('[checkSubscription] No data or error, returning false');
+    return false;
+  }
+
+  if (data.subscription_status !== 'active') {
+    console.log('[checkSubscription] Status not active:', data.subscription_status);
+    return false;
+  }
   
   if (data.subscription_expires_at) {
     const expiresAt = new Date(data.subscription_expires_at);
     if (expiresAt < new Date()) {
+      console.log('[checkSubscription] Subscription expired');
       // Subscription expired, update status
       await updateProfile(userId, { subscription_status: 'expired' });
       return false;
     }
   }
 
+  console.log('[checkSubscription] User is subscribed!');
   return true;
 }
 

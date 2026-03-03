@@ -178,6 +178,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const handleSignOut = async () => {
     try {
+      // Clear local storage first
+      if (typeof window !== 'undefined') {
+        Object.keys(localStorage).forEach(key => {
+          if (key.startsWith('sb-') || key.startsWith('supabase')) {
+            localStorage.removeItem(key);
+          }
+        });
+      }
       await supabase.auth.signOut({ scope: 'global' });
     } catch (err) {
       console.error("Sign out error:", err);
@@ -185,10 +193,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Always clear state, even if supabase call fails
     setUser(null);
     setSession(null);
-    if (!isInFrame) {
-      setProfile(null);
-      setIsSubscribed(false);
-      setViewsRemaining(5);
+    setProfile(null);
+    setIsSubscribed(false);
+    setViewsRemaining(5);
+    // Force redirect
+    if (typeof window !== 'undefined') {
+      window.location.href = '/';
     }
   };
 
