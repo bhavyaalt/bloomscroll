@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAuth } from "@/components/AuthProvider";
+import { signInWithProvider } from "@/lib/supabase";
 import {
   PRICING,
   REGION_NAMES,
@@ -16,14 +17,19 @@ import {
   calculateYearlySavings
 } from "@/lib/pricing";
 
-export default function SubscribePage() {
+function SubscribeContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const autoCheckout = searchParams.get('auto_checkout') === '1';
+  const autoCheckoutFiredRef = useRef(false);
   const { user, profile, loading, isSubscribed, isAuthenticated } = useAuth();
 
   const [region, setRegion] = useState<Region>('OTHER');
   const [billingCycle, setBillingCycle] = useState<BillingCycle>('yearly');
   const [detectingRegion, setDetectingRegion] = useState(true);
   const [showRegionSelector, setShowRegionSelector] = useState(false);
+  const [socialLoading, setSocialLoading] = useState<string | null>(null);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   // Detect region on mount
   useEffect(() => {
@@ -33,20 +39,38 @@ export default function SubscribePage() {
     });
   }, []);
 
-  // Show message if already subscribed (don't redirect — user navigated here intentionally)
+  // Auto-checkout after OAuth redirect
+  useEffect(() => {
+    if (!loading && isAuthenticated && autoCheckout && !autoCheckoutFiredRef.current) {
+      autoCheckoutFiredRef.current = true;
+      const successUrl = `${window.location.origin}/subscribe/success`;
+      const pricing = PRICING[region];
+      const plan = pricing[billingCycle];
+      const checkoutUrl = getCheckoutUrl(plan.productId, user?.email || undefined, successUrl);
+      window.location.href = checkoutUrl;
+    }
+  }, [loading, isAuthenticated, autoCheckout, region, billingCycle, user]);
+
+  // Show message if already subscribed
   const alreadySubscribed = !loading && isSubscribed;
 
   const pricing = PRICING[region];
   const plan = pricing[billingCycle];
   const savings = calculateYearlySavings(region);
 
-  const handleCheckout = () => {
-    // If not authenticated, redirect to auth first
-    if (!isAuthenticated) {
-      router.push("/auth?redirect=/subscribe");
-      return;
+  const handleSocialSignIn = async (provider: 'google' | 'twitter') => {
+    setSocialLoading(provider);
+    setAuthError(null);
+    try {
+      document.cookie = `auth_redirect=/subscribe?auto_checkout=1; path=/; max-age=600; SameSite=Lax`;
+      await signInWithProvider(provider);
+    } catch {
+      setAuthError(`Could not sign in with ${provider === 'google' ? 'Google' : 'X'}. Please try again.`);
+      setSocialLoading(null);
     }
-    
+  };
+
+  const handleCheckout = () => {
     const successUrl = `${window.location.origin}/subscribe/success`;
     const checkoutUrl = getCheckoutUrl(plan.productId, user?.email || undefined, successUrl);
     window.location.href = checkoutUrl;
@@ -57,6 +81,18 @@ export default function SubscribePage() {
       <div className="min-h-screen bg-bglight flex items-center justify-center">
         <div className="animate-pulse text-4xl font-bold text-bgdark">
           Loading...
+        </div>
+      </div>
+    );
+  }
+
+  // Auto-checkout redirect screen
+  if (!loading && isAuthenticated && autoCheckout) {
+    return (
+      <div className="min-h-screen bg-bglight flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin text-4xl mb-4">⟳</div>
+          <p className="font-bold text-xl text-bgdark">Taking you to checkout...</p>
         </div>
       </div>
     );
@@ -259,14 +295,57 @@ export default function SubscribePage() {
               ))}
             </ul>
 
-            {/* CTA Button */}
-            <button
-              onClick={handleCheckout}
-              disabled={loading}
-              className="w-full py-4 bg-[#007A5E] text-[#EACCD4] font-bold uppercase tracking-widest text-lg hover:bg-[#004a39] transition-all hover:scale-[1.02] rounded-xl shadow-lg disabled:opacity-50"
-            >
-              {loading ? "Loading..." : isAuthenticated ? "Get Pro Now" : "Sign In & Get Pro"}
-            </button>
+            {/* CTA Button — conditional on auth state */}
+            {isAuthenticated ? (
+              <button
+                onClick={handleCheckout}
+                disabled={loading}
+                className="w-full py-4 bg-[#007A5E] text-[#EACCD4] font-bold uppercase tracking-widest text-lg hover:bg-[#004a39] transition-all hover:scale-[1.02] rounded-xl shadow-lg disabled:opacity-50"
+              >
+                {loading ? "Loading..." : "Get Pro Now"}
+              </button>
+            ) : (
+              <div className="space-y-3">
+                <button
+                  onClick={() => handleSocialSignIn("google")}
+                  disabled={!!socialLoading}
+                  className="w-full py-4 rounded-xl font-bold uppercase tracking-widest transition-all bg-white text-bgdark border-2 border-sage hover:border-bgdark flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {socialLoading === "google" ? (
+                    <span className="animate-spin">⟳</span>
+                  ) : (
+                    <svg className="size-5" viewBox="0 0 24 24">
+                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
+                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                    </svg>
+                  )}
+                  Sign in with Google
+                </button>
+
+                <button
+                  onClick={() => handleSocialSignIn("twitter")}
+                  disabled={!!socialLoading}
+                  className="w-full py-4 rounded-xl font-bold uppercase tracking-widest transition-all bg-black text-white border-2 border-black hover:bg-black/90 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {socialLoading === "twitter" ? (
+                    <span className="animate-spin">⟳</span>
+                  ) : (
+                    <svg className="size-5" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
+                  )}
+                  Sign in with X
+                </button>
+
+                {authError && (
+                  <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-sm">
+                    {authError}
+                  </div>
+                )}
+              </div>
+            )}
 
             <p className="text-xs text-center opacity-60 mt-4">
               Secure checkout powered by Dodo Payments
@@ -343,5 +422,19 @@ export default function SubscribePage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function SubscribePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-bglight flex items-center justify-center">
+        <div className="animate-pulse text-4xl font-bold text-bgdark">
+          Loading...
+        </div>
+      </div>
+    }>
+      <SubscribeContent />
+    </Suspense>
   );
 }
