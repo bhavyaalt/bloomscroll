@@ -1,20 +1,26 @@
-import { createBrowserClient, SupabaseClient } from '@supabase/ssr';
+import { createBrowserClient } from '@supabase/ssr';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 let supabaseInstance: SupabaseClient | null = null;
 
-function getSupabase(): SupabaseClient {
-  if (!supabaseInstance) {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    if (!url || !key) {
-      throw new Error('Missing Supabase env vars');
-    }
-    supabaseInstance = createBrowserClient(url, key);
+function createSupabaseClient(): SupabaseClient {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) {
+    throw new Error('Missing Supabase env vars');
   }
-  return supabaseInstance;
+  return createBrowserClient(url, key);
 }
 
-export const supabase = typeof window !== 'undefined' ? getSupabase() : (null as unknown as SupabaseClient);
+// Getter pattern for lazy initialization
+export const supabase: SupabaseClient = new Proxy({} as SupabaseClient, {
+  get(_target, prop) {
+    if (!supabaseInstance) {
+      supabaseInstance = createSupabaseClient();
+    }
+    return (supabaseInstance as Record<string, unknown>)[prop as string];
+  }
+});
 
 // ============================================
 // AUTH FUNCTIONS
