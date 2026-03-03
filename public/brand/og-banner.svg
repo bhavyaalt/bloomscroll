@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#EACCD4"/>
+      <stop offset="100%" style="stop-color:#e0bfc8"/>
+    </linearGradient>
+    <linearGradient id="leafGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#007A5E"/>
+      <stop offset="100%" style="stop-color:#004a39"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+  
+  <!-- Decorative circles -->
+  <circle cx="100" cy="100" r="200" fill="#007A5E" opacity="0.05"/>
+  <circle cx="1100" cy="530" r="250" fill="#007A5E" opacity="0.05"/>
+  <circle cx="900" cy="80" r="150" fill="#007A5E" opacity="0.03"/>
+  
+  <!-- Logo icon on left -->
+  <g transform="translate(200, 315)">
+    <!-- Circle background -->
+    <circle cx="0" cy="0" r="100" fill="#007A5E"/>
+    
+    <!-- Bloom inside -->
+    <g transform="translate(0, 15)">
+      <path d="M0 -10 C-25 -40 -18 -75 0 -85 C18 -75 25 -40 0 -10 Z" fill="#EACCD4"/>
+      <path d="M-30 5 C-35 -25 -22 -55 -5 -65 C-8 -35 -20 -10 -30 5 Z" fill="#EACCD4" opacity="0.85"/>
+      <path d="M30 5 C35 -25 22 -55 5 -65 C8 -35 20 -10 30 5 Z" fill="#EACCD4" opacity="0.85"/>
+      <rect x="-6" y="-10" width="12" height="50" rx="6" fill="#004a39"/>
+    </g>
+  </g>
+  
+  <!-- Text -->
+  <text x="380" y="280" font-family="Impact, Arial Black, sans-serif" font-size="120" fill="#007A5E" letter-spacing="-2">
+    BLOOM
+  </text>
+  <text x="380" y="390" font-family="Georgia, Times, serif" font-size="100" fill="#007A5E" font-style="italic" opacity="0.9">
+    scroll
+  </text>
+  
+  <!-- Tagline -->
+  <text x="385" y="480" font-family="system-ui, sans-serif" font-size="32" fill="#007A5E" opacity="0.7">
+    Turn Scrolling into Growing
+  </text>
+  
+  <!-- Small decorative leaves -->
+  <g transform="translate(1050, 200) rotate(15)">
+    <path d="M0 0 C-15 -25 -10 -50 0 -60 C10 -50 15 -25 0 0 Z" fill="#007A5E" opacity="0.2"/>
+  </g>
+  <g transform="translate(1100, 350) rotate(-20)">
+    <path d="M0 0 C-12 -20 -8 -40 0 -48 C8 -40 12 -20 0 0 Z" fill="#007A5E" opacity="0.15"/>
+  </g>
+</svg>
