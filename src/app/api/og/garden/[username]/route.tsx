@@ -4,7 +4,8 @@ import { getProfileByUsername, getPinnedCards } from "@/lib/pinned-cards";
 import { getCardById } from "@/lib/content-library";
 import { UserProfile } from "@/lib/supabase";
 
-export const runtime = "edge";
+// Using serverless instead of edge to avoid size limits
+export const runtime = "nodejs";
 
 export async function GET(
   request: NextRequest,
