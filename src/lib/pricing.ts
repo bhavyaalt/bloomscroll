@@ -94,32 +94,54 @@ export function detectRegionFromHeaders(headers: Headers): Region {
 
 // Detect region from IP (client-side)
 export async function detectRegionClient(): Promise<Region> {
+  // First try timezone (most reliable, no network)
   try {
-    const res = await fetch('https://ipapi.co/json/', {
-      cache: 'force-cache',
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    console.log('[Pricing] Timezone detected:', timezone);
+    
+    if (timezone === 'Asia/Kolkata' || timezone === 'Asia/Calcutta') {
+      console.log('[Pricing] Detected India from timezone');
+      return 'IN';
+    }
+    if (timezone.startsWith('America/New_York') || 
+        timezone.startsWith('America/Los_Angeles') ||
+        timezone.startsWith('America/Chicago') ||
+        timezone.startsWith('America/Denver')) {
+      console.log('[Pricing] Detected US from timezone');
+      return 'US';
+    }
+  } catch (e) {
+    console.log('[Pricing] Timezone detection failed:', e);
+  }
+  
+  // Then try IP-based detection
+  try {
+    const res = await fetch('https://ipapi.co/country_code/', {
+      cache: 'no-store',
     });
     
-    if (!res.ok) throw new Error('ipapi failed');
-    
-    const data = await res.json();
-    const country = data.country_code;
-    
-    if (country === 'IN') return 'IN';
-    if (country === 'US') return 'US';
-    return 'OTHER';
-  } catch {
-    try {
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      if (timezone.startsWith('Asia/Kolkata') || timezone.startsWith('Asia/Calcutta')) {
-        return 'IN';
-      }
-      if (timezone.startsWith('America/')) {
-        return 'US';
-      }
-    } catch {}
-    
-    return 'OTHER';
+    if (res.ok) {
+      const country = (await res.text()).trim();
+      console.log('[Pricing] Country from IP:', country);
+      
+      if (country === 'IN') return 'IN';
+      if (country === 'US') return 'US';
+    }
+  } catch (e) {
+    console.log('[Pricing] IP detection failed:', e);
   }
+  
+  // Final fallback - check language
+  try {
+    const lang = navigator.language || navigator.languages?.[0];
+    console.log('[Pricing] Browser language:', lang);
+    if (lang?.includes('IN') || lang === 'hi' || lang === 'hi-IN') {
+      return 'IN';
+    }
+  } catch {}
+  
+  console.log('[Pricing] Defaulting to OTHER');
+  return 'OTHER';
 }
 
 // Format price with currency
