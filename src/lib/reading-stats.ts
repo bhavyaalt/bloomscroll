@@ -2,6 +2,7 @@
 
 const STATS_KEY = "bloomscroll_reading_stats";
 const DAILY_READS_KEY = "bloomscroll_daily_reads";
+const OLD_STREAK_KEY = "bloomscroll_streak";
 
 export interface DailyRead {
   date: string; // YYYY-MM-DD
@@ -162,4 +163,74 @@ export function getTopTopics(limit: number = 5): { topic: string; count: number 
     .map(([topic, count]) => ({ topic, count }))
     .sort((a, b) => b.count - a.count)
     .slice(0, limit);
+}
+
+// One-time migration: merge old streak data into reading stats and delete old key
+function migrateOldStreakData(stats: ReadingStats): ReadingStats {
+  if (typeof window === "undefined") return stats;
+
+  const old = localStorage.getItem(OLD_STREAK_KEY);
+  if (!old) return stats;
+
+  try {
+    const parsed = JSON.parse(old) as {
+      currentStreak: number;
+      lastVisitDate: string;
+      longestStreak: number;
+      totalDays: number;
+    };
+
+    // Keep the higher values
+    if (parsed.longestStreak > stats.longestStreak) {
+      stats.longestStreak = parsed.longestStreak;
+    }
+    if (parsed.currentStreak > stats.currentStreak) {
+      stats.currentStreak = parsed.currentStreak;
+    }
+    if (parsed.totalDays > stats.totalDaysActive) {
+      stats.totalDaysActive = parsed.totalDays;
+    }
+    if (parsed.lastVisitDate && (!stats.lastReadDate || parsed.lastVisitDate > stats.lastReadDate)) {
+      stats.lastReadDate = parsed.lastVisitDate;
+    }
+
+    saveReadingStats(stats);
+  } catch {
+    // Ignore invalid data
+  }
+
+  localStorage.removeItem(OLD_STREAK_KEY);
+  return stats;
+}
+
+// Standalone streak updater — call on app load
+export function updateReadingStreak(): ReadingStats {
+  let stats = getReadingStats();
+  stats = migrateOldStreakData(stats);
+
+  if (typeof window === "undefined") return stats;
+
+  const today = new Date().toISOString().split("T")[0];
+
+  // Already visited today
+  if (stats.lastReadDate === today) return stats;
+
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+  if (stats.lastReadDate === yesterdayStr) {
+    stats.currentStreak++;
+  } else if (!stats.lastReadDate) {
+    stats.currentStreak = 1;
+  } else {
+    stats.currentStreak = 1;
+  }
+
+  stats.lastReadDate = today;
+  stats.totalDaysActive++;
+  stats.longestStreak = Math.max(stats.currentStreak, stats.longestStreak);
+
+  saveReadingStats(stats);
+  return stats;
 }

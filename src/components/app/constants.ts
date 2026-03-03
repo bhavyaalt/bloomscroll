@@ -1,0 +1,17 @@
+export const topicIcons: Record<string, string> = {
+  philosophy: "🏛️",
+  stoicism: "🗿",
+  psychology: "🧠",
+  business: "📈",
+  science: "🔬",
+  history: "📜",
+  productivity: "⚡",
+  creativity: "✨",
+  mindfulness: "🧘",
+  leadership: "👑",
+  finance: "💰",
+  relationships: "💝",
+  health: "🌱",
+  technology: "💻",
+  spirituality: "✨",
+};
