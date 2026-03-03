@@ -33,12 +33,8 @@ export default function SubscribePage() {
     });
   }, []);
 
-  // Redirect if already subscribed
-  useEffect(() => {
-    if (!loading && isSubscribed) {
-      router.push("/app");
-    }
-  }, [isSubscribed, loading, router]);
+  // Show message if already subscribed (don't redirect — user navigated here intentionally)
+  const alreadySubscribed = !loading && isSubscribed;
 
   const pricing = PRICING[region];
   const plan = pricing[billingCycle];
@@ -83,11 +79,33 @@ export default function SubscribePage() {
 
       {/* Main Content */}
       <main className="max-w-2xl mx-auto px-6 py-16">
+        {alreadySubscribed && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-12 p-8 bg-[#007A5E]/10 border border-[#007A5E]/20 rounded-2xl"
+          >
+            <span className="text-4xl mb-4 block">🌿</span>
+            <h2 className="font-impact text-3xl uppercase mb-2 text-[#007A5E]">
+              You&apos;re Already Pro!
+            </h2>
+            <p className="opacity-70 mb-6">
+              You have full access to all premium features.
+            </p>
+            <Link
+              href="/app"
+              className="inline-block px-8 py-3 bg-[#007A5E] text-[#EACCD4] font-bold uppercase tracking-widest rounded-xl hover:bg-[#004a39] transition-all"
+            >
+              Back to App
+            </Link>
+          </motion.div>
+        )}
+
         {/* Hero */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className={`text-center mb-12 ${alreadySubscribed ? "hidden" : ""}`}
         >
           <span className="inline-block py-1 px-3 border border-[#007A5E] rounded-full text-xs font-bold uppercase tracking-widest mb-4">
             Pro Membership
@@ -105,6 +123,7 @@ export default function SubscribePage() {
           )}
         </motion.div>
 
+        {!alreadySubscribed && <>
         {/* Region & Billing Toggle */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -314,6 +333,7 @@ export default function SubscribePage() {
             </details>
           ))}
         </motion.div>
+        </>}
       </main>
 
       {/* Footer */}
