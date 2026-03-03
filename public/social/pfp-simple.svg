@@ -1,0 +1,32 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#EACCD4"/>
+      <stop offset="100%" style="stop-color:#d4a5b0"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <circle cx="200" cy="200" r="200" fill="url(#bg)"/>
+  
+  <!-- Inner ring -->
+  <circle cx="200" cy="200" r="175" fill="none" stroke="#007A5E" stroke-width="6"/>
+  
+  <!-- Seedling -->
+  <g transform="translate(200, 220)">
+    <!-- Ground/pot shape -->
+    <ellipse cx="0" cy="60" rx="50" ry="15" fill="#007A5E" opacity="0.3"/>
+    
+    <!-- Stem -->
+    <rect x="-8" y="-20" width="16" height="80" rx="8" fill="#007A5E"/>
+    
+    <!-- Left leaf -->
+    <path d="M-8 0 Q-60 -30 -50 -80 Q-20 -60 -8 -30" fill="#007A5E"/>
+    
+    <!-- Right leaf -->
+    <path d="M8 -10 Q70 -50 55 -100 Q20 -70 8 -40" fill="#007A5E"/>
+    
+    <!-- Center sprout -->
+    <path d="M0 -30 Q-15 -80 0 -110 Q15 -80 0 -30" fill="#4D9E8A"/>
+  </g>
+</svg>

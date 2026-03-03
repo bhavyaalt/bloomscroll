@@ -1,0 +1,34 @@
+{
+  "name": "bloomscroll",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@base-org/account": "^2.5.2",
+    "@base-org/account-ui": "^1.0.1",
+    "@farcaster/frame-sdk": "^0.1.14",
+    "@privy-io/react-auth": "^3.15.0",
+    "@supabase/supabase-js": "^2.95.2",
+    "framer-motion": "^12.33.0",
+    "next": "16.1.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "canvas": "^3.2.1",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

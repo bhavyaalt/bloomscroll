@@ -1,0 +1,18 @@
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjAsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIn0",
+    "payload": "eyJkb21haW4iOiJibG9vbXNjcm9sbC5jbHViIn0",
+    "signature": "placeholder"
+  },
+  "frame": {
+    "version": "1",
+    "name": "Bloomscroll",
+    "iconUrl": "https://bloomscroll.club/icon.png",
+    "homeUrl": "https://bloomscroll.club",
+    "imageUrl": "https://bloomscroll.club/og-image.png",
+    "buttonTitle": "🌱 Start Growing",
+    "splashImageUrl": "https://bloomscroll.club/splash.png",
+    "splashBackgroundColor": "#1a1a1a",
+    "webhookUrl": "https://bloomscroll.club/api/webhook"
+  }
+}

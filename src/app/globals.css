@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+:root {
+  --color-pink: #EACCD4;
+  --color-green: #007A5E;
+  --color-green-light: #4D9E8A;
+  --color-green-dark: #004a39;
+}
+
+@theme inline {
+  --color-pink: var(--color-pink);
+  --color-green: var(--color-green);
+  --color-green-light: var(--color-green-light);
+  --color-green-dark: var(--color-green-dark);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  background-color: #EACCD4;
+  color: #007A5E;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: contain;
+}
+
+/* iOS momentum scrolling */
+.scroll-container {
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: y mandatory;
+  overscroll-behavior-y: contain;
+}
+
+.scroll-snap-card {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* Smoother touch gestures */
+.touch-pan-y {
+  touch-action: pan-y;
+}
+
+/* Prevent rubber-banding on iOS */
+.no-bounce {
+  overscroll-behavior: none;
+}
+
+.grayscale-img {
+  filter: grayscale(100%) contrast(120%);
+  mix-blend-mode: multiply;
+}
+
+.text-outline {
+  -webkit-text-stroke: 1px #007A5E;
+  color: transparent;
+}
+
+.hover-lift {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #EACCD4;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #007A5E;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Font classes */
+.font-impact {
+  font-family: 'Impact', 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
+}
+
+.font-times {
+  font-family: 'Times New Roman', 'Times', serif;
+}
+
+.font-helvetica {
+  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+}
+
+/* iOS safe area handling */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Improved mobile touch feel */
+@media (max-width: 640px) {
+  body {
+    font-size: 14px;
+  }
+  
+  /* Smoother drag animations */
+  * {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+}
+
+/* Hardware acceleration for smoother scrolling */
+.hw-accelerated {
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
