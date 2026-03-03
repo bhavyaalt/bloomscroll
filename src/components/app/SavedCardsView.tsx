@@ -10,10 +10,10 @@ interface SavedCardsViewProps {
 
 export default function SavedCardsView({ cards, onRemove }: SavedCardsViewProps) {
   return (
-    <div className="pt-16 pb-20 px-4 max-w-lg mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="font-bold text-xl">Your Library</h2>
-        <span className="text-white/40 text-sm">{cards.length} saved</span>
+    <div className="pt-14 sm:pt-16 pb-20 px-3 sm:px-4 max-w-lg mx-auto">
+      <div className="flex justify-between items-center mb-4 sm:mb-6">
+        <h2 className="font-bold text-lg sm:text-xl">Your Library</h2>
+        <span className="text-white/40 text-xs sm:text-sm">{cards.length} saved</span>
       </div>
       {cards.length === 0 ? (
         <div className="text-center py-20 text-white/40">

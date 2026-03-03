@@ -24,18 +24,18 @@ export default function StreakModal({ streak, dailyProgress, onClose }: StreakMo
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-[#1a2e23] border border-primary/20 rounded-3xl max-w-sm w-full p-8 text-center text-white"
+        className="bg-[#1a2e23] border border-primary/20 rounded-2xl sm:rounded-3xl max-w-sm w-full p-5 sm:p-8 text-center text-white mx-2"
       >
-        <div className="text-6xl mb-4">
+        <div className="text-4xl sm:text-6xl mb-3 sm:mb-4">
           {getStreakEmoji(streak.currentStreak)}
         </div>
-        <h2 className="text-5xl font-black mb-2 text-primary flex items-center justify-center gap-2">
+        <h2 className="text-4xl sm:text-5xl font-black mb-2 text-primary flex items-center justify-center gap-2">
           {streak.currentStreak}
           {streak.streakFreezeActive && (
-            <span className="text-2xl" title="Streak Shield active">&#x1F6E1;&#xFE0F;</span>
+            <span className="text-xl sm:text-2xl" title="Streak Shield active">&#x1F6E1;&#xFE0F;</span>
           )}
         </h2>
-        <p className="text-sm uppercase tracking-widest text-white/50 mb-4 font-bold">
+        <p className="text-xs sm:text-sm uppercase tracking-widest text-white/50 mb-3 sm:mb-4 font-bold">
           Day Streak
         </p>
 
@@ -67,24 +67,24 @@ export default function StreakModal({ streak, dailyProgress, onClose }: StreakMo
         </div>
 
         {/* Stats row */}
-        <div className="grid grid-cols-3 gap-4 mb-8 py-4 border-t border-b border-white/10">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 sm:mb-8 py-3 sm:py-4 border-t border-b border-white/10">
           <div>
-            <div className="text-2xl font-bold text-primary">{streak.currentStreak}</div>
-            <div className="text-[10px] uppercase tracking-wider text-white/40 mt-1">Current</div>
+            <div className="text-xl sm:text-2xl font-bold text-primary">{streak.currentStreak}</div>
+            <div className="text-[9px] sm:text-[10px] uppercase tracking-wider text-white/40 mt-1">Current</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-white/80">{streak.longestStreak}</div>
-            <div className="text-[10px] uppercase tracking-wider text-white/40 mt-1">Best</div>
+            <div className="text-xl sm:text-2xl font-bold text-white/80">{streak.longestStreak}</div>
+            <div className="text-[9px] sm:text-[10px] uppercase tracking-wider text-white/40 mt-1">Best</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-white/80">{streak.totalDays}</div>
-            <div className="text-[10px] uppercase tracking-wider text-white/40 mt-1">Total Days</div>
+            <div className="text-xl sm:text-2xl font-bold text-white/80">{streak.totalDays}</div>
+            <div className="text-[9px] sm:text-[10px] uppercase tracking-wider text-white/40 mt-1">Total Days</div>
           </div>
         </div>
 
         <button
           onClick={onClose}
-          className="w-full py-3.5 bg-primary text-[#102219] rounded-xl font-bold text-sm uppercase tracking-wide hover:bg-primary/90 transition-colors"
+          className="w-full py-3 sm:py-3.5 bg-primary text-[#102219] rounded-xl font-bold text-sm uppercase tracking-wide hover:bg-primary/90 transition-colors"
         >
           Keep Growing
         </button>

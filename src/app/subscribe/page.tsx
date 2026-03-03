@@ -102,19 +102,19 @@ function SubscribeContent() {
     <div className="min-h-screen bg-bglight text-bgdark">
       {/* Header */}
       <header className="border-b border-sage">
-        <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 h-14 sm:h-20 flex items-center justify-between">
           <Link href="/" className="flex items-baseline">
-            <span className="font-impact text-2xl uppercase tracking-tighter">Bloom</span>
-            <span className="font-times italic text-2xl">scroll</span>
+            <span className="font-impact text-xl sm:text-2xl uppercase tracking-tighter">Bloom</span>
+            <span className="font-times italic text-xl sm:text-2xl">scroll</span>
           </Link>
-          <Link href="/app" className="text-sm font-bold uppercase hover:opacity-70">
+          <Link href="/app" className="text-xs sm:text-sm font-bold uppercase hover:opacity-70">
             Back to App
           </Link>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-2xl mx-auto px-6 py-16">
+      <main className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-16">
         {alreadySubscribed && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -141,19 +141,19 @@ function SubscribeContent() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`text-center mb-12 ${alreadySubscribed ? "hidden" : ""}`}
+          className={`text-center mb-8 sm:mb-12 ${alreadySubscribed ? "hidden" : ""}`}
         >
-          <span className="inline-block py-1 px-3 border border-[#007A5E] rounded-full text-xs font-bold uppercase tracking-widest mb-4">
+          <span className="inline-block py-1 px-3 border border-[#007A5E] rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-3 sm:mb-4">
             Pro Membership
           </span>
-          <h1 className="font-impact text-5xl md:text-6xl uppercase mb-4">
+          <h1 className="font-impact text-3xl sm:text-5xl md:text-6xl uppercase mb-3 sm:mb-4">
             Unlock Your Potential
           </h1>
-          <p className="font-times italic text-xl opacity-80 max-w-md mx-auto">
+          <p className="font-times italic text-base sm:text-xl opacity-80 max-w-md mx-auto">
             Unlimited wisdom, ad-free experience, and exclusive features.
           </p>
           {user && (
-            <p className="text-sm opacity-60 mt-4">
+            <p className="text-xs sm:text-sm opacity-60 mt-3 sm:mt-4 truncate px-4">
               Logged in as {user.email}
             </p>
           )}

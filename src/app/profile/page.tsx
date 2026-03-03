@@ -150,42 +150,42 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-cream text-darkteal" style={{ fontFamily: "'Lexend', sans-serif" }}>
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-cream/90 backdrop-blur-md border-b border-botsage/30 px-6 py-4">
+      <header className="sticky top-0 z-50 bg-cream/90 backdrop-blur-md border-b border-botsage/30 px-3 sm:px-6 py-3 sm:py-4">
         <div className="max-w-[1100px] mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <Link
               href="/app"
-              className="flex items-center justify-center p-2 rounded-full bg-botsage/20 hover:bg-botsage/30 text-botgreen transition-colors"
+              className="flex items-center justify-center p-1.5 sm:p-2 rounded-full bg-botsage/20 hover:bg-botsage/30 text-botgreen transition-colors"
             >
-              <svg className="size-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <svg className="size-4 sm:size-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
               </svg>
             </Link>
-            <div className="flex items-center gap-2">
-              <svg className="size-5 text-botgreen" viewBox="0 0 24 24" fill="currentColor">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <svg className="size-4 sm:size-5 text-botgreen" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 22c4.97 0 9-4.03 9-9-4.97 0-9 4.03-9 9ZM5.6 10.25c0 1.64 1.33 2.97 2.97 2.97h.86c1.97 0 3.56-1.6 3.56-3.57v-5.4C12.99 2.56 11.43 1 9.43 1c-2 0-3.56 1.56-3.56 3.56v5.4c0 .1 0 .2-.27.29ZM3 13c0 4.97 4.03 9 9 9 0-4.97-4.03-9-9-9Z" />
               </svg>
-              <h2 className="text-xl font-bold tracking-tight text-botgreen" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>BloomScroll</h2>
+              <h2 className="text-base sm:text-xl font-bold tracking-tight text-botgreen hidden min-[400px]:block" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>BloomScroll</h2>
             </div>
           </div>
           <button
             onClick={handleShare}
-            className="flex items-center gap-2 px-6 py-2 rounded-full bg-botgreen text-cream font-medium text-sm transition-transform active:scale-95 shadow-md"
+            className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-1.5 sm:py-2 rounded-full bg-botgreen text-cream font-medium text-xs sm:text-sm transition-transform active:scale-95 shadow-md"
           >
-            <svg className="size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+            <svg className="size-3.5 sm:size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
             </svg>
-            {copied ? "Copied!" : "Share Profile"}
+            {copied ? "Copied!" : "Share"}
           </button>
         </div>
       </header>
 
-      <main className="max-w-[1100px] mx-auto px-4 md:px-12 py-10">
+      <main className="max-w-[1100px] mx-auto px-3 sm:px-4 md:px-12 py-6 sm:py-10">
         {/* Profile Header */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center text-center mb-12">
-          <div className="relative mb-6">
-            <div className="w-36 h-36 rounded-full border-2 border-botsage p-1.5 bg-white shadow-sm">
-              <div className="w-full h-full rounded-full bg-botsagelight flex items-center justify-center text-5xl">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center text-center mb-8 sm:mb-12">
+          <div className="relative mb-4 sm:mb-6">
+            <div className="w-24 h-24 sm:w-36 sm:h-36 rounded-full border-2 border-botsage p-1 sm:p-1.5 bg-white shadow-sm">
+              <div className="w-full h-full rounded-full bg-botsagelight flex items-center justify-center text-3xl sm:text-5xl">
                 {avatarUrl ? (
                   <img src={avatarUrl} alt="" className="w-full h-full rounded-full object-cover" />
                 ) : (
@@ -193,11 +193,11 @@ export default function ProfilePage() {
                 )}
               </div>
             </div>
-            <div className="absolute -bottom-1 -right-1 bg-white border border-botsage/50 rounded-full w-11 h-11 flex items-center justify-center text-xl shadow-md">
+            <div className="absolute -bottom-1 -right-1 bg-white border border-botsage/50 rounded-full w-8 h-8 sm:w-11 sm:h-11 flex items-center justify-center text-base sm:text-xl shadow-md">
               🌿
             </div>
           </div>
-          <h1 className="text-4xl font-bold mb-2 text-darkteal" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+          <h1 className="text-2xl sm:text-4xl font-bold mb-2 text-darkteal" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
             {displayName}
           </h1>
           {user?.email && <p className="text-botsagedark font-medium mb-3">{user.email}</p>}
