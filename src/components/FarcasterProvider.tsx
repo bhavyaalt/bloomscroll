@@ -1,10 +1,11 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from "react";
-import sdk from "@farcaster/miniapp-sdk";
+import { createContext, useContext, useEffect, useState, useCallback, useRef, ReactNode } from "react";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type FrameContext = any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type FarcasterSDK = any;
 
 interface FarcasterContextType {
   isSDKLoaded: boolean;
@@ -45,10 +46,15 @@ export function FarcasterProvider({ children }: FarcasterProviderProps) {
   const [isInFrame, setIsInFrame] = useState(false);
   const [context, setContext] = useState<FrameContext | null>(null);
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const sdkRef = useRef<FarcasterSDK | null>(null);
 
   useEffect(() => {
     const load = async () => {
       try {
+        // Dynamic import to avoid SSR/browser compatibility issues
+        const { default: sdk } = await import("@farcaster/miniapp-sdk");
+        sdkRef.current = sdk;
+        
         // Check if we're in a mini app context
         const inMiniApp = await sdk.isInMiniApp();
         if (inMiniApp) {
@@ -68,7 +74,7 @@ export function FarcasterProvider({ children }: FarcasterProviderProps) {
           }
         }
       } catch (e) {
-        console.log("Not in Farcaster frame context");
+        console.log("Not in Farcaster frame context or SDK unavailable");
       }
       setIsSDKLoaded(true);
     };
@@ -77,11 +83,11 @@ export function FarcasterProvider({ children }: FarcasterProviderProps) {
   }, []);
 
   const requestWallet = useCallback(async (): Promise<string | null> => {
-    if (!isInFrame) return null;
+    if (!isInFrame || !sdkRef.current) return null;
     
     try {
       // Request wallet connection through Farcaster
-      const provider = await sdk.wallet.ethProvider;
+      const provider = await sdkRef.current.wallet.ethProvider;
       const accounts = await provider.request({ method: "eth_requestAccounts" });
       
       if (accounts && accounts.length > 0) {
@@ -96,15 +102,15 @@ export function FarcasterProvider({ children }: FarcasterProviderProps) {
   }, [isInFrame]);
 
   const ready = useCallback(() => {
-    if (isInFrame) {
-      sdk.actions.ready();
+    if (isInFrame && sdkRef.current) {
+      sdkRef.current.actions.ready();
     }
   }, [isInFrame]);
 
   // Auto-ready when SDK loads in frame context
   useEffect(() => {
-    if (isSDKLoaded && isInFrame) {
-      sdk.actions.ready();
+    if (isSDKLoaded && isInFrame && sdkRef.current) {
+      sdkRef.current.actions.ready();
     }
   }, [isSDKLoaded, isInFrame]);
 
