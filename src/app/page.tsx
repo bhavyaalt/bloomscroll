@@ -188,16 +188,19 @@ const testimonials = [
     quote: "BloomScroll completely changed my relationship with my phone. Instead of feeling drained after an hour on social media, I feel inspired by the gentle affirmations.",
     name: "Sarah Jenkins",
     role: "Content Creator",
+    image: "https://randomuser.me/api/portraits/women/44.jpg",
   },
   {
     quote: "The AI detection is surprisingly accurate. It knows exactly when I'm doomscrolling and redirects my focus with just the right message. I've gained back 2 hours daily.",
     name: "David Chen",
     role: "Software Engineer",
+    image: "https://randomuser.me/api/portraits/men/32.jpg",
   },
   {
     quote: "Visualizing my progress as a growing garden makes mindfulness feel rewarding. It's the only app that has actually helped me stick to my digital detox goals.",
     name: "Elena Rodriguez",
     role: "Student",
+    image: "https://randomuser.me/api/portraits/women/68.jpg",
   },
 ];
 
@@ -221,7 +224,7 @@ const Testimonials = () => (
           className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all"
         >
           <div className="flex items-center gap-3 mb-5">
-            <div className="size-12 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 flex-shrink-0" />
+            <img src={t.image} alt={t.name} className="size-12 rounded-full object-cover flex-shrink-0" />
             <div>
               <p className="font-bold text-sm text-slate-900">{t.name}</p>
               <p className="text-xs text-primary font-semibold uppercase tracking-wider">{t.role}</p>
