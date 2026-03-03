@@ -61,27 +61,8 @@ export async function signInWithEmail(email: string) {
 
 // Sign out
 export async function signOut() {
-  try {
-    // Clear local storage first
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('supabase.auth.token');
-      // Clear all supabase-related storage
-      Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('sb-')) localStorage.removeItem(key);
-      });
-    }
-    const { error } = await supabase.auth.signOut({ scope: 'global' });
-    if (error) {
-      console.error('Sign out error:', error);
-      throw error;
-    }
-  } catch (err) {
-    console.error('Sign out failed:', err);
-    // Force reload anyway
-    if (typeof window !== 'undefined') {
-      window.location.href = '/';
-    }
-  }
+  const { error } = await supabase.auth.signOut({ scope: 'local' });
+  if (error) throw error;
 }
 
 // Get current user
@@ -125,33 +106,135 @@ export interface UserProfile {
   auth_method?: 'email' | 'farcaster' | 'both';
 }
 
+function normalizeEmail(email: string) {
+  return email.trim().toLowerCase();
+}
+
+async function getProfileById(id: string): Promise<UserProfile | null> {
+  const { data, error } = await supabase
+    .from('bloomscroll_profiles')
+    .select('*')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error fetching profile by id:', error);
+    return null;
+  }
+
+  return data;
+}
+
+async function getProfileByEmail(email: string): Promise<UserProfile | null> {
+  const normalizedEmail = normalizeEmail(email);
+  if (!normalizedEmail) return null;
+
+  const { data, error } = await supabase
+    .from('bloomscroll_profiles')
+    .select('*')
+    .ilike('email', normalizedEmail)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error fetching profile by email:', error);
+    return null;
+  }
+
+  return data;
+}
+
+function isProfileSubscriptionActive(profile: Pick<UserProfile, 'subscription_status' | 'subscription_expires_at'>) {
+  if (profile.subscription_status !== 'active') return false;
+  if (!profile.subscription_expires_at) return true;
+  return new Date(profile.subscription_expires_at) >= new Date();
+}
+
+function pickCanonicalProfile(
+  candidates: Array<UserProfile | null>,
+  userId?: string,
+  fid?: number
+): UserProfile | null {
+  const unique = candidates.filter((candidate): candidate is UserProfile => !!candidate)
+    .filter((candidate, index, all) => all.findIndex((item) => item.id === candidate.id) === index);
+
+  if (unique.length === 0) return null;
+
+  unique.sort((left, right) => {
+    const leftActive = isProfileSubscriptionActive(left) ? 1 : 0;
+    const rightActive = isProfileSubscriptionActive(right) ? 1 : 0;
+    if (leftActive !== rightActive) return rightActive - leftActive;
+
+    const leftUserMatch = left.id === userId ? 1 : 0;
+    const rightUserMatch = right.id === userId ? 1 : 0;
+    if (leftUserMatch !== rightUserMatch) return rightUserMatch - leftUserMatch;
+
+    const leftFidMatch = left.fid === fid ? 1 : 0;
+    const rightFidMatch = right.fid === fid ? 1 : 0;
+    if (leftFidMatch !== rightFidMatch) return rightFidMatch - leftFidMatch;
+
+    return new Date(right.created_at || 0).getTime() - new Date(left.created_at || 0).getTime();
+  });
+
+  return unique[0];
+}
+
+async function updateResolvedProfile(
+  profile: UserProfile,
+  updates: Partial<UserProfile>
+): Promise<UserProfile> {
+  if (Object.keys(updates).length === 0) {
+    return profile;
+  }
+
+  const { data, error } = await supabase
+    .from('bloomscroll_profiles')
+    .update(updates)
+    .eq('id', profile.id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error updating resolved profile:', error);
+    return profile;
+  }
+
+  return data;
+}
+
 // Get or create user profile
 export async function getOrCreateProfile(
   userId: string,
   email: string,
-  metadata?: { displayName?: string; avatarUrl?: string }
+  metadata?: { displayName?: string; avatarUrl?: string },
+  fcUser?: FarcasterUser
 ): Promise<UserProfile | null> {
-  console.log('[getOrCreateProfile] Looking up userId:', userId);
-  // Try to get existing profile
-  let { data: profile, error } = await supabase
-    .from('bloomscroll_profiles')
-    .select('*')
-    .eq('id', userId)
-    .single();
-  
-  console.log('[getOrCreateProfile] Result:', { profile: profile ? { id: profile.id, subscription_status: profile.subscription_status } : null, error });
+  const normalizedEmail = normalizeEmail(email);
+  const [byId, byEmail, byFid] = await Promise.all([
+    getProfileById(userId),
+    getProfileByEmail(normalizedEmail),
+    fcUser?.fid ? getProfileByFid(fcUser.fid) : Promise.resolve(null),
+  ]);
 
-  if (error && error.code === 'PGRST116') {
-    // Profile doesn't exist, create it
+  const profile = pickCanonicalProfile([byId, byEmail, byFid], userId, fcUser?.fid);
+
+  if (!profile) {
     const newProfile: Record<string, unknown> = {
       id: userId,
-      email,
+      email: normalizedEmail,
       subscription_status: 'free',
       daily_views_count: 0,
       daily_views_reset_at: new Date().toISOString(),
+      auth_method: fcUser?.fid ? 'both' : 'email',
     };
     if (metadata?.displayName) newProfile.display_name = metadata.displayName;
     if (metadata?.avatarUrl) newProfile.avatar_url = metadata.avatarUrl;
+    if (fcUser?.fid) {
+      newProfile.fid = fcUser.fid;
+      newProfile.fc_username = fcUser.username;
+      newProfile.fc_display_name = fcUser.displayName;
+      newProfile.fc_pfp_url = fcUser.pfpUrl;
+      newProfile.wallet_address = fcUser.walletAddress?.toLowerCase();
+    }
 
     const { data: created, error: createError } = await supabase
       .from('bloomscroll_profiles')
@@ -166,28 +249,49 @@ export async function getOrCreateProfile(
     return created;
   }
 
-  if (error) {
-    console.error('Error fetching profile:', error);
-    return null;
+  const updates: Partial<UserProfile> = {};
+
+  if (normalizedEmail && profile.email !== normalizedEmail) {
+    updates.email = normalizedEmail;
   }
 
-  // Update display_name and avatar_url if missing and metadata provided
-  if (profile && metadata) {
-    const updates: Record<string, string> = {};
-    if (!profile.display_name && metadata.displayName) updates.display_name = metadata.displayName;
-    if (!profile.avatar_url && metadata.avatarUrl) updates.avatar_url = metadata.avatarUrl;
-    if (Object.keys(updates).length > 0) {
-      const { data: updated } = await supabase
-        .from('bloomscroll_profiles')
-        .update(updates)
-        .eq('id', userId)
-        .select()
-        .single();
-      if (updated) return updated;
+  if (metadata?.displayName && !profile.display_name) {
+    updates.display_name = metadata.displayName;
+  }
+
+  if (metadata?.avatarUrl && !profile.avatar_url) {
+    updates.avatar_url = metadata.avatarUrl;
+  }
+
+  if (fcUser?.fid && profile.fid !== fcUser.fid) {
+    updates.fid = fcUser.fid;
+  }
+
+  if (fcUser?.username && profile.fc_username !== fcUser.username) {
+    updates.fc_username = fcUser.username;
+  }
+
+  if (fcUser?.displayName && profile.fc_display_name !== fcUser.displayName) {
+    updates.fc_display_name = fcUser.displayName;
+  }
+
+  if (fcUser?.pfpUrl && profile.fc_pfp_url !== fcUser.pfpUrl) {
+    updates.fc_pfp_url = fcUser.pfpUrl;
+  }
+
+  if (fcUser?.walletAddress) {
+    const normalizedWallet = fcUser.walletAddress.toLowerCase();
+    if (profile.wallet_address !== normalizedWallet) {
+      updates.wallet_address = normalizedWallet;
     }
   }
 
-  return profile;
+  const nextAuthMethod = fcUser?.fid ? 'both' : profile.auth_method || 'email';
+  if (profile.auth_method !== nextAuthMethod) {
+    updates.auth_method = nextAuthMethod;
+  }
+
+  return updateResolvedProfile(profile, updates);
 }
 
 // Update user profile
@@ -217,14 +321,9 @@ export interface FarcasterUser {
 
 // Get or create profile by Farcaster ID
 export async function getOrCreateFarcasterProfile(fcUser: FarcasterUser): Promise<UserProfile | null> {
-  // Try to get existing profile by FID
-  let { data: profile, error } = await supabase
-    .from('bloomscroll_profiles')
-    .select('*')
-    .eq('fid', fcUser.fid)
-    .single();
+  const profile = await getProfileByFid(fcUser.fid);
 
-  if (error && error.code === 'PGRST116') {
+  if (!profile) {
     // Profile doesn't exist, create it
     const newProfile = {
       id: `fc_${fcUser.fid}`, // Use fc_ prefix for Farcaster-only users
@@ -252,25 +351,17 @@ export async function getOrCreateFarcasterProfile(fcUser: FarcasterUser): Promis
     return created;
   }
 
-  if (error) {
-    console.error('Error fetching Farcaster profile:', error);
-    return null;
-  }
-
   // Update profile with latest Farcaster info
-  if (profile) {
-    const updates: Partial<UserProfile> = {
-      fc_username: fcUser.username,
-      fc_display_name: fcUser.displayName,
-      fc_pfp_url: fcUser.pfpUrl,
-    };
-    if (fcUser.walletAddress) {
-      updates.wallet_address = fcUser.walletAddress.toLowerCase();
-    }
-    await supabase.from('bloomscroll_profiles').update(updates).eq('fid', fcUser.fid);
+  const updates: Partial<UserProfile> = {
+    fc_username: fcUser.username,
+    fc_display_name: fcUser.displayName,
+    fc_pfp_url: fcUser.pfpUrl,
+  };
+  if (fcUser.walletAddress) {
+    updates.wallet_address = fcUser.walletAddress.toLowerCase();
   }
 
-  return profile;
+  return updateResolvedProfile(profile, updates);
 }
 
 // Get profile by FID
@@ -279,9 +370,12 @@ export async function getProfileByFid(fid: number): Promise<UserProfile | null> 
     .from('bloomscroll_profiles')
     .select('*')
     .eq('fid', fid)
-    .single();
+    .maybeSingle();
 
-  if (error) return null;
+  if (error) {
+    console.error('Error fetching profile by fid:', error);
+    return null;
+  }
   return data;
 }
 
@@ -313,7 +407,7 @@ export async function linkEmailToFarcasterProfile(fid: number, email: string): P
   const { data, error } = await supabase
     .from('bloomscroll_profiles')
     .update({
-      email,
+      email: normalizeEmail(email),
       auth_method: 'both',
     })
     .eq('fid', fid)
@@ -324,7 +418,6 @@ export async function linkEmailToFarcasterProfile(fid: number, email: string): P
     console.error('Error linking email:', error);
     return null;
   }
-  return data;
   return data;
 }
 
