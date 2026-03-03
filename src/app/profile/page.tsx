@@ -131,9 +131,13 @@ export default function ProfilePage() {
 
   const gardenUsername = profile?.fc_username || user?.email?.split("@")[0] || "";
 
-  const displayName = profile?.fc_username
-    ? `@${profile.fc_username}`
-    : user?.email?.split("@")[0] || "Reader";
+  const displayName = profile?.display_name
+    || profile?.fc_display_name
+    || (profile?.fc_username ? `@${profile.fc_username}` : null)
+    || user?.email?.split("@")[0]
+    || "Reader";
+
+  const avatarUrl = profile?.avatar_url || profile?.fc_pfp_url;
 
   if (!stats) {
     return (
@@ -182,8 +186,8 @@ export default function ProfilePage() {
           <div className="relative mb-6">
             <div className="w-36 h-36 rounded-full border-2 border-botsage p-1.5 bg-white shadow-sm">
               <div className="w-full h-full rounded-full bg-botsagelight flex items-center justify-center text-5xl">
-                {profile?.fc_pfp_url ? (
-                  <img src={profile.fc_pfp_url} alt="" className="w-full h-full rounded-full object-cover" />
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt="" className="w-full h-full rounded-full object-cover" />
                 ) : (
                   <span>{displayName.charAt(0).toUpperCase()}</span>
                 )}

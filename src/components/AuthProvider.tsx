@@ -100,7 +100,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        getOrCreateProfile(session.user.id, session.user.email || "").then((p) => {
+        const meta = session.user.user_metadata;
+        getOrCreateProfile(session.user.id, session.user.email || "", {
+          displayName: meta?.full_name || meta?.name,
+          avatarUrl: meta?.avatar_url || meta?.picture,
+        }).then((p) => {
           setProfile(p);
           if (p) {
             canViewContent(p.id).then(({ remaining, isSubscribed: subStatus }) => {
@@ -121,9 +125,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        
+
         if (session?.user) {
-          const userProfile = await getOrCreateProfile(session.user.id, session.user.email || "");
+          const meta = session.user.user_metadata;
+          const userProfile = await getOrCreateProfile(session.user.id, session.user.email || "", {
+            displayName: meta?.full_name || meta?.name,
+            avatarUrl: meta?.avatar_url || meta?.picture,
+          });
           setProfile(userProfile);
           if (userProfile) {
             const { remaining, isSubscribed: subStatus } = await canViewContent(userProfile.id);
@@ -169,10 +177,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [isSDKLoaded, isInFrame, fid, username, displayName, pfpUrl, walletAddress, user]);
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.error("Sign out error:", err);
+    }
+    // Always clear state, even if supabase call fails
     setUser(null);
     setSession(null);
-    // Keep Farcaster profile if in frame
     if (!isInFrame) {
       setProfile(null);
       setIsSubscribed(false);

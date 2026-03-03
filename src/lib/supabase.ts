@@ -62,6 +62,8 @@ export async function getSession() {
 export interface UserProfile {
   id: string;
   email?: string;
+  display_name?: string;
+  avatar_url?: string;
   wallet_address?: string;
   preferences?: {
     topics: string[];
@@ -81,7 +83,11 @@ export interface UserProfile {
 }
 
 // Get or create user profile
-export async function getOrCreateProfile(userId: string, email: string): Promise<UserProfile | null> {
+export async function getOrCreateProfile(
+  userId: string,
+  email: string,
+  metadata?: { displayName?: string; avatarUrl?: string }
+): Promise<UserProfile | null> {
   // Try to get existing profile
   let { data: profile, error } = await supabase
     .from('bloomscroll_profiles')
@@ -91,13 +97,15 @@ export async function getOrCreateProfile(userId: string, email: string): Promise
 
   if (error && error.code === 'PGRST116') {
     // Profile doesn't exist, create it
-    const newProfile = {
+    const newProfile: Record<string, unknown> = {
       id: userId,
       email,
       subscription_status: 'free',
       daily_views_count: 0,
       daily_views_reset_at: new Date().toISOString(),
     };
+    if (metadata?.displayName) newProfile.display_name = metadata.displayName;
+    if (metadata?.avatarUrl) newProfile.avatar_url = metadata.avatarUrl;
 
     const { data: created, error: createError } = await supabase
       .from('bloomscroll_profiles')
@@ -115,6 +123,22 @@ export async function getOrCreateProfile(userId: string, email: string): Promise
   if (error) {
     console.error('Error fetching profile:', error);
     return null;
+  }
+
+  // Update display_name and avatar_url if missing and metadata provided
+  if (profile && metadata) {
+    const updates: Record<string, string> = {};
+    if (!profile.display_name && metadata.displayName) updates.display_name = metadata.displayName;
+    if (!profile.avatar_url && metadata.avatarUrl) updates.avatar_url = metadata.avatarUrl;
+    if (Object.keys(updates).length > 0) {
+      const { data: updated } = await supabase
+        .from('bloomscroll_profiles')
+        .update(updates)
+        .eq('id', userId)
+        .select()
+        .single();
+      if (updated) return updated;
+    }
   }
 
   return profile;

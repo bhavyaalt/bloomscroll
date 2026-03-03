@@ -23,7 +23,7 @@ interface AppHeaderProps {
   onShowReview?: () => void;
   onShowAchievements?: () => void;
   onShowLeaderboard?: () => void;
-  onSignOut: () => void;
+  onSignOut: () => Promise<void>;
 }
 
 export default function AppHeader({
@@ -231,7 +231,7 @@ export default function AppHeader({
               </button>
               <div className="border-t border-white/5 mt-1 pt-1">
                 <button
-                  onClick={() => { onSignOut(); onToggleUserMenu(); }}
+                  onClick={async () => { await onSignOut(); window.location.href = "/"; }}
                   className="w-full px-3 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg text-white/30"
                 >
                   Sign out

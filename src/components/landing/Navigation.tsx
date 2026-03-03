@@ -63,7 +63,7 @@ export const Navigation = () => {
                     Continue Reading
                   </Link>
                   <button
-                    onClick={() => { signOut(); setShowMenu(false); }}
+                    onClick={async () => { await signOut(); setShowMenu(false); window.location.href = "/"; }}
                     className="w-full px-4 py-2 text-sm text-left hover:bg-sage/20 text-slate-400"
                   >
                     Sign out
