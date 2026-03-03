@@ -178,7 +178,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const handleSignOut = async () => {
     try {
-      await supabase.auth.signOut();
+      await supabase.auth.signOut({ scope: 'global' });
     } catch (err) {
       console.error("Sign out error:", err);
     }
