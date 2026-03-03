@@ -422,6 +422,32 @@ export async function unsaveCard(userId: string, cardId: string) {
 }
 
 // ============================================
+// ACTIVE TODAY TRACKING
+// ============================================
+
+export async function updateLastActive(userId: string) {
+  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  await supabase
+    .from('bloomscroll_profiles')
+    .update({ last_active_date: today })
+    .eq('id', userId);
+}
+
+export async function getActiveTodayCount(): Promise<number> {
+  const today = new Date().toISOString().split('T')[0];
+  const { count, error } = await supabase
+    .from('bloomscroll_profiles')
+    .select('*', { count: 'exact', head: true })
+    .eq('last_active_date', today);
+
+  if (error) {
+    console.error('Error getting active count:', error);
+    return 0;
+  }
+  return count || 0;
+}
+
+// ============================================
 // FEEDBACK FUNCTIONS
 // ============================================
 

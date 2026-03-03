@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { PanInfo } from "framer-motion";
 import { useAuth } from "@/components/AuthProvider";
 import {
@@ -18,6 +18,9 @@ import { getCollectionCards, Collection } from "@/lib/collections";
 import { recordCardRead, recordQuizResult } from "@/lib/reading-stats";
 import { sounds, haptic, getSoundEnabled, setSoundEnabled } from "@/lib/sounds";
 import { celebrate } from "@/lib/confetti";
+import { getDailyCard, isDailyCardDismissed, dismissDailyCard } from "@/lib/daily-card";
+import { shouldShowInstallPrompt } from "@/lib/pwa";
+import { addToReview, removeFromReview, getReviewStats } from "@/lib/spaced-repetition";
 
 import { Preferences, StreakState } from "@/components/app/types";
 import AppHeader from "@/components/app/AppHeader";
@@ -28,6 +31,8 @@ import SettingsModal from "@/components/app/SettingsModal";
 import ExpandedCardView from "@/components/app/ExpandedCardView";
 import SavedCardsView from "@/components/app/SavedCardsView";
 import CardFeed from "@/components/app/CardFeed";
+import InstallPrompt from "@/components/app/InstallPrompt";
+import ReviewView from "@/components/app/ReviewView";
 import { AnimatePresence } from "framer-motion";
 
 const SWIPE_THRESHOLD = 100;
@@ -41,6 +46,8 @@ export default function AppPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [savedCards, setSavedCards] = useState<Set<string>>(new Set());
   const [viewedCards, setViewedCards] = useState<Set<string>>(new Set());
+  const viewedCardsRef = useRef(viewedCards);
+  viewedCardsRef.current = viewedCards;
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [showSaved, setShowSaved] = useState(false);
@@ -88,6 +95,17 @@ export default function AppPage() {
   // Sound effects state
   const [soundEnabled, setSoundEnabledState] = useState(true);
 
+  // Daily card state
+  const [dailyCard, setDailyCard] = useState<Card | null>(null);
+
+  // PWA install prompt state
+  const [installEvent, setInstallEvent] = useState<Event | null>(null);
+  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
+
+  // Spaced repetition state
+  const [showReview, setShowReview] = useState(false);
+  const [reviewDueCount, setReviewDueCount] = useState(0);
+
   // Load saved cards, viewed cards, and preferences from localStorage
   useEffect(() => {
     const savedJson = localStorage.getItem(SAVE_STORAGE_KEY);
@@ -121,12 +139,41 @@ export default function AppPage() {
 
     setSoundEnabledState(getSoundEnabled());
     setQuizStats(getQuizStats());
+
+    // Daily card
+    if (!isDailyCardDismissed()) {
+      setDailyCard(getDailyCard());
+    }
+
+    // Spaced repetition stats
+    setReviewDueCount(getReviewStats().dueToday);
+
     setIsLoaded(true);
   }, []);
+
+  // PWA beforeinstallprompt listener
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setInstallEvent(e);
+    };
+    window.addEventListener("beforeinstallprompt", handler);
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
+
+  // Show install prompt after viewing enough cards
+  useEffect(() => {
+    if (shouldShowInstallPrompt(sessionCardsViewed)) {
+      setShowInstallPrompt(true);
+    }
+  }, [sessionCardsViewed]);
 
   // Generate smart feed
   useEffect(() => {
     if (!isLoaded) return;
+
+    // Read viewedCards once at build time via ref to avoid re-triggering on every view
+    const viewed = viewedCardsRef.current;
 
     let availableCards: Card[];
 
@@ -148,20 +195,21 @@ export default function AppPage() {
         !card.topic.some(t => preferences.topics.includes(t))
       );
       const smartFeed = [
-        ...shuffleCards(preferredCards.filter(c => !viewedCards.has(c.id))),
-        ...shuffleCards(otherCards.filter(c => !viewedCards.has(c.id))),
-        ...shuffleCards(preferredCards.filter(c => viewedCards.has(c.id))),
-        ...shuffleCards(otherCards.filter(c => viewedCards.has(c.id))),
+        ...shuffleCards(preferredCards.filter(c => !viewed.has(c.id))),
+        ...shuffleCards(otherCards.filter(c => !viewed.has(c.id))),
+        ...shuffleCards(preferredCards.filter(c => viewed.has(c.id))),
+        ...shuffleCards(otherCards.filter(c => viewed.has(c.id))),
       ];
       setFeed(smartFeed);
     } else {
-      const unseenCards = availableCards.filter(card => !viewedCards.has(card.id));
-      const seenCards = availableCards.filter(card => viewedCards.has(card.id));
+      const unseenCards = availableCards.filter(card => !viewed.has(card.id));
+      const seenCards = availableCards.filter(card => viewed.has(card.id));
       setFeed([...shuffleCards(unseenCards), ...shuffleCards(seenCards)]);
     }
 
     setCurrentIndex(0);
-  }, [selectedTopic, selectedCollection, selectedBook, isLoaded, viewedCards, preferences]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTopic, selectedCollection, selectedBook, isLoaded, preferences]);
 
   // Save to localStorage when savedCards changes
   useEffect(() => {
@@ -174,8 +222,9 @@ export default function AppPage() {
   useEffect(() => {
     if (feed[currentIndex] && isLoaded) {
       const card = feed[currentIndex];
-      if (!viewedCards.has(card.id)) {
-        const newViewed = new Set(viewedCards);
+      const viewed = viewedCardsRef.current;
+      if (!viewed.has(card.id)) {
+        const newViewed = new Set(viewed);
         newViewed.add(card.id);
         setViewedCards(newViewed);
         localStorage.setItem(VIEW_STORAGE_KEY, JSON.stringify([...newViewed]));
@@ -267,13 +316,16 @@ export default function AppPage() {
       const newSet = new Set(prev);
       if (newSet.has(cardId)) {
         newSet.delete(cardId);
+        removeFromReview(cardId);
       } else {
         newSet.add(cardId);
+        addToReview(cardId);
         setJustSaved(true);
         setTimeout(() => setJustSaved(false), 600);
         sounds.save();
         haptic("medium");
       }
+      setReviewDueCount(getReviewStats().dueToday);
       return newSet;
     });
   };
@@ -282,13 +334,16 @@ export default function AppPage() {
     if (currentCard) toggleSave(currentCard.id);
   };
 
+  // Derive ref username for share attribution
+  const refUsername = profile?.fc_username || user?.email?.split("@")[0] || undefined;
+
   const handleShare = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (!currentCard || isSharing) return;
     setIsSharing(true);
     try {
-      await shareCard(currentCard);
+      await shareCard(currentCard, refUsername);
     } finally {
       setTimeout(() => setIsSharing(false), 500);
     }
@@ -296,7 +351,7 @@ export default function AppPage() {
 
   const handleCopy = () => {
     if (!currentCard) return;
-    copyQuote(currentCard);
+    copyQuote(currentCard, refUsername);
     setShowCopied(true);
     sounds.copy();
     haptic("light");
@@ -309,6 +364,18 @@ export default function AppPage() {
     const newStats = updateQuizStats(correct);
     setQuizStats(newStats);
     recordQuizResult(correct);
+  };
+
+  const handleDismissDailyCard = () => {
+    dismissDailyCard();
+    setDailyCard(null);
+  };
+
+  const handleShareDailyCard = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!dailyCard) return;
+    await shareCard(dailyCard, refUsername);
   };
 
   const handleSaveWallet = async (address: string): Promise<boolean> => {
@@ -340,7 +407,7 @@ export default function AppPage() {
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#1a1a1a] to-[#0f0f0f] flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-[#102219] to-[#0a1610] flex items-center justify-center">
         <div className="text-center">
           <div className="text-5xl mb-4">🌱</div>
           <div className="font-impact text-2xl text-[#007A5E]">Loading...</div>
@@ -350,7 +417,7 @@ export default function AppPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#1a1a1a] to-[#0f0f0f] text-white overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-[#102219] to-[#0a1610] text-white overflow-hidden">
       <AppHeader
         user={user}
         profile={profile}
@@ -359,19 +426,20 @@ export default function AppPage() {
         savedCount={savedCards.size}
         showSaved={showSaved}
         showUserMenu={showUserMenu}
+        reviewDueCount={reviewDueCount}
         onToggleSaved={() => setShowSaved(!showSaved)}
         onToggleUserMenu={() => setShowUserMenu(!showUserMenu)}
         onShowStreakModal={() => setShowStreakModal(true)}
         onShowBookFilter={() => setShowBookFilter(true)}
         onShowCollections={() => setShowCollections(true)}
         onShowSettings={() => setShowSettings(true)}
+        onShowReview={() => setShowReview(true)}
         onSignOut={signOut}
       />
 
       {showStreakModal && (
         <StreakModal
           streak={streak}
-          savedCount={savedCards.size}
           onClose={() => setShowStreakModal(false)}
         />
       )}
@@ -403,6 +471,9 @@ export default function AppPage() {
           sessionCardsViewed={sessionCardsViewed}
           feedLength={feed.length}
           hasChapter={!!currentCard?.chapter}
+          dailyCard={dailyCard}
+          onDismissDailyCard={handleDismissDailyCard}
+          onShareDailyCard={handleShareDailyCard}
           onDragEnd={handleDragEnd}
           onDoubleTap={handleDoubleTap}
           onToggleSave={toggleSave}
@@ -461,6 +532,31 @@ export default function AppPage() {
           }}
         />
       )}
+
+      <AnimatePresence>
+        {showInstallPrompt && (
+          <InstallPrompt
+            installEvent={installEvent}
+            onClose={() => setShowInstallPrompt(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showReview && (
+          <ReviewView
+            isSubscribed={isSubscribed}
+            onClose={() => {
+              setShowReview(false);
+              setReviewDueCount(getReviewStats().dueToday);
+            }}
+            onUpgrade={() => {
+              setShowReview(false);
+              window.location.href = "/subscribe";
+            }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

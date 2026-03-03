@@ -6,39 +6,48 @@ import { StreakState } from "./types";
 
 interface StreakModalProps {
   streak: StreakState;
-  savedCount: number;
   onClose: () => void;
 }
 
-export default function StreakModal({ streak, savedCount, onClose }: StreakModalProps) {
+export default function StreakModal({ streak, onClose }: StreakModalProps) {
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl max-w-sm w-full p-6 text-center text-white"
+        className="bg-[#1a2e23] border border-primary/20 rounded-3xl max-w-sm w-full p-8 text-center text-white"
       >
         <div className="text-6xl mb-4">{getStreakEmoji(streak.currentStreak)}</div>
-        <h2 className="font-impact text-4xl uppercase mb-2">
-          {streak.currentStreak} Day{streak.currentStreak !== 1 ? "s" : ""}!
+        <h2 className="text-5xl font-black mb-2 text-primary">
+          {streak.currentStreak}
         </h2>
-        <p className="text-lg opacity-90 mb-6">{getStreakMessage(streak.currentStreak)}</p>
-        <div className="grid grid-cols-2 gap-3 mb-6 text-sm">
-          <div className="bg-white/20 rounded-xl p-3">
-            <div className="text-2xl font-bold">{streak.longestStreak}</div>
-            <div className="text-xs opacity-80">Best</div>
+        <p className="text-sm uppercase tracking-widest text-white/50 mb-4 font-bold">
+          Day Streak
+        </p>
+        <p className="text-white/70 mb-8 leading-relaxed">{getStreakMessage(streak.currentStreak)}</p>
+
+        {/* Stats row */}
+        <div className="grid grid-cols-3 gap-4 mb-8 py-4 border-t border-b border-white/10">
+          <div>
+            <div className="text-2xl font-bold text-primary">{streak.currentStreak}</div>
+            <div className="text-[10px] uppercase tracking-wider text-white/40 mt-1">Current</div>
           </div>
-          <div className="bg-white/20 rounded-xl p-3">
-            <div className="text-2xl font-bold">{savedCount}</div>
-            <div className="text-xs opacity-80">Saved</div>
+          <div>
+            <div className="text-2xl font-bold text-white/80">{streak.longestStreak}</div>
+            <div className="text-[10px] uppercase tracking-wider text-white/40 mt-1">Best</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-white/80">{streak.totalDays}</div>
+            <div className="text-[10px] uppercase tracking-wider text-white/40 mt-1">Total Days</div>
           </div>
         </div>
+
         <button
           onClick={onClose}
-          className="w-full py-3 bg-white text-orange-600 rounded-full font-bold uppercase"
+          className="w-full py-3.5 bg-primary text-[#102219] rounded-xl font-bold text-sm uppercase tracking-wide hover:bg-primary/90 transition-colors"
         >
-          Keep Growing 🌱
+          Keep Growing
         </button>
       </motion.div>
     </div>

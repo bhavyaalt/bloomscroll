@@ -17722,6 +17722,10 @@ export function getBooksByAuthor(author: string): string[] {
   return Array.from(books);
 }
 
+export function getCardById(id: string): Card | undefined {
+  return contentLibrary.find(card => card.id === id);
+}
+
 export function getAllAuthors(): { author: string; cardCount: number; bookCount: number }[] {
   const authorMap = new Map<string, { cards: number; books: Set<string> }>();
   

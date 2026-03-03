@@ -16,6 +16,9 @@ interface CardFeedProps {
   sessionCardsViewed: number;
   feedLength: number;
   hasChapter: boolean;
+  dailyCard?: Card | null;
+  onDismissDailyCard?: () => void;
+  onShareDailyCard?: (e: React.MouseEvent) => void;
   onDragEnd: (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => void;
   onDoubleTap: () => void;
   onToggleSave: (cardId: string) => void;
@@ -27,6 +30,63 @@ interface CardFeedProps {
   onToggleAutoScroll: () => void;
   onClearFilters: () => void;
 }
+
+/* ── SVG Icon Components ── */
+const InfoIcon = () => (
+  <svg className="size-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+  </svg>
+);
+
+const BookmarkIcon = () => (
+  <svg className="size-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+  </svg>
+);
+
+const VolumeIcon = ({ active }: { active: boolean }) => (
+  <svg className="size-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+    {active ? (
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+    ) : (
+      <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-4.72a.75.75 0 011.28.531v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
+    )}
+  </svg>
+);
+
+const PlayIcon = ({ active }: { active: boolean }) => (
+  <svg className="size-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+    {active ? (
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
+    ) : (
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+    )}
+  </svg>
+);
+
+const StarIcon = ({ filled }: { filled: boolean }) => (
+  <svg className="size-5" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+  </svg>
+);
+
+const ShareIcon = () => (
+  <svg className="size-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+  </svg>
+);
+
+const CopyIcon = () => (
+  <svg className="size-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25H10.5a2.25 2.25 0 00-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+  </svg>
+);
+
+const ChevronUpIcon = () => (
+  <svg className="size-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+  </svg>
+);
 
 export default function CardFeed({
   currentCard,
@@ -50,154 +110,206 @@ export default function CardFeed({
   onReadingMode,
   onToggleAudio,
   onToggleAutoScroll,
+  dailyCard,
+  onDismissDailyCard,
+  onShareDailyCard,
   onClearFilters,
 }: CardFeedProps) {
+  const dailyGoal = 10;
+  const progressPercent = Math.min((sessionCardsViewed / dailyGoal) * 100, 100);
+
   return (
-    <div className="fixed inset-0 pt-16 pb-6 px-4 touch-pan-y">
-      <div className="h-full max-w-lg mx-auto relative">
+    <div className="fixed inset-0 pt-16 pb-0 px-4 touch-pan-y flex flex-col">
+      {/* Daily Card Banner */}
+      <AnimatePresence>
+        {dailyCard && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="max-w-2xl mx-auto w-full mb-2 overflow-hidden"
+          >
+            <div className="bg-primary/10 border border-primary/20 rounded-xl px-4 py-3 flex items-center gap-3">
+              <div className="flex-1 min-w-0">
+                <span className="text-xs font-bold text-primary uppercase tracking-wider">
+                  Card of the Day
+                </span>
+                <p className="text-sm text-white/70 truncate mt-0.5">
+                  &ldquo;{dailyCard.quote.slice(0, 80)}{dailyCard.quote.length > 80 ? "..." : ""}&rdquo;
+                </p>
+                <p className="text-xs text-white/40 mt-0.5">— {dailyCard.author}</p>
+              </div>
+              <div className="flex items-center gap-1.5 flex-shrink-0">
+                <button
+                  onClick={onShareDailyCard}
+                  className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white/60 text-sm hover:bg-white/20 transition-all"
+                >
+                  <ShareIcon />
+                </button>
+                <button
+                  onClick={onDismissDailyCard}
+                  className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/40 text-sm hover:bg-white/10 transition-all"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Card Area */}
+      <div className="flex-1 max-w-2xl mx-auto w-full relative">
         <AnimatePresence mode="wait" initial={false}>
           {currentCard && (
             <motion.div
               key={currentCard.id}
-              initial={{ opacity: 0, y: direction > 0 ? 100 : -100, scale: 0.95, rotateX: direction > 0 ? -5 : 5 }}
-              animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
-              exit={{ opacity: 0, y: direction > 0 ? -100 : 100, scale: 0.95, rotateX: direction > 0 ? 5 : -5 }}
-              transition={{
-                duration: 0.4,
-                ease: [0.25, 0.46, 0.45, 0.94],
-                opacity: { duration: 0.3 },
-              }}
+              initial={{ opacity: 0, y: direction > 0 ? 80 : -80, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: direction > 0 ? -80 : 80, scale: 0.97 }}
+              transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
               drag="y"
               dragConstraints={{ top: 0, bottom: 0 }}
               dragElastic={0.1}
               onDragEnd={onDragEnd}
               onDoubleClick={onDoubleTap}
-              className="absolute inset-0 flex flex-col cursor-grab active:cursor-grabbing p-1"
-              style={{ perspective: 1000 }}
+              className="absolute inset-0 flex flex-col cursor-grab active:cursor-grabbing"
             >
-              {/* Card */}
-              <div className="flex-1 bg-gradient-to-b from-[#EACCD4] to-[#e0bfc8] text-[#007A5E] rounded-2xl overflow-hidden flex flex-col relative shadow-2xl">
+              {/* The Card */}
+              <div className="flex-1 bg-gradient-to-b from-[#EACCD4] to-[#e0bfc8] rounded-2xl overflow-hidden flex flex-col relative shadow-2xl shadow-black/30">
                 <div className="relative flex-1 p-6 sm:p-8 flex flex-col">
-                  {/* Saved indicator */}
-                  <div className="flex justify-end mb-4">
+                  {/* Saved badge */}
+                  <div className="flex justify-end mb-2 min-h-[32px]">
                     <AnimatePresence>
                       {savedCards.has(currentCard.id) && (
                         <motion.span
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          exit={{ scale: 0 }}
-                          className="px-3 py-1.5 rounded-full bg-[#007A5E] text-white text-xs font-bold"
+                          initial={{ scale: 0, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          exit={{ scale: 0, opacity: 0 }}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#007A5E]/20 bg-white/50 text-[#007A5E] text-xs font-bold"
                         >
-                          ★ Saved
+                          <StarIcon filled /> SAVED
                         </motion.span>
                       )}
                     </AnimatePresence>
                   </div>
 
+                  {/* Quotation marks */}
+                  <div className="text-center mb-2">
+                    <span className="text-5xl text-[#007A5E]/25 leading-none select-none" style={{ fontFamily: "Georgia, serif" }}>&ldquo;&rdquo;</span>
+                  </div>
+
                   {/* Quote */}
-                  <div className="flex-1 flex items-center justify-center">
-                    <blockquote className="text-xl sm:text-2xl md:text-3xl font-serif leading-relaxed text-center">
-                      <span className="text-[#007A5E]/30 text-4xl">&ldquo;</span>
-                      <span>{currentCard.quote}</span>
-                      <span className="text-[#007A5E]/30 text-4xl">&rdquo;</span>
+                  <div className="flex-1 flex items-center justify-center px-2">
+                    <blockquote className="text-xl sm:text-2xl md:text-3xl leading-relaxed text-center text-[#007A5E]" style={{ fontFamily: "Georgia, serif" }}>
+                      &ldquo;{currentCard.quote}&rdquo;
                     </blockquote>
                   </div>
 
-                  {/* Author */}
-                  <div className="text-center mb-4 mt-4">
-                    <p className="font-bold text-2xl tracking-wide">{currentCard.author}</p>
-                    <p className="text-lg text-[#007A5E]/70 italic">{currentCard.book}</p>
+                  {/* Author + Book */}
+                  <div className="text-center mt-6 mb-2">
+                    <p className="font-bold text-sm sm:text-base uppercase tracking-[0.2em] text-[#007A5E]">
+                      {currentCard.author}
+                    </p>
+                    <p className="text-sm text-[#007A5E]/60 italic mt-1" style={{ fontFamily: "Georgia, serif" }}>
+                      {currentCard.book}
+                    </p>
                   </div>
 
+                  {/* Divider */}
+                  <div className="w-24 h-px bg-[#007A5E]/15 mx-auto my-4" />
+
                   {/* Insight */}
-                  <p className="text-sm text-[#007A5E]/70 leading-relaxed text-center mb-4">
-                    {currentCard.insight}
+                  <p className="text-sm text-[#007A5E]/60 leading-relaxed text-center max-w-md mx-auto">
+                    Insight: {currentCard.insight}
                   </p>
 
-                  {/* Bottom row */}
-                  <div className="flex items-center justify-between mt-auto">
-                    {/* Left buttons */}
-                    <div className="flex gap-2">
+                  {/* Action buttons */}
+                  <div className="flex items-center justify-between mt-6 pt-4">
+                    {/* Left actions */}
+                    <div className="flex gap-1.5">
                       <button
                         onClick={onExpand}
-                        className="w-10 h-10 rounded-full bg-[#007A5E]/10 text-[#007A5E] hover:bg-[#007A5E]/20 transition-all flex items-center justify-center text-lg"
-                        title="Quick insight"
+                        className="w-10 h-10 rounded-full bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E] transition-all flex items-center justify-center"
+                        title="Deep dive"
                       >
-                        ℹ️
+                        <InfoIcon />
                       </button>
                       <button
                         onClick={onReadingMode}
-                        className={`w-10 h-10 rounded-full flex items-center justify-center text-lg transition-all ${
+                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
                           hasChapter
-                            ? "bg-[#007A5E]/10 text-[#007A5E] hover:bg-[#007A5E]/20"
-                            : "bg-[#007A5E]/5 text-[#007A5E]/40"
+                            ? "bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E]"
+                            : "bg-[#007A5E]/5 text-[#007A5E]/30"
                         }`}
                         title={hasChapter ? "Read chapter" : "Chapter coming soon"}
                       >
-                        📖
+                        <BookmarkIcon />
                       </button>
                       <button
                         onClick={onToggleAudio}
-                        className={`w-10 h-10 rounded-full flex items-center justify-center text-lg transition-all ${
+                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
                           audioMode
                             ? "bg-[#007A5E] text-white"
-                            : "bg-[#007A5E]/10 text-[#007A5E] hover:bg-[#007A5E]/20"
+                            : "bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E]"
                         }`}
                         title={audioMode ? "Stop audio" : "Read aloud"}
                       >
-                        {isSpeaking ? "🔊" : audioMode ? "🔈" : "🔇"}
+                        <VolumeIcon active={audioMode || isSpeaking} />
                       </button>
                       <button
                         onClick={onToggleAutoScroll}
-                        className={`w-10 h-10 rounded-full flex items-center justify-center text-lg transition-all ${
+                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
                           autoScroll
                             ? "bg-[#007A5E] text-white"
-                            : "bg-[#007A5E]/10 text-[#007A5E] hover:bg-[#007A5E]/20"
+                            : "bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E]"
                         }`}
-                        title={autoScroll ? "Auto-scroll on" : "Auto-scroll off"}
+                        title={autoScroll ? "Stop auto-scroll" : "Auto-scroll"}
                       >
-                        {autoScroll ? "▶️" : "⏸️"}
+                        <PlayIcon active={autoScroll} />
                       </button>
                     </div>
 
-                    {/* Right buttons */}
-                    <div className="flex gap-2">
+                    {/* Right actions */}
+                    <div className="flex gap-1.5">
                       <motion.button
                         onClick={() => onToggleSave(currentCard.id)}
-                        whileTap={{ scale: 0.95 }}
-                        className={`w-10 h-10 rounded-full flex items-center justify-center text-lg transition-all ${
+                        whileTap={{ scale: 0.9 }}
+                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
                           savedCards.has(currentCard.id)
                             ? "bg-[#007A5E] text-white"
-                            : "bg-[#007A5E]/10 text-[#007A5E] hover:bg-[#007A5E]/20"
+                            : "bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E]"
                         }`}
-                        title={savedCards.has(currentCard.id) ? "Saved" : "Save"}
+                        title={savedCards.has(currentCard.id) ? "Unsave" : "Save"}
                       >
-                        {savedCards.has(currentCard.id) ? "★" : "☆"}
+                        <StarIcon filled={savedCards.has(currentCard.id)} />
                       </motion.button>
                       <button
                         onClick={onShare}
                         disabled={isSharing}
-                        className="w-10 h-10 rounded-full bg-[#007A5E]/10 text-[#007A5E] hover:bg-[#007A5E]/20 transition-all flex items-center justify-center text-lg disabled:opacity-50"
+                        className="w-10 h-10 rounded-full bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E] transition-all flex items-center justify-center disabled:opacity-50"
                         title="Share"
                       >
-                        {isSharing ? "⏳" : "↗"}
+                        <ShareIcon />
                       </button>
                       <button
                         onClick={onCopy}
-                        className="w-10 h-10 rounded-full bg-[#007A5E]/10 text-[#007A5E] hover:bg-[#007A5E]/20 transition-all flex items-center justify-center text-lg relative"
-                        title="Copy"
+                        className="w-10 h-10 rounded-full bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E] transition-all flex items-center justify-center relative"
+                        title="Copy quote"
                       >
-                        📋
-                        {showCopied && (
-                          <motion.span
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0 }}
-                            className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded whitespace-nowrap"
-                          >
-                            Copied!
-                          </motion.span>
-                        )}
+                        <CopyIcon />
+                        <AnimatePresence>
+                          {showCopied && (
+                            <motion.span
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0 }}
+                              className="absolute -top-8 left-1/2 -translate-x-1/2 bg-[#102219] text-white text-xs px-2 py-1 rounded whitespace-nowrap"
+                            >
+                              Copied!
+                            </motion.span>
+                          )}
+                        </AnimatePresence>
                       </button>
                     </div>
                   </div>
@@ -210,27 +322,44 @@ export default function CardFeed({
                       initial={{ opacity: 0, scale: 0.5 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.5 }}
-                      className="absolute inset-0 flex items-center justify-center bg-[#007A5E]/20 pointer-events-none"
+                      className="absolute inset-0 flex items-center justify-center bg-[#007A5E]/10 pointer-events-none"
                     >
-                      <motion.span
+                      <motion.div
                         initial={{ scale: 0 }}
-                        animate={{ scale: [0, 1.2, 1] }}
-                        className="text-6xl"
+                        animate={{ scale: [0, 1.3, 1] }}
+                        className="text-[#007A5E]"
                       >
-                        ★
-                      </motion.span>
+                        <svg className="size-16" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                        </svg>
+                      </motion.div>
                     </motion.div>
                   )}
                 </AnimatePresence>
               </div>
 
-              {/* Progress */}
-              <div className="mt-3 flex items-center justify-between text-white/30 text-xs px-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-[#007A5E]">●</span>
-                  <span>{sessionCardsViewed > 0 ? `${sessionCardsViewed} read today` : "Start your session"}</span>
+              {/* Daily Progress Bar */}
+              <div className="mt-4 px-1">
+                <div className="flex items-center justify-between text-xs mb-2">
+                  <span className="text-primary font-medium">Daily Progress</span>
+                  <span className="text-primary/70">
+                    {sessionCardsViewed > 0 ? `${sessionCardsViewed} read today` : "Start your session"}
+                  </span>
                 </div>
-                <span className="text-white/20">Swipe ↑</span>
+                <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden">
+                  <motion.div
+                    className="h-full bg-primary rounded-full"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${progressPercent}%` }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                  />
+                </div>
+              </div>
+
+              {/* Swipe hint */}
+              <div className="mt-4 flex flex-col items-center text-white/30">
+                <ChevronUpIcon />
+                <span className="text-[10px] uppercase tracking-[0.2em] font-bold mt-0.5">Swipe up for next</span>
               </div>
             </motion.div>
           )}
@@ -241,12 +370,17 @@ export default function CardFeed({
           <div className="h-full flex items-center justify-center text-white/40 text-center">
             <div>
               <p className="text-lg mb-2">No cards in this selection</p>
-              <button onClick={onClearFilters} className="text-[#007A5E] underline">
+              <button onClick={onClearFilters} className="text-primary underline">
                 View all cards
               </button>
             </div>
           </div>
         )}
+      </div>
+
+      {/* Footer */}
+      <div className="text-center py-4 text-white/20 text-[10px] uppercase tracking-widest">
+        &copy; 2025 BloomScroll &middot; Cultivating Mindfulness One Quote at a Time
       </div>
     </div>
   );

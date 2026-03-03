@@ -2,15 +2,16 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { User, Session } from "@supabase/supabase-js";
-import { 
-  supabase, 
-  UserProfile, 
-  getOrCreateProfile, 
+import {
+  supabase,
+  UserProfile,
+  getOrCreateProfile,
   getOrCreateFarcasterProfile,
   canViewContent,
   linkFarcasterToProfile,
   linkEmailToFarcasterProfile,
   linkWallet,
+  updateLastActive,
   FarcasterUser
 } from "@/lib/supabase";
 import { useFarcaster } from "./FarcasterProvider";
@@ -71,6 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { remaining, isSubscribed: subStatus } = await canViewContent(userProfile.id);
         setIsSubscribed(subStatus);
         setViewsRemaining(remaining);
+        updateLastActive(userProfile.id).catch(() => {});
       }
     } else if (fid) {
       // Farcaster-authenticated user
@@ -87,6 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { remaining, isSubscribed: subStatus } = await canViewContent(userProfile.id);
         setIsSubscribed(subStatus);
         setViewsRemaining(remaining);
+        updateLastActive(userProfile.id).catch(() => {});
       }
     }
   };
@@ -104,6 +107,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               setIsSubscribed(subStatus);
               setViewsRemaining(remaining);
             });
+            updateLastActive(p.id).catch(() => {});
           }
         });
       }

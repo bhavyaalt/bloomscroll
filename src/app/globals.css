@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  /* Legacy colors for app pages */
   --color-pink: #EACCD4;
   --color-green: #007A5E;
   --color-green-light: #4D9E8A;
@@ -12,6 +13,13 @@
   --color-green: var(--color-green);
   --color-green-light: var(--color-green-light);
   --color-green-dark: var(--color-green-dark);
+
+  /* Landing page design system */
+  --color-primary: #13ec80;
+  --color-bglight: #f6f8f7;
+  --color-bgdark: #102219;
+  --color-lavender: #e9e7f3;
+  --color-sage: #cfe7db;
 }
 
 * {
@@ -24,11 +32,15 @@ html {
 }
 
 body {
-  background-color: #EACCD4;
-  color: #007A5E;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: contain;
+}
+
+/* Botanical dot pattern */
+.botanical-pattern {
+  background-image: radial-gradient(circle at 2px 2px, rgba(19, 236, 128, 0.05) 1px, transparent 0);
+  background-size: 40px 40px;
 }
 
 /* iOS momentum scrolling */
@@ -58,11 +70,6 @@ body {
   mix-blend-mode: multiply;
 }
 
-.text-outline {
-  -webkit-text-stroke: 1px #007A5E;
-  color: transparent;
-}
-
 .hover-lift {
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -76,11 +83,12 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #EACCD4;
+  background: #f6f8f7;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #007A5E;
+  background: #cfe7db;
+  border-radius: 4px;
 }
 
 @keyframes marquee {
@@ -101,7 +109,7 @@ body {
   scrollbar-width: none;
 }
 
-/* Font classes */
+/* Font classes - legacy for app pages */
 .font-impact {
   font-family: 'Impact', 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
 }
@@ -123,12 +131,7 @@ body {
 
 /* Improved mobile touch feel */
 @media (max-width: 640px) {
-  body {
-    font-size: 14px;
-  }
-  
-  /* Smoother drag animations */
-  * {
+  .hw-accelerated * {
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
   }

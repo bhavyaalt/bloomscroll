@@ -1,347 +1,496 @@
-"use client";
-
-import { useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { useAuth } from "@/components/AuthProvider";
+import { Navigation } from "@/components/landing/Navigation";
+import { FAQ } from "@/components/landing/FAQ";
+import { EmailCapture } from "@/components/landing/EmailCapture";
 
-const Navigation = () => {
-  const { user, profile, isAuthenticated, signOut } = useAuth();
-  const [showMenu, setShowMenu] = useState(false);
-
-  // Get display name/email for logged in user
-  const displayName = profile?.fc_username 
-    ? `@${profile.fc_username}` 
-    : user?.email?.split('@')[0] || 'User';
-
-  return (
-    <nav className="sticky top-0 z-50 bg-[#EACCD4] border-b border-[#007A5E]/20 backdrop-blur-sm bg-opacity-95">
-      <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-        <Link href="/" className="flex items-baseline group">
-          <span className="font-impact text-3xl uppercase tracking-tighter group-hover:tracking-normal transition-all duration-300">Bloom</span>
-          <span className="font-times italic text-3xl font-normal ml-0.5">scroll</span>
-        </Link>
-        <div className="hidden md:flex items-center gap-8 font-bold text-sm tracking-wide uppercase">
-          <a href="#features" className="hover:text-[#004a39] hover:underline decoration-1 underline-offset-4">Manifesto</a>
-          <a href="#library" className="hover:text-[#004a39] hover:underline decoration-1 underline-offset-4">Library</a>
+/* ─── Hero ─── */
+const Hero = () => (
+  <section className="px-6 md:px-20 lg:px-40 py-16 md:py-24">
+    <div className="flex flex-col gap-10 lg:flex-row items-center lg:gap-16">
+      {/* Left copy */}
+      <div className="flex flex-col gap-8 lg:w-1/2">
+        <div className="flex flex-col gap-4">
+          <span className="text-primary font-bold tracking-widest text-xs uppercase bg-primary/10 w-fit px-3 py-1 rounded-full">
+            Daily Curated Wisdom
+          </span>
+          <h1 className="text-slate-900 text-5xl md:text-7xl font-black leading-[1.1] tracking-tight">
+            Turn Scrolling into{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-600">
+              Growing
+            </span>
+          </h1>
+          <p className="text-slate-600 text-lg md:text-xl font-normal leading-relaxed max-w-[540px]">
+            Replace mindless doomscrolling with 60-second wisdom cards from Seneca, Marcus Aurelius, and history&apos;s greatest minds. Designed for your peace of mind.
+          </p>
         </div>
-        <div className="flex items-center gap-4">
-          {isAuthenticated ? (
-            <div className="relative">
-              <button
-                onClick={() => setShowMenu(!showMenu)}
-                className="hidden sm:flex items-center gap-2 font-bold text-sm uppercase hover:opacity-70"
-              >
-                <span className="w-8 h-8 bg-[#007A5E] rounded-full flex items-center justify-center text-[#EACCD4] text-xs">
-                  {displayName.charAt(0).toUpperCase()}
-                </span>
-                <span className="hidden md:inline">{displayName}</span>
-              </button>
-              {showMenu && (
-                <div className="absolute right-0 top-12 bg-white border border-[#007A5E]/20 rounded-lg shadow-xl min-w-[180px] py-2">
-                  <div className="px-4 py-2 text-xs text-[#007A5E]/60 border-b border-[#007A5E]/10">
-                    {user?.email || profile?.fc_username}
-                  </div>
-                  <Link
-                    href="/profile"
-                    className="block px-4 py-2 text-sm hover:bg-[#007A5E]/10 text-[#007A5E]"
-                    onClick={() => setShowMenu(false)}
-                  >
-                    📊 My Profile
-                  </Link>
-                  <Link
-                    href="/app"
-                    className="block px-4 py-2 text-sm hover:bg-[#007A5E]/10 text-[#007A5E]"
-                    onClick={() => setShowMenu(false)}
-                  >
-                    📖 Continue Reading
-                  </Link>
-                  <button
-                    onClick={() => { signOut(); setShowMenu(false); }}
-                    className="w-full px-4 py-2 text-sm text-left hover:bg-[#007A5E]/10 text-[#007A5E]/60"
-                  >
-                    Sign out
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <Link href="/auth" className="hidden sm:block font-bold text-sm uppercase hover:opacity-70">Log in</Link>
-          )}
-          <Link href="/app" className="flex items-center gap-2 px-5 py-2.5 border border-[#007A5E] bg-[#007A5E] text-[#EACCD4] font-bold text-sm uppercase hover:bg-transparent hover:text-[#007A5E] transition-all">
-            <span>Start Reading</span>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Link
+            href="/app"
+            className="flex min-w-[180px] cursor-pointer items-center justify-center rounded-xl h-14 px-8 bg-primary text-bgdark text-lg font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all"
+          >
+            Start Reading Free
+          </Link>
+          <Link
+            href="#how-it-works"
+            className="flex min-w-[180px] cursor-pointer items-center justify-center rounded-xl h-14 px-8 border-2 border-sage text-slate-700 text-lg font-semibold hover:bg-sage/20 transition-all"
+          >
+            See How It Works
           </Link>
         </div>
-      </div>
-    </nav>
-  );
-};
-
-const Hero = () => {
-  return (
-    <header className="relative overflow-hidden pt-20 pb-32 border-b border-[#007A5E]">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        <div className="lg:col-span-7 flex flex-col gap-8 z-10">
-          <div className="inline-flex items-center gap-3 border border-[#007A5E] px-4 py-1.5 w-fit bg-white/10 backdrop-blur-sm">
-            <span className="text-xs font-bold uppercase tracking-widest">Daily Curated Wisdom</span>
-            <span className="text-xs">◆</span>
-            <span className="text-xs font-times italic">Est. 2024</span>
+        <div className="flex items-center gap-4 text-sm text-slate-500">
+          <div className="flex -space-x-2">
+            <div className="size-8 rounded-full border-2 border-bglight bg-primary/20 flex items-center justify-center text-[10px] font-bold text-primary">S</div>
+            <div className="size-8 rounded-full border-2 border-bglight bg-lavender flex items-center justify-center text-[10px] font-bold text-slate-500">J</div>
+            <div className="size-8 rounded-full border-2 border-bglight bg-sage flex items-center justify-center text-[10px] font-bold text-slate-600">P</div>
           </div>
-          <h1 className="text-7xl md:text-8xl lg:text-9xl leading-[0.85] font-impact uppercase tracking-tight">
-            Bloom<br />
-            <span className="font-times italic font-normal tracking-normal text-6xl md:text-7xl lg:text-8xl block mt-2 ml-2">Your Mind</span>
-          </h1>
-          <p className="text-xl md:text-2xl font-times italic max-w-xl leading-relaxed opacity-90">
-            Replace mindless scrolling with meaningful wisdom.
-            <span className="not-italic font-helvetica text-lg block mt-4 opacity-80">
-              Digestible 60-second summaries of history&apos;s greatest ideas, delivered daily to your phone.
-            </span>
-          </p>
-          <div className="flex flex-wrap gap-4 mt-4">
-            <Link href="/app" className="px-8 py-4 bg-[#007A5E] text-[#EACCD4] font-bold uppercase tracking-wide hover:bg-[#004a39] transition-colors border border-[#007A5E]">
-              Start Reading Free
-            </Link>
-          </div>
-          <div className="flex items-center gap-6 mt-8 text-xs font-bold uppercase tracking-widest opacity-60">
-            <span className="flex items-center gap-2"><span className="text-lg">◆</span> Philosophy</span>
-            <span className="flex items-center gap-2"><span className="text-lg">◆</span> History</span>
-            <span className="flex items-center gap-2"><span className="text-lg">◆</span> Science</span>
-          </div>
+          <span>Joined by 10,000+ mindful readers</span>
         </div>
-        <div className="lg:col-span-5 relative">
-          <div className="relative border border-[#007A5E] p-4 bg-[#EACCD4] z-10 rotate-2 hover:rotate-0 transition-transform duration-500 origin-bottom-right">
-            <div className="absolute -top-3 -right-3 w-16 h-16 bg-[#007A5E] flex items-center justify-center rounded-full text-[#EACCD4] z-20 animate-pulse">
-              <span className="font-times italic text-xl">New</span>
-            </div>
-            <img 
-              src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1000&auto=format&fit=crop" 
-              alt="Classic Statue" 
-              className="w-full h-[600px] object-cover grayscale-img border border-[#007A5E]/20"
-            />
-            <div className="absolute bottom-10 left-10 right-10 bg-[#EACCD4]/90 border border-[#007A5E] p-6 backdrop-blur-md">
-              <div className="text-xs font-bold mb-2 flex justify-between">
-                <span>TODAY&apos;S READ</span>
-                <span>60s</span>
+      </div>
+
+      {/* Right — hero card */}
+      <div className="lg:w-1/2 w-full relative">
+        <div className="absolute -top-10 -right-10 size-64 bg-lavender/40 rounded-full blur-3xl -z-10" />
+        <div className="absolute -bottom-10 -left-10 size-64 bg-primary/10 rounded-full blur-3xl -z-10" />
+        <div className="w-full aspect-square bg-white rounded-3xl shadow-2xl overflow-hidden border border-sage/30 p-4 max-w-lg mx-auto">
+          <div className="w-full h-full rounded-2xl bg-gradient-to-br from-sage/30 to-lavender/40 flex items-center justify-center">
+            <div className="bg-white/90 backdrop-blur p-6 rounded-2xl shadow-xl max-w-xs text-center border border-primary/20">
+              <span className="text-primary text-4xl mb-2 block">✦</span>
+              <p className="italic text-lg text-slate-800 leading-relaxed" style={{ fontFamily: "Georgia, serif" }}>
+                &ldquo;It is not that we have a short time to live, but that we waste a lot of it.&rdquo;
+              </p>
+              <p className="text-xs text-slate-400 mt-3 uppercase tracking-widest font-semibold">— Seneca</p>
+              <div className="mt-4 h-1 w-full bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-full bg-primary w-2/3" />
               </div>
-              <h3 className="font-impact text-4xl uppercase leading-none mb-1">Marcus Aurelius</h3>
-              <p className="font-times italic text-xl">Meditations on Resilience</p>
+              <p className="text-[10px] uppercase tracking-widest mt-2 text-slate-400">
+                Daily Bloom Progress: 65%
+              </p>
             </div>
           </div>
-          <div className="absolute top-10 -right-10 w-full h-full border border-[#007A5E] opacity-20 -z-10"></div>
-          <div className="absolute top-20 -right-20 w-full h-full border border-[#007A5E] opacity-10 -z-10"></div>
         </div>
-      </div>
-    </header>
-  );
-};
-
-const MarqueeBanner = () => {
-  return (
-    <div className="overflow-hidden whitespace-nowrap border-b border-[#007A5E] bg-[#007A5E] text-[#EACCD4] py-3">
-      <div className="inline-block animate-marquee">
-        <span className="mx-8 font-impact text-xl uppercase tracking-widest">Ideas that matter</span>
-        <span className="mx-4 text-[#4D9E8A]">◆</span>
-        <span className="mx-8 font-times italic text-xl">Seneca</span>
-        <span className="mx-4 text-[#4D9E8A]">◆</span>
-        <span className="mx-8 font-impact text-xl uppercase tracking-widest">No Ads</span>
-        <span className="mx-4 text-[#4D9E8A]">◆</span>
-        <span className="mx-8 font-times italic text-xl">Plato</span>
-        <span className="mx-4 text-[#4D9E8A]">◆</span>
-        <span className="mx-8 font-impact text-xl uppercase tracking-widest">Curated Daily</span>
-        <span className="mx-4 text-[#4D9E8A]">◆</span>
-        <span className="mx-8 font-times italic text-xl">Curie</span>
-        <span className="mx-4 text-[#4D9E8A]">◆</span>
-        <span className="mx-8 font-impact text-xl uppercase tracking-widest">Ideas that matter</span>
-        <span className="mx-4 text-[#4D9E8A]">◆</span>
-        <span className="mx-8 font-times italic text-xl">Seneca</span>
-        <span className="mx-4 text-[#4D9E8A]">◆</span>
-        <span className="mx-8 font-impact text-xl uppercase tracking-widest">No Ads</span>
-        <span className="mx-4 text-[#4D9E8A]">◆</span>
-        <span className="mx-8 font-times italic text-xl">Plato</span>
-        <span className="mx-4 text-[#4D9E8A]">◆</span>
-        <span className="mx-8 font-impact text-xl uppercase tracking-widest">Curated Daily</span>
-        <span className="mx-4 text-[#4D9E8A]">◆</span>
-        <span className="mx-8 font-times italic text-xl">Curie</span>
       </div>
     </div>
-  );
-};
+  </section>
+);
 
-const Features = () => {
-  return (
-    <section id="features" className="py-24 border-b border-[#007A5E]">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-[#007A5E] border border-[#007A5E]">
-          <div className="bg-[#EACCD4] p-12 hover:bg-[#e0bcc5] transition-colors group">
-            <div className="w-12 h-12 border border-[#007A5E] flex items-center justify-center mb-8 font-times italic text-2xl group-hover:bg-[#007A5E] group-hover:text-[#EACCD4] transition-colors">
-              i
-            </div>
-            <h3 className="font-impact text-3xl uppercase mb-4">Daily Bliss</h3>
-            <p className="text-lg opacity-80 leading-relaxed">
-              Wake up to one curated idea. No endless feeds, no algorithm chasing your attention. Just one powerful thought to start your day.
+/* ─── Social Proof Stats ─── */
+const SocialProof = () => (
+  <section className="px-6 md:px-20 lg:px-40 py-8 bg-white">
+    <div className="max-w-4xl mx-auto flex flex-col sm:flex-row justify-center items-center gap-8 sm:gap-16 text-center">
+      <div className="flex flex-col items-center gap-1">
+        <span className="text-3xl font-black text-slate-900">1,000+</span>
+        <span className="text-sm text-slate-500">Wisdom Cards</span>
+      </div>
+      <div className="hidden sm:block w-px h-10 bg-sage/40" />
+      <div className="flex flex-col items-center gap-1">
+        <span className="text-3xl font-black text-slate-900">4.9★</span>
+        <span className="text-sm text-slate-500">Reader Rating</span>
+      </div>
+      <div className="hidden sm:block w-px h-10 bg-sage/40" />
+      <div className="flex flex-col items-center gap-1">
+        <span className="text-3xl font-black text-slate-900">50+</span>
+        <span className="text-sm text-slate-500">Curated Books</span>
+      </div>
+    </div>
+  </section>
+);
+
+/* ─── How It Works ─── */
+const HowItWorks = () => (
+  <section id="how-it-works" className="px-6 md:px-20 lg:px-40 py-20 bg-white">
+    <div className="flex flex-col gap-16">
+      <div className="text-center max-w-2xl mx-auto flex flex-col gap-4">
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
+          Three simple steps to mindful reading
+        </h2>
+        <p className="text-slate-500 text-lg">
+          We&apos;ve distilled the world&apos;s best books into a beautiful, bite-sized experience.
+        </p>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="flex flex-col gap-6 p-8 rounded-2xl bg-bglight border border-sage/20 hover:border-primary/50 transition-all group">
+          <div className="size-16 rounded-2xl bg-sage/30 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-bgdark transition-all">
+            <svg className="size-7" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+            </svg>
+          </div>
+          <div className="flex flex-col gap-2">
+            <h3 className="text-xl font-bold text-slate-900">Choose Your Topics</h3>
+            <p className="text-slate-500 leading-relaxed">
+              Pick what resonates — philosophy, science, psychology, leadership, or creativity. Your feed, your focus.
             </p>
           </div>
-          <div className="bg-[#EACCD4] p-12 hover:bg-[#e0bcc5] transition-colors group border-t md:border-t-0 md:border-l border-[#007A5E]/20">
-            <div className="w-12 h-12 border border-[#007A5E] flex items-center justify-center mb-8 font-times italic text-2xl group-hover:bg-[#007A5E] group-hover:text-[#EACCD4] transition-colors">
-              ii
-            </div>
-            <h3 className="font-impact text-3xl uppercase mb-4">60 Seconds</h3>
-            <p className="text-lg opacity-80 leading-relaxed">
-              We distill complex books and theories into 60-second reads. Perfect for your commute, coffee break, or morning ritual.
+        </div>
+        <div className="flex flex-col gap-6 p-8 rounded-2xl bg-bglight border border-sage/20 hover:border-primary/50 transition-all group">
+          <div className="size-16 rounded-2xl bg-lavender flex items-center justify-center text-indigo-500 group-hover:bg-primary group-hover:text-bgdark transition-all">
+            <svg className="size-7" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+            </svg>
+          </div>
+          <div className="flex flex-col gap-2">
+            <h3 className="text-xl font-bold text-slate-900">Swipe Through Wisdom</h3>
+            <p className="text-slate-500 leading-relaxed">
+              Each card is a 60-second insight from a great book. Swipe to explore, save what inspires you.
             </p>
           </div>
-          <div className="bg-[#EACCD4] p-12 hover:bg-[#e0bcc5] transition-colors group border-t md:border-t-0 md:border-l border-[#007A5E]/20">
-            <div className="w-12 h-12 border border-[#007A5E] flex items-center justify-center mb-8 font-times italic text-2xl group-hover:bg-[#007A5E] group-hover:text-[#EACCD4] transition-colors">
-              iii
-            </div>
-            <h3 className="font-impact text-3xl uppercase mb-4">Save & Grow</h3>
-            <p className="text-lg opacity-80 leading-relaxed">
-              Build your personal library of wisdom. Save your favorites, categorize them, and revisit them whenever you need perspective.
+        </div>
+        <div className="flex flex-col gap-6 p-8 rounded-2xl bg-bglight border border-sage/20 hover:border-primary/50 transition-all group">
+          <div className="size-16 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-600 group-hover:bg-primary group-hover:text-bgdark transition-all">
+            <svg className="size-7" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+            </svg>
+          </div>
+          <div className="flex flex-col gap-2">
+            <h3 className="text-xl font-bold text-slate-900">Track Your Growth</h3>
+            <p className="text-slate-500 leading-relaxed">
+              Build streaks, take quizzes, and watch your wisdom library grow. Real progress, one card at a time.
             </p>
           </div>
         </div>
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
-interface ArticleCardProps {
-  category: string;
-  image: string;
-  author: string;
-  title: string;
-  quote: string;
-}
-
-const ArticleCard = ({ category, image, author, title, quote }: ArticleCardProps) => {
-  return (
-    <Link href="/app">
-      <article className="min-w-[340px] md:min-w-[400px] bg-[#EACCD4] text-[#007A5E] p-6 snap-center border-l-4 border-[#4D9E8A] hover:-translate-y-2 transition-transform duration-300 cursor-pointer">
-        <div className="flex justify-between items-center text-xs font-bold mb-6 border-b border-[#007A5E]/10 pb-4">
-          <span className="flex items-center gap-2">◆ {category}</span>
-          <span className="opacity-60">60s read</span>
+/* ─── Features Grid ─── */
+const Features = () => (
+  <section id="features" className="px-6 md:px-20 lg:px-40 py-24">
+    <div className="text-center max-w-2xl mx-auto flex flex-col gap-4 mb-16">
+      <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
+        Everything you need to bloom
+      </h2>
+      <p className="text-slate-500 text-lg">
+        A complete system for replacing doomscrolling with something meaningful.
+      </p>
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+      {[
+        { icon: "📚", title: "1000+ Wisdom Cards", desc: "Curated insights from 50+ of the greatest books ever written." },
+        { icon: "⏱", title: "60-Second Reads", desc: "Distilled wisdom that fits your commute, coffee break, or morning ritual." },
+        { icon: "🔥", title: "Daily Streaks", desc: "Build consistency with streak tracking and gentle daily reminders." },
+        { icon: "🧠", title: "Quiz Mode", desc: "Test your knowledge with \"Who said this?\" challenges every 10 cards." },
+        { icon: "💾", title: "Save & Collect", desc: "Bookmark favorites and browse curated collections anytime." },
+        { icon: "📤", title: "Share as Stories", desc: "Generate beautiful share images to inspire your friends." },
+      ].map((f, i) => (
+        <div key={i} className="p-6 rounded-2xl bg-white border border-sage/20 hover:border-primary/50 hover:-translate-y-1 transition-all">
+          <span className="text-2xl mb-3 block">{f.icon}</span>
+          <h3 className="font-bold text-slate-900 mb-1">{f.title}</h3>
+          <p className="text-sm text-slate-500 leading-relaxed">{f.desc}</p>
         </div>
-        <div className="h-48 bg-black mb-6 overflow-hidden relative group">
-          <img 
-            src={image} 
-            alt={author}
-            className="w-full h-full object-cover opacity-80 mix-blend-luminosity group-hover:scale-110 transition-transform duration-700"
-          />
-        </div>
-        <h3 className="font-impact text-4xl uppercase leading-none mb-2">{author}</h3>
-        <h4 className="font-times italic text-2xl mb-4">{title}</h4>
-        <p className="text-sm leading-relaxed border-l-2 border-[#007A5E] pl-4 opacity-80">
-          {quote}
-        </p>
-      </article>
-    </Link>
-  );
-};
+      ))}
+    </div>
+  </section>
+);
 
-const Library = () => {
-  return (
-    <section id="library" className="py-32 bg-[#007A5E] text-[#EACCD4] overflow-hidden relative">
-      <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#EACCD4 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
-          <div>
-            <h2 className="font-impact text-6xl md:text-8xl uppercase leading-none mb-4">The Library</h2>
-            <p className="font-times italic text-2xl md:text-3xl text-[#4D9E8A]">Timeless wisdom for modern minds.</p>
+/* ─── Testimonials ─── */
+const testimonials = [
+  {
+    quote: "I replaced my morning TikTok habit with BloomScroll. Three weeks in, and I actually look forward to my commute.",
+    name: "Sarah K.",
+    role: "Product Designer",
+  },
+  {
+    quote: "Finally, an app that respects my time. 60 seconds of Seneca beats 60 minutes of doom.",
+    name: "James R.",
+    role: "Software Engineer",
+  },
+  {
+    quote: "My team does a \u2018card of the day\u2019 standup starter. It\u2019s become our favorite ritual.",
+    name: "Priya M.",
+    role: "Team Lead",
+  },
+  {
+    quote: "I\u2019ve read more philosophy in 2 months of BloomScroll than in 4 years of college.",
+    name: "Alex T.",
+    role: "Graduate Student",
+  },
+];
+
+const Testimonials = () => (
+  <section className="px-6 md:px-20 lg:px-40 py-24 bg-white">
+    <div className="text-center mb-12">
+      <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
+        Loved by mindful readers
+      </h2>
+      <p className="text-slate-500 text-lg mt-3">
+        See what our community has to say.
+      </p>
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+      {testimonials.map((t, i) => (
+        <div
+          key={i}
+          className="p-6 rounded-2xl bg-bglight border border-sage/20 hover:border-primary/50 transition-all"
+        >
+          <p className="text-slate-700 leading-relaxed mb-4" style={{ fontFamily: "Georgia, serif" }}>
+            &ldquo;{t.quote}&rdquo;
+          </p>
+          <div className="flex items-center gap-3">
+            <div className="size-10 rounded-full bg-primary/15 flex items-center justify-center text-primary font-bold text-sm">
+              {t.name.charAt(0)}
+            </div>
+            <div>
+              <span className="font-semibold text-sm text-slate-900">{t.name}</span>
+              <span className="text-sm text-slate-400 ml-2">{t.role}</span>
+            </div>
           </div>
-          <Link href="/app" className="text-[#EACCD4] border-b border-[#EACCD4] pb-1 uppercase font-bold text-sm tracking-widest hover:text-[#4D9E8A] hover:border-[#4D9E8A] transition-colors">
-            Explore Archive →
+        </div>
+      ))}
+    </div>
+  </section>
+);
+
+/* ─── Before / After ─── */
+const BeforeAfter = () => (
+  <section className="px-6 md:px-20 lg:px-40 py-24">
+    <div className="text-center mb-12">
+      <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
+        Your Scrolling, Reimagined
+      </h2>
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      <div className="p-8 rounded-2xl border-2 border-slate-200 bg-white relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-1 bg-slate-300" />
+        <h3 className="text-lg font-bold text-slate-400 uppercase tracking-wide mb-6">Doomscrolling</h3>
+        <ul className="space-y-4 text-slate-500">
+          <li className="flex items-start gap-3">
+            <span className="text-xl shrink-0">😵</span>
+            <span>Anxiety after scrolling</span>
+          </li>
+          <li className="flex items-start gap-3">
+            <span className="text-xl shrink-0">⏰</span>
+            <span>2 hours wasted daily</span>
+          </li>
+          <li className="flex items-start gap-3">
+            <span className="text-xl shrink-0">📉</span>
+            <span>Brain rot &amp; regret</span>
+          </li>
+          <li className="flex items-start gap-3">
+            <span className="text-xl shrink-0">🔄</span>
+            <span>Endless, addictive feed</span>
+          </li>
+        </ul>
+      </div>
+      <div className="p-8 rounded-2xl border-2 border-primary bg-bglight relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-1 bg-primary" />
+        <h3 className="text-lg font-bold text-primary uppercase tracking-wide mb-6">Bloomscrolling</h3>
+        <ul className="space-y-4 text-slate-700">
+          <li className="flex items-start gap-3">
+            <span className="text-xl shrink-0">🧘</span>
+            <span>Calm, centered mind</span>
+          </li>
+          <li className="flex items-start gap-3">
+            <span className="text-xl shrink-0">⏰</span>
+            <span>5 minutes invested</span>
+          </li>
+          <li className="flex items-start gap-3">
+            <span className="text-xl shrink-0">📈</span>
+            <span>Growth &amp; insight</span>
+          </li>
+          <li className="flex items-start gap-3">
+            <span className="text-xl shrink-0">✅</span>
+            <span>Curated, finite wisdom</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+);
+
+/* ─── Pricing ─── */
+const Pricing = () => (
+  <section id="pricing" className="px-6 md:px-20 lg:px-40 py-24">
+    <div className="text-center flex flex-col gap-3 mb-12">
+      <h2 className="text-3xl md:text-5xl font-black text-slate-900">Choose Your Path to Growth</h2>
+      <p className="text-slate-500">Flexible plans to support your wisdom journey.</p>
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto w-full gap-8">
+      {/* Free */}
+      <div className="flex flex-col p-8 rounded-3xl border-2 border-sage bg-white relative overflow-hidden">
+        <div className="flex flex-col gap-6 h-full">
+          <div className="flex flex-col gap-2">
+            <h3 className="text-xl font-bold text-slate-900">Seedling Plan</h3>
+            <p className="text-slate-500 text-sm">Everything you need to start blooming.</p>
+          </div>
+          <div className="flex items-baseline gap-1">
+            <span className="text-4xl font-black text-slate-900">$0</span>
+            <span className="text-slate-400 font-medium">/forever</span>
+          </div>
+          <ul className="flex flex-col gap-4 mt-4 flex-grow">
+            <li className="flex items-center gap-3 text-sm text-slate-700">
+              <span className="text-primary text-lg">✓</span>
+              5 daily wisdom cards
+            </li>
+            <li className="flex items-center gap-3 text-sm text-slate-700">
+              <span className="text-primary text-lg">✓</span>
+              Daily streak tracking
+            </li>
+            <li className="flex items-center gap-3 text-sm text-slate-700">
+              <span className="text-primary text-lg">✓</span>
+              Save &amp; share cards
+            </li>
+            <li className="flex items-center gap-3 text-sm text-slate-400">
+              <span className="text-slate-300 text-lg">✕</span>
+              Unlimited access
+            </li>
+          </ul>
+          <Link
+            href="/app"
+            className="w-full py-4 rounded-xl border-2 border-sage font-bold text-center hover:bg-sage/10 transition-colors mt-8 text-slate-700 block"
+          >
+            Start Free
           </Link>
         </div>
-        <div className="flex gap-8 overflow-x-auto pb-12 snap-x snap-mandatory scrollbar-hide">
-          <ArticleCard
-            category="PHILOSOPHY"
-            image="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=600&auto=format&fit=crop"
-            author="Seneca"
-            title="On Shortness of Life"
-            quote='"It is not that we have a short time to live, but that we waste a lot of it."'
-          />
-          <ArticleCard
-            category="SCIENCE"
-            image="https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=600&auto=format&fit=crop"
-            author="Feynman"
-            title="The Pleasure of Finding"
-            quote='"The first principle is that you must not fool yourself and you are the easiest person to fool."'
-          />
-          <ArticleCard
-            category="HISTORY"
-            image="https://images.unsplash.com/photo-1555679427-1f6dfcce943b?q=80&w=600&auto=format&fit=crop"
-            author="Machiavelli"
-            title="The Prince"
-            quote='"Entrepreneurs are simply those who understand that there is little difference between obstacle and opportunity."'
-          />
-          <article className="min-w-[340px] md:min-w-[400px] bg-[#007A5E] border border-[#EACCD4] p-6 snap-center flex flex-col justify-center items-center text-center group cursor-pointer hover:bg-[#4D9E8A] transition-colors">
-            <div className="w-20 h-20 border border-[#EACCD4] rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-              <span className="text-4xl">→</span>
-            </div>
-            <h3 className="font-impact text-3xl uppercase text-[#EACCD4] mb-2">View All 1000+</h3>
-            <p className="font-times italic text-[#EACCD4] opacity-80">Join to access the full archive</p>
-          </article>
+      </div>
+
+      {/* Pro */}
+      <div className="flex flex-col p-8 rounded-3xl border-2 border-primary bg-bglight shadow-2xl shadow-primary/10 relative overflow-hidden transform md:scale-105 z-10">
+        <div className="absolute top-0 right-0 bg-primary text-bgdark font-bold text-[10px] uppercase tracking-widest px-6 py-2 rounded-bl-xl">
+          Best Value
+        </div>
+        <div className="flex flex-col gap-6 h-full">
+          <div className="flex flex-col gap-2">
+            <h3 className="text-xl font-bold text-slate-900">Pro Garden</h3>
+            <p className="text-slate-500 text-sm">Unlock the full power of daily wisdom.</p>
+          </div>
+          <div className="flex items-baseline gap-1">
+            <span className="text-4xl font-black text-primary">$5</span>
+            <span className="text-slate-400 font-medium">/month</span>
+          </div>
+          <ul className="flex flex-col gap-4 mt-4 flex-grow">
+            <li className="flex items-center gap-3 text-sm font-semibold text-slate-900">
+              <span className="text-primary text-lg font-bold">✓</span>
+              Unlimited wisdom cards
+            </li>
+            <li className="flex items-center gap-3 text-sm font-semibold text-slate-900">
+              <span className="text-primary text-lg font-bold">✓</span>
+              Spaced repetition learning
+            </li>
+            <li className="flex items-center gap-3 text-sm font-semibold text-slate-900">
+              <span className="text-primary text-lg font-bold">✓</span>
+              All 8 curated collections
+            </li>
+            <li className="flex items-center gap-3 text-sm font-semibold text-slate-900">
+              <span className="text-primary text-lg font-bold">✓</span>
+              Advanced quiz &amp; stats
+            </li>
+            <li className="flex items-center gap-3 text-sm font-semibold text-slate-900">
+              <span className="text-primary text-lg font-bold">✓</span>
+              Offline reading mode
+            </li>
+          </ul>
+          <Link
+            href="/subscribe"
+            className="w-full py-4 rounded-xl bg-primary text-bgdark font-black shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all mt-8 text-center block"
+          >
+            Grow Now
+          </Link>
         </div>
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
-const Footer = () => {
-  return (
-    <footer className="bg-[#007A5E] text-[#EACCD4] pt-20 pb-10 border-t border-[#EACCD4]/20">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-          <div className="col-span-1 md:col-span-2">
-            <Link href="/" className="flex items-baseline mb-6">
-              <span className="font-impact text-5xl uppercase tracking-tighter">Bloom</span>
-              <span className="font-times italic text-5xl font-normal ml-1 text-[#4D9E8A]">scroll</span>
-            </Link>
-            <p className="max-w-sm font-times italic text-lg opacity-70">
-              Bloom your mind. Daily wisdom, one scroll at a time.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-impact text-lg uppercase tracking-widest mb-6 text-[#4D9E8A]">Platform</h4>
-            <ul className="space-y-3 font-helvetica text-sm font-bold opacity-80">
-              <li><span className="opacity-50">iOS App (Coming Soon)</span></li>
-              <li><span className="opacity-50">Android App (Coming Soon)</span></li>
-              <li><Link href="/app" className="hover:text-[#4D9E8A] transition-colors">Web Reader</Link></li>
-              <li><Link href="/profile" className="hover:text-[#4D9E8A] transition-colors">My Stats</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-impact text-lg uppercase tracking-widest mb-6 text-[#4D9E8A]">Company</h4>
-            <ul className="space-y-3 font-helvetica text-sm font-bold opacity-80">
-              <li><a href="#" className="hover:text-[#4D9E8A] transition-colors">About Us</a></li>
-              <li><a href="#" className="hover:text-[#4D9E8A] transition-colors">Manifesto</a></li>
-              <li><a href="#" className="hover:text-[#4D9E8A] transition-colors">Careers</a></li>
-              <li><a href="#" className="hover:text-[#4D9E8A] transition-colors">Contact</a></li>
-            </ul>
-          </div>
-        </div>
-        <div className="border-t border-[#EACCD4]/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-bold uppercase tracking-widest opacity-40">
-          <div>© 2025 Bloomscroll</div>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-[#4D9E8A]">Privacy</a>
-            <a href="#" className="hover:text-[#4D9E8A]">Terms</a>
-            <a href="https://twitter.com/bloomscroll" className="hover:text-[#4D9E8A]">Twitter</a>
-            <a href="https://instagram.com/bloomscroll" className="hover:text-[#4D9E8A]">Instagram</a>
-          </div>
+/* ─── CTA ─── */
+const CTA = () => (
+  <section className="px-6 md:px-20 lg:px-40 py-24 mb-20">
+    <div className="bg-slate-900 rounded-[2rem] md:rounded-[3rem] p-12 md:p-20 text-center flex flex-col items-center gap-8 relative overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-full opacity-10 botanical-pattern pointer-events-none" />
+      <div className="absolute -top-24 -left-24 size-64 bg-primary/20 rounded-full blur-[100px]" />
+      <div className="absolute -bottom-24 -right-24 size-64 bg-emerald-500/20 rounded-full blur-[100px]" />
+      <div className="relative z-10 flex flex-col gap-6 max-w-3xl">
+        <h2 className="text-white text-4xl md:text-6xl font-black leading-tight">
+          Ready to let your mind bloom?
+        </h2>
+        <p className="text-slate-400 text-lg md:text-xl">
+          Join over 10,000 readers who replaced doomscrolling with wisdom and reclaimed their time.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+          <Link
+            href="/app"
+            className="flex items-center justify-center gap-3 rounded-2xl h-16 px-10 bg-primary text-bgdark text-xl font-bold transition-transform hover:scale-105"
+          >
+            Get Started Free
+            <svg className="size-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
+          </Link>
         </div>
       </div>
-    </footer>
-  );
-};
+    </div>
+  </section>
+);
 
+/* ─── Trust Badges ─── */
+const TrustBadges = () => (
+  <section className="px-6 md:px-20 lg:px-40 py-8">
+    <div className="flex flex-wrap justify-center gap-8 text-sm font-medium text-slate-400">
+      <span className="flex items-center gap-2">🔒 No Ads</span>
+      <span className="flex items-center gap-2">🛡️ No Tracking</span>
+      <span className="flex items-center gap-2">📱 Works Offline</span>
+      <span className="flex items-center gap-2">💚 Open Source Friendly</span>
+    </div>
+  </section>
+);
+
+/* ─── Footer ─── */
+const Footer = () => (
+  <footer className="px-6 md:px-20 lg:px-40 py-12 border-t border-sage/20">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-3">
+          <div className="size-6 flex items-center justify-center bg-primary rounded text-bgdark">
+            <svg className="size-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 22c4.97 0 9-4.03 9-9-4.97 0-9 4.03-9 9ZM5.6 10.25c0 1.64 1.33 2.97 2.97 2.97h.86c1.97 0 3.56-1.6 3.56-3.57v-5.4C12.99 2.56 11.43 1 9.43 1c-2 0-3.56 1.56-3.56 3.56v5.4c0 .1 0 .2-.27.29ZM3 13c0 4.97 4.03 9 9 9 0-4.97-4.03-9-9-9Z" />
+            </svg>
+          </div>
+          <span className="text-lg font-bold text-slate-900">BloomScroll</span>
+        </div>
+        <p className="text-sm text-slate-500">Transforming digital habits through wisdom and growth.</p>
+      </div>
+      <div className="flex flex-col gap-4">
+        <h4 className="font-bold text-slate-900">Product</h4>
+        <Link href="/app" className="text-sm text-slate-500 hover:text-primary transition-colors">Web Reader</Link>
+        <a href="#features" className="text-sm text-slate-500 hover:text-primary transition-colors">Features</a>
+        <Link href="/subscribe" className="text-sm text-slate-500 hover:text-primary transition-colors">Pricing</Link>
+      </div>
+      <div className="flex flex-col gap-4">
+        <h4 className="font-bold text-slate-900">Company</h4>
+        <a href="#" className="text-sm text-slate-500 hover:text-primary transition-colors">About Us</a>
+        <a href="#" className="text-sm text-slate-500 hover:text-primary transition-colors">Community</a>
+        <a href="#" className="text-sm text-slate-500 hover:text-primary transition-colors">Privacy Policy</a>
+      </div>
+      <div className="flex flex-col gap-4">
+        <h4 className="font-bold text-slate-900">Newsletter</h4>
+        <p className="text-xs text-slate-500">Get weekly wisdom tips.</p>
+        <EmailCapture />
+      </div>
+    </div>
+    <div className="flex flex-col md:flex-row justify-between items-center border-t border-sage/10 pt-8 gap-4">
+      <p className="text-xs text-slate-400">&copy; 2025 BloomScroll. All rights reserved.</p>
+      <div className="flex gap-6">
+        <a href="https://twitter.com/bloomscroll" className="text-slate-400 hover:text-primary transition-colors text-sm">Twitter</a>
+        <a href="https://instagram.com/bloomscroll" className="text-slate-400 hover:text-primary transition-colors text-sm">Instagram</a>
+      </div>
+    </div>
+  </footer>
+);
+
+/* ─── Page ─── */
 export default function HomePage() {
   return (
-    <div className="bg-[#EACCD4] text-[#007A5E] font-helvetica min-h-screen flex flex-col">
+    <div className="bg-bglight text-slate-900 min-h-screen flex flex-col botanical-pattern" style={{ fontFamily: "'Lexend', sans-serif" }}>
       <Navigation />
       <Hero />
-      <MarqueeBanner />
+      <SocialProof />
+      <HowItWorks />
       <Features />
-      <Library />
+      <Testimonials />
+      <BeforeAfter />
+      <Pricing />
+      <FAQ />
+      <TrustBadges />
+      <CTA />
       <Footer />
     </div>
   );

@@ -141,19 +141,25 @@ function roundRect(
   ctx.closePath();
 }
 
-export async function shareCard(card: Card): Promise<void> {
+function getCardUrl(card: Card, refUsername?: string): string {
+  const base = `${window.location.origin}/card/${card.id}`;
+  return refUsername ? `${base}?ref=${encodeURIComponent(refUsername)}` : base;
+}
+
+export async function shareCard(card: Card, refUsername?: string): Promise<void> {
   try {
     const blob = await generateShareImage(card);
     const file = new File([blob], `bloomscroll-${card.author.toLowerCase().replace(/\s+/g, "-")}.png`, {
       type: "image/png",
     });
-    
+    const cardUrl = getCardUrl(card, refUsername);
+
     // Try native share if available
     if (navigator.share && navigator.canShare({ files: [file] })) {
       await navigator.share({
         files: [file],
-        title: `${card.author} - Bloomscroll`,
-        text: `"${card.quote}" — ${card.author}`,
+        title: `${card.author} - Scrollbliss`,
+        text: `"${card.quote}" — ${card.author}\n\n${cardUrl}`,
       });
     } else {
       // Fallback: download the image
@@ -169,7 +175,8 @@ export async function shareCard(card: Card): Promise<void> {
   }
 }
 
-export function copyQuote(card: Card): void {
-  const text = `"${card.quote}"\n\n— ${card.author}, ${card.book}\n\nvia Bloomscroll`;
+export function copyQuote(card: Card, refUsername?: string): void {
+  const cardUrl = getCardUrl(card, refUsername);
+  const text = `"${card.quote}"\n\n— ${card.author}, ${card.book}\n\n${cardUrl}`;
   navigator.clipboard.writeText(text);
 }
