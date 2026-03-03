@@ -5,6 +5,7 @@ export type BillingCycle = 'monthly' | 'yearly';
 
 export interface PlanPricing {
   price: number;
+  originalPrice: number; // For strikethrough display
   productId: string;
   savings?: string;
 }
@@ -15,50 +16,59 @@ export interface RegionPricing {
   locale: string;
   monthly: PlanPricing;
   yearly: PlanPricing;
+  discountPercent: number;
 }
 
-// TODO: Replace with actual Dodo product IDs from your dashboard
 export const PRICING: Record<Region, RegionPricing> = {
   IN: {
     currency: 'INR',
     symbol: '₹',
     locale: 'en-IN',
+    discountPercent: 17,
     monthly: { 
-      price: 200, 
-      productId: process.env.NEXT_PUBLIC_DODO_INR_MONTHLY || 'prod_inr_monthly' 
+      price: 149, 
+      originalPrice: 179,
+      productId: process.env.NEXT_PUBLIC_DODO_INR_MONTHLY || 'pdt_0NZhOW3CE8kBUybLJEXpj' 
     },
     yearly: { 
-      price: 2000, 
-      productId: process.env.NEXT_PUBLIC_DODO_INR_YEARLY || 'prod_inr_yearly',
-      savings: '17%' 
+      price: 999, 
+      originalPrice: 1199,
+      productId: process.env.NEXT_PUBLIC_DODO_INR_YEARLY || 'pdt_0NZhOcVC5iWA9ZERoAzsl',
+      savings: 'Save ₹789/yr' 
     },
   },
   US: {
     currency: 'USD',
     symbol: '$',
     locale: 'en-US',
+    discountPercent: 17,
     monthly: { 
-      price: 5, 
-      productId: process.env.NEXT_PUBLIC_DODO_USD_MONTHLY || 'prod_usd_monthly' 
+      price: 4.99, 
+      originalPrice: 5.99,
+      productId: process.env.NEXT_PUBLIC_DODO_USD_MONTHLY || 'pdt_0NZhOieGgNkEHC9GqbTBx' 
     },
     yearly: { 
-      price: 45, 
-      productId: process.env.NEXT_PUBLIC_DODO_USD_YEARLY || 'prod_usd_yearly',
-      savings: '25%' 
+      price: 39.99, 
+      originalPrice: 47.99,
+      productId: process.env.NEXT_PUBLIC_DODO_USD_YEARLY || 'pdt_0NZhOoNwre6igKDvDFsSX',
+      savings: 'Save $20/yr' 
     },
   },
   OTHER: {
     currency: 'USD',
     symbol: '$',
     locale: 'en-US',
+    discountPercent: 17,
     monthly: { 
-      price: 5, 
-      productId: process.env.NEXT_PUBLIC_DODO_USD_MONTHLY || 'prod_usd_monthly' 
+      price: 4.99, 
+      originalPrice: 5.99,
+      productId: process.env.NEXT_PUBLIC_DODO_USD_MONTHLY || 'pdt_0NZhOieGgNkEHC9GqbTBx' 
     },
     yearly: { 
-      price: 45, 
-      productId: process.env.NEXT_PUBLIC_DODO_USD_YEARLY || 'prod_usd_yearly',
-      savings: '25%' 
+      price: 39.99, 
+      originalPrice: 47.99,
+      productId: process.env.NEXT_PUBLIC_DODO_USD_YEARLY || 'pdt_0NZhOoNwre6igKDvDFsSX',
+      savings: 'Save $20/yr' 
     },
   },
 };
@@ -85,9 +95,8 @@ export function detectRegionFromHeaders(headers: Headers): Region {
 // Detect region from IP (client-side)
 export async function detectRegionClient(): Promise<Region> {
   try {
-    // Try ipapi.co first (free tier: 1000 req/day)
     const res = await fetch('https://ipapi.co/json/', {
-      cache: 'force-cache', // Cache the result
+      cache: 'force-cache',
     });
     
     if (!res.ok) throw new Error('ipapi failed');
@@ -99,7 +108,6 @@ export async function detectRegionClient(): Promise<Region> {
     if (country === 'US') return 'US';
     return 'OTHER';
   } catch {
-    // Fallback: try to detect from browser timezone/locale
     try {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       if (timezone.startsWith('Asia/Kolkata') || timezone.startsWith('Asia/Calcutta')) {
@@ -120,18 +128,22 @@ export function formatPrice(region: Region, price: number): string {
   return new Intl.NumberFormat(pricing.locale, {
     style: 'currency',
     currency: pricing.currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    minimumFractionDigits: pricing.currency === 'INR' ? 0 : 2,
+    maximumFractionDigits: pricing.currency === 'INR' ? 0 : 2,
   }).format(price);
 }
 
 // Get checkout URL for Dodo Payments
-export function getCheckoutUrl(productId: string, customerEmail?: string): string {
-  const baseUrl = process.env.NEXT_PUBLIC_DODO_CHECKOUT_URL || 'https://checkout.dodopayments.com/buy';
+export function getCheckoutUrl(productId: string, customerEmail?: string, successUrl?: string): string {
+  const baseUrl = 'https://checkout.dodopayments.com/buy';
   const url = new URL(`${baseUrl}/${productId}`);
   
   if (customerEmail) {
     url.searchParams.set('prefilled_email', customerEmail);
+  }
+  
+  if (successUrl) {
+    url.searchParams.set('redirect_url', successUrl);
   }
   
   return url.toString();
