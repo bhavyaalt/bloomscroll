@@ -63,47 +63,46 @@ export default function AppHeader({
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#102219]/90 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
+        <div className="max-w-2xl mx-auto px-2 sm:px-4 h-12 sm:h-14 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="size-7 flex items-center justify-center bg-primary rounded-lg">
-              <svg className="size-4 text-[#102219]" viewBox="0 0 24 24" fill="currentColor">
+          <Link href="/" className="flex items-center gap-1.5 sm:gap-2.5">
+            <div className="size-6 sm:size-7 flex items-center justify-center bg-primary rounded-lg">
+              <svg className="size-3.5 sm:size-4 text-[#102219]" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 22c4.97 0 9-4.03 9-9-4.97 0-9 4.03-9 9ZM5.6 10.25c0 1.64 1.33 2.97 2.97 2.97h.86c1.97 0 3.56-1.6 3.56-3.57v-5.4C12.99 2.56 11.43 1 9.43 1c-2 0-3.56 1.56-3.56 3.56v5.4c0 .1 0 .2-.27.29ZM3 13c0 4.97 4.03 9 9 9 0-4.97-4.03-9-9-9Z" />
               </svg>
             </div>
-            <span className="text-lg font-bold tracking-tight text-primary">BloomScroll</span>
+            <span className="text-base sm:text-lg font-bold tracking-tight text-primary hidden min-[400px]:inline">BloomScroll</span>
           </Link>
 
           {/* Right controls */}
-          <div className="flex items-center gap-2">
-            {/* Books */}
+          <div className="flex items-center gap-1 sm:gap-2">
+            {/* Books - hidden on very small screens */}
             <button
               onClick={onShowBookFilter}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white/60 hover:text-white/80 hover:bg-white/5 transition-all text-sm"
+              className="hidden sm:flex items-center gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-white/60 hover:text-white/80 hover:bg-white/5 transition-all text-sm"
             >
               <svg className="size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
               </svg>
-              <span className="hidden sm:inline font-medium">Books</span>
             </button>
 
             {/* Streak */}
             <button
               onClick={onShowStreakModal}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-white/60 hover:text-white/80 hover:bg-white/5 transition-all"
+              className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-full text-white/60 hover:text-white/80 hover:bg-white/5 transition-all"
             >
-              <span className="text-sm">🔥</span>
-              <span className="text-sm font-bold text-white/70">{streak.currentStreak}</span>
+              <span className="text-xs sm:text-sm">🔥</span>
+              <span className="text-xs sm:text-sm font-bold text-white/70">{streak.currentStreak}</span>
             </button>
 
             {/* Achievements */}
             {onShowAchievements && (
               <button
                 onClick={onShowAchievements}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-white/60 hover:text-white/80 hover:bg-white/5 transition-all"
+                className="flex items-center gap-1 px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-full text-white/60 hover:text-white/80 hover:bg-white/5 transition-all"
                 title="Achievements"
               >
-                <span className="text-sm">🏆</span>
+                <span className="text-xs sm:text-sm">🏆</span>
               </button>
             )}
 
@@ -111,44 +110,44 @@ export default function AppHeader({
             {onShowLeaderboard && (
               <button
                 onClick={onShowLeaderboard}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-white/60 hover:text-white/80 hover:bg-white/5 transition-all"
+                className="hidden min-[400px]:flex items-center gap-1 px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-full text-white/60 hover:text-white/80 hover:bg-white/5 transition-all"
                 title="Leaderboard"
               >
-                <span className="text-sm">📊</span>
+                <span className="text-xs sm:text-sm">📊</span>
               </button>
             )}
 
             {/* Saved */}
             <button
               onClick={onToggleSaved}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full transition-all ${
+              className={`flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-full transition-all ${
                 showSaved
                   ? "bg-primary text-[#102219]"
                   : "text-white/60 hover:text-white/80 hover:bg-white/5"
               }`}
             >
-              <svg className="size-4" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="size-3.5 sm:size-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
               </svg>
-              <span className="text-sm font-bold">{savedCount}</span>
+              <span className="text-xs sm:text-sm font-bold">{savedCount}</span>
             </button>
 
             {/* User avatar / Login */}
             {user || profile ? (
               <button
                 onClick={onToggleUserMenu}
-                className="size-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/15 transition-all overflow-hidden border border-white/10"
+                className="size-7 sm:size-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/15 transition-all overflow-hidden border border-white/10"
               >
                 {profile?.fc_pfp_url ? (
                   <img src={profile.fc_pfp_url} alt="" className="size-full object-cover" />
                 ) : (
-                  <span className="text-sm font-bold text-white/70">{displayInitial}</span>
+                  <span className="text-xs sm:text-sm font-bold text-white/70">{displayInitial}</span>
                 )}
               </button>
             ) : (
               <Link
                 href="/auth?redirect=/app"
-                className="px-3 py-1.5 rounded-full bg-primary text-[#102219] text-sm font-bold hover:bg-primary/90 transition-all"
+                className="px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-primary text-[#102219] text-xs sm:text-sm font-bold hover:bg-primary/90 transition-all"
               >
                 Login
               </Link>

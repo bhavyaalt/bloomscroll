@@ -131,7 +131,7 @@ export default function CardFeed({
   const progressPercent = Math.min((dailyProgress.read / dailyProgress.goal) * 100, 100);
 
   return (
-    <div className="fixed inset-0 pt-14 sm:pt-16 pb-0 px-3 sm:px-4 touch-pan-y flex flex-col">
+    <div className="fixed inset-0 pt-12 sm:pt-14 pb-0 px-3 sm:px-4 touch-pan-y flex flex-col">
       {/* Daily Card Banner */}
       <AnimatePresence>
         {dailyCard && (
