@@ -15,7 +15,7 @@ export default function CollectionsModal({ onSelect, onClose }: CollectionsModal
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-[#1f1f1f] border border-white/10 rounded-2xl max-w-md w-full max-h-[80vh] overflow-auto"
+        className="bg-[#1a2e23] border border-white/10 rounded-2xl max-w-md w-full max-h-[80vh] overflow-auto"
       >
         <div className="p-6">
           <h2 className="font-bold text-xl mb-4">Collections</h2>

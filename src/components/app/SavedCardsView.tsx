@@ -17,7 +17,11 @@ export default function SavedCardsView({ cards, onRemove }: SavedCardsViewProps)
       </div>
       {cards.length === 0 ? (
         <div className="text-center py-20 text-white/40">
-          <p className="text-4xl mb-4">📚</p>
+          <div className="mb-4 flex justify-center">
+            <svg className="size-10 text-white/40" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+            </svg>
+          </div>
           <p className="text-lg mb-2">No saved cards yet</p>
           <p className="text-sm">Double-tap to save cards you love</p>
         </div>
@@ -28,7 +32,7 @@ export default function SavedCardsView({ cards, onRemove }: SavedCardsViewProps)
               key={card.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-gradient-to-br from-[#EACCD4]/10 to-[#EACCD4]/5 border border-[#007A5E]/20 rounded-xl p-4"
+              className="bg-[#1a2e23] border border-white/10 rounded-xl p-4"
             >
               <p className="text-sm text-white/80 italic mb-2 line-clamp-2">&ldquo;{card.quote}&rdquo;</p>
               <div className="flex items-center justify-between">

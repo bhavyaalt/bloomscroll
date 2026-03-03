@@ -47,12 +47,16 @@ export default async function CardPage({ params, searchParams }: PageProps) {
   if (!card) notFound();
 
   return (
-    <div className="min-h-screen bg-[#1a1a1a] text-white flex flex-col">
+    <div className="min-h-screen bg-[#102219] text-white flex flex-col">
       {/* Header */}
       <header className="px-4 h-14 flex items-center justify-between max-w-2xl mx-auto w-full">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-xl">🌱</span>
-          <span className="font-impact text-lg uppercase tracking-tight text-[#007A5E]">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="size-7 flex items-center justify-center bg-primary rounded-lg">
+            <svg className="size-4 text-[#102219]" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 22c4.97 0 9-4.03 9-9-4.97 0-9 4.03-9 9ZM5.6 10.25c0 1.64 1.33 2.97 2.97 2.97h.86c1.97 0 3.56-1.6 3.56-3.57v-5.4C12.99 2.56 11.43 1 9.43 1c-2 0-3.56 1.56-3.56 3.56v5.4c0 .1 0 .2-.27.29ZM3 13c0 4.97 4.03 9 9 9 0-4.97-4.03-9-9-9Z" />
+            </svg>
+          </div>
+          <span className="text-lg font-bold tracking-tight text-primary">
             Scrollbliss
           </span>
         </Link>
@@ -104,7 +108,7 @@ export default async function CardPage({ params, searchParams }: PageProps) {
           <div className="mt-8 text-center">
             <Link
               href="/app"
-              className="inline-block px-8 py-3 rounded-full bg-[#007A5E] text-white font-bold text-lg hover:bg-[#005a46] transition-all shadow-lg"
+              className="inline-block px-8 py-3 rounded-full bg-primary text-[#102219] font-bold text-lg hover:bg-primary/90 transition-all shadow-lg"
             >
               See more on Scrollbliss
             </Link>

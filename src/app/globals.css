@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 :root {
-  /* Legacy colors for app pages */
   --color-pink: #EACCD4;
   --color-green: #007A5E;
   --color-green-light: #4D9E8A;
@@ -20,6 +19,21 @@
   --color-bgdark: #102219;
   --color-lavender: #e9e7f3;
   --color-sage: #cfe7db;
+
+  /* Profile page botanical palette */
+  --color-cream: #F9F8F4;
+  --color-botsage: #B2C2B2;
+  --color-botsagedark: #8A9A8A;
+  --color-botsagelight: #DCE2DC;
+  --color-darkteal: #2C3E3E;
+  --color-mutedlav: #B8B5C8;
+  --color-softclay: #D9A08B;
+  --color-botgreen: #4A5D4E;
+  --color-lvl0: #f9f7f2;
+  --color-lvl1: #d8e2d8;
+  --color-lvl2: #b2c2b2;
+  --color-lvl3: #809680;
+  --color-lvl4: #4a5d4a;
 }
 
 * {
@@ -107,15 +121,6 @@ body {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-
-/* Font classes - legacy for app pages */
-.font-impact {
-  font-family: 'Impact', 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
-}
-
-.font-times {
-  font-family: 'Times New Roman', 'Times', serif;
 }
 
 .font-helvetica {

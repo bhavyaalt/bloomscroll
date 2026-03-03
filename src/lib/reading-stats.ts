@@ -22,6 +22,10 @@ export interface ReadingStats {
   dailyReads: DailyRead[];
   joinedDate: string;
   lastReadDate: string;
+  dailyGoal: number;                   // 5 | 10 | 15 | 20
+  dailyGoalCompletedDates: string[];   // YYYY-MM-DD dates where goal was hit
+  streakFreezeActive: boolean;
+  streakFreezeUsedDate: string;        // YYYY-MM-DD of last consumed freeze
 }
 
 function getDefaultStats(): ReadingStats {
@@ -37,6 +41,10 @@ function getDefaultStats(): ReadingStats {
     dailyReads: [],
     joinedDate: new Date().toISOString().split("T")[0],
     lastReadDate: "",
+    dailyGoal: 5,
+    dailyGoalCompletedDates: [],
+    streakFreezeActive: false,
+    streakFreezeUsedDate: "",
   };
 }
 
@@ -58,18 +66,33 @@ export function saveReadingStats(stats: ReadingStats): void {
   localStorage.setItem(STATS_KEY, JSON.stringify(stats));
 }
 
+// Shared helper: attempt to use streak freeze for a 1-day gap
+function tryStreakFreeze(stats: ReadingStats, yesterdayStr: string): boolean {
+  if (!stats.streakFreezeActive) return false;
+
+  const twoDaysAgo = new Date();
+  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+  const twoDaysAgoStr = twoDaysAgo.toISOString().split("T")[0];
+
+  if (stats.lastReadDate === twoDaysAgoStr && stats.streakFreezeUsedDate !== yesterdayStr) {
+    stats.streakFreezeUsedDate = yesterdayStr;
+    return true;
+  }
+  return false;
+}
+
 export function recordCardRead(cardId: string, topics: string[]): ReadingStats {
   const stats = getReadingStats();
   const today = new Date().toISOString().split("T")[0];
-  
+
   // Update total
   stats.totalCardsRead++;
-  
+
   // Update topics
   topics.forEach(topic => {
     stats.topicsExplored[topic] = (stats.topicsExplored[topic] || 0) + 1;
   });
-  
+
   // Update daily reads
   let todayEntry = stats.dailyReads.find(d => d.date === today);
   if (!todayEntry) {
@@ -77,34 +100,38 @@ export function recordCardRead(cardId: string, topics: string[]): ReadingStats {
     stats.dailyReads.push(todayEntry);
     stats.totalDaysActive++;
   }
-  
+
   if (!todayEntry.cardIds.includes(cardId)) {
     todayEntry.count++;
     todayEntry.cardIds.push(cardId);
   }
-  
+
   // Update streak
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
   const yesterdayStr = yesterday.toISOString().split("T")[0];
-  
+
   if (stats.lastReadDate === yesterdayStr || stats.lastReadDate === today) {
     if (stats.lastReadDate !== today) {
       stats.currentStreak++;
     }
   } else if (stats.lastReadDate !== today) {
-    stats.currentStreak = 1;
+    if (tryStreakFreeze(stats, yesterdayStr)) {
+      stats.currentStreak++;
+    } else {
+      stats.currentStreak = 1;
+    }
   }
-  
+
   stats.lastReadDate = today;
   stats.longestStreak = Math.max(stats.longestStreak, stats.currentStreak);
-  
+
   // Keep only last 365 days of daily reads
   const oneYearAgo = new Date();
   oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
   const oneYearAgoStr = oneYearAgo.toISOString().split("T")[0];
   stats.dailyReads = stats.dailyReads.filter(d => d.date >= oneYearAgoStr);
-  
+
   saveReadingStats(stats);
   return stats;
 }
@@ -223,6 +250,8 @@ export function updateReadingStreak(): ReadingStats {
     stats.currentStreak++;
   } else if (!stats.lastReadDate) {
     stats.currentStreak = 1;
+  } else if (tryStreakFreeze(stats, yesterdayStr)) {
+    stats.currentStreak++;
   } else {
     stats.currentStreak = 1;
   }
@@ -233,4 +262,47 @@ export function updateReadingStreak(): ReadingStats {
 
   saveReadingStats(stats);
   return stats;
+}
+
+// ── Daily Goal & Streak Freeze API ──
+
+export interface DailyProgress {
+  read: number;
+  goal: number;
+  completed: boolean;
+}
+
+export function setDailyGoal(goal: number): void {
+  const stats = getReadingStats();
+  stats.dailyGoal = goal;
+  saveReadingStats(stats);
+}
+
+export function getDailyProgress(): DailyProgress {
+  const stats = getReadingStats();
+  const today = new Date().toISOString().split("T")[0];
+  const todayEntry = stats.dailyReads.find(d => d.date === today);
+  const read = todayEntry?.count ?? 0;
+  const goal = stats.dailyGoal || 5;
+  const completed = (stats.dailyGoalCompletedDates ?? []).includes(today);
+  return { read, goal, completed };
+}
+
+export function markDailyGoalCompleted(): void {
+  const stats = getReadingStats();
+  const today = new Date().toISOString().split("T")[0];
+  if (!stats.dailyGoalCompletedDates) stats.dailyGoalCompletedDates = [];
+  if (stats.dailyGoalCompletedDates.includes(today)) return;
+  stats.dailyGoalCompletedDates.push(today);
+  // Prune to last 365 entries
+  if (stats.dailyGoalCompletedDates.length > 365) {
+    stats.dailyGoalCompletedDates = stats.dailyGoalCompletedDates.slice(-365);
+  }
+  saveReadingStats(stats);
+}
+
+export function setStreakFreeze(active: boolean): void {
+  const stats = getReadingStats();
+  stats.streakFreezeActive = active;
+  saveReadingStats(stats);
 }

@@ -184,7 +184,7 @@ export default function AppHeader({
                 </button>
               )}
               <Link
-                href="/notifications"
+                href="/profile"
                 onClick={onToggleUserMenu}
                 className="w-full px-3 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg flex items-center gap-2.5 text-white/70"
               >

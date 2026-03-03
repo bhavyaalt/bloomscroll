@@ -9,6 +9,19 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 // AUTH FUNCTIONS
 // ============================================
 
+// Sign in with OAuth provider (Google, Twitter)
+export async function signInWithProvider(provider: 'google' | 'twitter') {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: {
+      redirectTo: `${window.location.origin}/auth/callback`,
+    },
+  });
+
+  if (error) throw error;
+  return data;
+}
+
 // Sign in with magic link
 export async function signInWithEmail(email: string) {
   const { data, error } = await supabase.auth.signInWithOtp({

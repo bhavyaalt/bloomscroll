@@ -36,11 +36,17 @@ export default function InstallPrompt({ installEvent, onClose }: InstallPromptPr
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 100, opacity: 0 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-[#1f1f1f] rounded-2xl p-6 max-w-sm w-full border border-white/10 shadow-2xl"
+        className="bg-[#1a2e23] rounded-2xl p-6 max-w-sm w-full border border-white/10 shadow-2xl"
       >
         <div className="text-center mb-5">
-          <div className="text-4xl mb-3">🌱</div>
-          <h3 className="font-impact text-xl text-[#007A5E] uppercase tracking-tight mb-1">
+          <div className="mb-3 flex justify-center">
+            <div className="size-10 flex items-center justify-center bg-primary rounded-xl">
+              <svg className="size-6 text-[#102219]" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 22c4.97 0 9-4.03 9-9-4.97 0-9 4.03-9 9ZM5.6 10.25c0 1.64 1.33 2.97 2.97 2.97h.86c1.97 0 3.56-1.6 3.56-3.57v-5.4C12.99 2.56 11.43 1 9.43 1c-2 0-3.56 1.56-3.56 3.56v5.4c0 .1 0 .2-.27.29ZM3 13c0 4.97 4.03 9 9 9 0-4.97-4.03-9-9-9Z" />
+              </svg>
+            </div>
+          </div>
+          <h3 className="text-xl font-bold text-primary uppercase tracking-tight mb-1">
             Add to Home Screen
           </h3>
           <p className="text-white/60 text-sm">

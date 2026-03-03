@@ -7,6 +7,8 @@ interface StreakData {
   lastVisitDate: string;
   longestStreak: number;
   totalDays: number;
+  streakFreezeActive: boolean;
+  streakFreezeUsedDate: string;
 }
 
 export function getStreakData(): StreakData {
@@ -16,6 +18,8 @@ export function getStreakData(): StreakData {
     lastVisitDate: stats.lastReadDate,
     longestStreak: stats.longestStreak,
     totalDays: stats.totalDaysActive,
+    streakFreezeActive: stats.streakFreezeActive ?? false,
+    streakFreezeUsedDate: stats.streakFreezeUsedDate ?? "",
   };
 }
 
@@ -26,6 +30,8 @@ export function updateStreak(): StreakData {
     lastVisitDate: stats.lastReadDate,
     longestStreak: stats.longestStreak,
     totalDays: stats.totalDaysActive,
+    streakFreezeActive: stats.streakFreezeActive ?? false,
+    streakFreezeUsedDate: stats.streakFreezeUsedDate ?? "",
   };
 }
 

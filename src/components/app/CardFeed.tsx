@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { Card } from "@/lib/content-library";
+import { DailyProgress } from "@/lib/reading-stats";
 
 interface CardFeedProps {
   currentCard: Card | undefined;
@@ -13,7 +14,7 @@ interface CardFeedProps {
   audioMode: boolean;
   isSpeaking: boolean;
   autoScroll: boolean;
-  sessionCardsViewed: number;
+  dailyProgress: DailyProgress;
   feedLength: number;
   hasChapter: boolean;
   dailyCard?: Card | null;
@@ -98,7 +99,7 @@ export default function CardFeed({
   audioMode,
   isSpeaking,
   autoScroll,
-  sessionCardsViewed,
+  dailyProgress,
   feedLength,
   hasChapter,
   onDragEnd,
@@ -115,8 +116,7 @@ export default function CardFeed({
   onShareDailyCard,
   onClearFilters,
 }: CardFeedProps) {
-  const dailyGoal = 10;
-  const progressPercent = Math.min((sessionCardsViewed / dailyGoal) * 100, 100);
+  const progressPercent = Math.min((dailyProgress.read / dailyProgress.goal) * 100, 100);
 
   return (
     <div className="fixed inset-0 pt-16 pb-0 px-4 touch-pan-y flex flex-col">
@@ -341,9 +341,12 @@ export default function CardFeed({
               {/* Daily Progress Bar */}
               <div className="mt-4 px-1">
                 <div className="flex items-center justify-between text-xs mb-2">
-                  <span className="text-primary font-medium">Daily Progress</span>
+                  <span className="text-primary font-medium flex items-center gap-1">
+                    Daily Progress
+                    {dailyProgress.completed && <span title="Goal reached!">&#10003;</span>}
+                  </span>
                   <span className="text-primary/70">
-                    {sessionCardsViewed > 0 ? `${sessionCardsViewed} read today` : "Start your session"}
+                    {dailyProgress.read > 0 ? `${dailyProgress.read}/${dailyProgress.goal} cards today` : "Start your session"}
                   </span>
                 </div>
                 <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden">

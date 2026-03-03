@@ -15,7 +15,7 @@ interface ReadingModeProps {
 }
 
 const THEME_STYLES: Record<Theme, { bg: string; text: string; accent: string }> = {
-  dark: { bg: 'bg-[#1a1a1a]', text: 'text-white', accent: 'text-[#007A5E]' },
+  dark: { bg: 'bg-[#102219]', text: 'text-white', accent: 'text-primary' },
   light: { bg: 'bg-[#fafafa]', text: 'text-gray-900', accent: 'text-[#007A5E]' },
   sepia: { bg: 'bg-[#f4ecd8]', text: 'text-[#5c4b37]', accent: 'text-[#8b6914]' },
 };
@@ -147,7 +147,11 @@ export default function ReadingMode({ card, isOpen, onClose, isSubscribed, onUpg
             {/* Chapter content or upgrade prompt */}
             {needsUpgrade ? (
               <div className="text-center py-12">
-                <div className="text-6xl mb-4">🔒</div>
+                <div className="mb-4 flex justify-center">
+                  <svg className="size-12 text-white/40" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                  </svg>
+                </div>
                 <h3 className="text-xl font-bold mb-2">Premium Content</h3>
                 <p className="opacity-60 mb-6">
                   Unlock full chapters, {card.genre} genre, and more with Pro
@@ -185,7 +189,10 @@ export default function ReadingMode({ card, isOpen, onClose, isSubscribed, onUpg
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-[#FF9900] text-black rounded-full font-bold hover:bg-[#FFa929] transition-colors"
                 >
-                  📖 Get it on Amazon
+                  <svg className="size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                  </svg>
+                  Get it on Amazon
                 </a>
               </div>
             )}

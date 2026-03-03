@@ -59,12 +59,12 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#1a1a1a] to-[#0f0f0f] text-white flex flex-col">
+    <div className="min-h-screen bg-gradient-to-b from-[#102219] to-[#0a1610] text-white flex flex-col">
       {/* Progress */}
       <div className="px-6 pt-6">
         <div className="flex gap-2 mb-2">
-          <div className={`h-1 flex-1 rounded-full ${step >= 1 ? "bg-[#007A5E]" : "bg-white/10"}`} />
-          <div className={`h-1 flex-1 rounded-full ${step >= 2 ? "bg-[#007A5E]" : "bg-white/10"}`} />
+          <div className={`h-1 flex-1 rounded-full ${step >= 1 ? "bg-primary" : "bg-white/10"}`} />
+          <div className={`h-1 flex-1 rounded-full ${step >= 2 ? "bg-primary" : "bg-white/10"}`} />
         </div>
         <p className="text-xs text-white/40">Step {step} of 2</p>
       </div>
@@ -81,7 +81,7 @@ export default function OnboardingPage() {
             >
               <div className="text-center mb-8">
                 <div className="text-4xl mb-3">🌱</div>
-                <h1 className="font-impact text-3xl uppercase tracking-tight text-[#007A5E] mb-2">
+                <h1 className="text-3xl font-bold tracking-tight uppercase text-primary mb-2">
                   What interests you?
                 </h1>
                 <p className="text-white/50 text-sm">Pick topics to personalize your feed</p>
@@ -94,7 +94,7 @@ export default function OnboardingPage() {
                     onClick={() => toggleTopic(topic.id)}
                     className={`p-3 rounded-xl text-center transition-all ${
                       selectedTopics.includes(topic.id)
-                        ? "bg-[#007A5E] text-white border-2 border-[#007A5E]"
+                        ? "bg-primary text-white border-2 border-primary"
                         : "bg-white/5 text-white/70 border-2 border-transparent hover:bg-white/10"
                     }`}
                   >
@@ -113,7 +113,7 @@ export default function OnboardingPage() {
                 </button>
                 <button
                   onClick={() => setStep(2)}
-                  className="flex-1 py-3 bg-[#007A5E] rounded-full font-bold text-sm"
+                  className="flex-1 py-3 bg-primary rounded-full font-bold text-sm"
                 >
                   Next
                 </button>
@@ -131,7 +131,7 @@ export default function OnboardingPage() {
             >
               <div className="text-center mb-8">
                 <div className="text-4xl mb-3">🎯</div>
-                <h1 className="font-impact text-3xl uppercase tracking-tight text-[#007A5E] mb-2">
+                <h1 className="text-3xl font-bold tracking-tight uppercase text-primary mb-2">
                   What are your goals?
                 </h1>
                 <p className="text-white/50 text-sm">Help us tailor your experience</p>
@@ -144,7 +144,7 @@ export default function OnboardingPage() {
                     onClick={() => toggleGoal(goal.id)}
                     className={`w-full p-4 rounded-xl text-left flex items-center gap-3 transition-all ${
                       selectedGoals.includes(goal.id)
-                        ? "bg-[#007A5E] text-white border-2 border-[#007A5E]"
+                        ? "bg-primary text-white border-2 border-primary"
                         : "bg-white/5 text-white/70 border-2 border-transparent hover:bg-white/10"
                     }`}
                   >
@@ -163,7 +163,7 @@ export default function OnboardingPage() {
                 </button>
                 <button
                   onClick={finish}
-                  className="flex-1 py-3 bg-[#007A5E] rounded-full font-bold text-sm"
+                  className="flex-1 py-3 bg-primary rounded-full font-bold text-sm"
                 >
                   Start Reading
                 </button>

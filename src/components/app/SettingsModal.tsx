@@ -6,6 +6,8 @@ import Link from "next/link";
 import { sounds, getSoundEnabled, setSoundEnabled } from "@/lib/sounds";
 import { StreakState } from "./types";
 
+const GOAL_OPTIONS = [5, 10, 15, 20];
+
 interface SettingsModalProps {
   user: { email?: string } | null;
   profile: { fc_username?: string } | null;
@@ -13,6 +15,9 @@ interface SettingsModalProps {
   streak: StreakState;
   viewedCount: number;
   savedCount: number;
+  dailyGoal: number;
+  onSetDailyGoal: (goal: number) => void;
+  onSetStreakFreeze: (active: boolean) => void;
   onSaveWallet: (address: string) => Promise<boolean>;
   onClose: () => void;
 }
@@ -24,6 +29,9 @@ export default function SettingsModal({
   streak,
   viewedCount,
   savedCount,
+  dailyGoal,
+  onSetDailyGoal,
+  onSetStreakFreeze,
   onSaveWallet,
   onClose,
 }: SettingsModalProps) {
@@ -53,11 +61,11 @@ export default function SettingsModal({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-[#1f1f1f] border border-white/10 rounded-2xl max-w-md w-full p-6"
+        className="bg-[#1a2e23] border border-white/10 rounded-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto"
       >
         <div className="flex justify-between items-center mb-6">
           <h2 className="font-bold text-xl">Settings</h2>
-          <button onClick={onClose} className="text-white/40 hover:text-white text-2xl">×</button>
+          <button onClick={onClose} className="text-white/40 hover:text-white text-2xl">&times;</button>
         </div>
 
         {/* Account */}
@@ -68,8 +76,66 @@ export default function SettingsModal({
             {profile?.fc_username && <p className="text-sm"><span className="text-white/40">Farcaster:</span> @{profile.fc_username}</p>}
             <p className="text-sm">
               <span className="text-white/40">Status:</span>{" "}
-              <span className={isSubscribed ? "text-[#007A5E] font-bold" : ""}>{isSubscribed ? "Pro ⭐" : "Free"}</span>
+              <span className={isSubscribed ? "text-[#007A5E] font-bold" : ""}>{isSubscribed ? "Pro" : "Free"}</span>
             </p>
+          </div>
+        </div>
+
+        {/* Daily Goal */}
+        <div className="mb-6">
+          <h3 className="text-xs uppercase tracking-wider text-white/40 mb-2">Daily Goal</h3>
+          <div className="bg-white/5 rounded-xl p-4">
+            <p className="text-sm text-white/60 mb-3">Cards to read per day</p>
+            <div className="grid grid-cols-4 gap-2">
+              {GOAL_OPTIONS.map(g => (
+                <button
+                  key={g}
+                  onClick={() => onSetDailyGoal(g)}
+                  className={`py-2.5 rounded-xl text-sm font-bold transition-all ${
+                    dailyGoal === g
+                      ? "bg-[#007A5E] text-white"
+                      : "bg-white/10 text-white/60 hover:bg-white/15"
+                  }`}
+                >
+                  {g}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Streak Shield */}
+        <div className="mb-6">
+          <h3 className="text-xs uppercase tracking-wider text-white/40 mb-2">Streak Shield</h3>
+          <div className="bg-white/5 rounded-xl p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium flex items-center gap-1.5">
+                  Protect your streak
+                </p>
+                <p className="text-xs text-white/40 mt-0.5">Saves your streak if you miss 1 day</p>
+              </div>
+              {isSubscribed ? (
+                <button
+                  onClick={() => onSetStreakFreeze(!streak.streakFreezeActive)}
+                  className={`w-12 h-7 rounded-full transition-all relative ${
+                    streak.streakFreezeActive ? "bg-[#007A5E]" : "bg-white/20"
+                  }`}
+                >
+                  <div className={`w-5 h-5 bg-white rounded-full absolute top-1 transition-all ${
+                    streak.streakFreezeActive ? "right-1" : "left-1"
+                  }`} />
+                </button>
+              ) : (
+                <Link
+                  href="/subscribe"
+                  onClick={onClose}
+                  className="text-xs font-bold text-[#007A5E] bg-[#007A5E]/15 px-3 py-1.5 rounded-full"
+                >
+                  Pro Only
+                </Link>
+              )}
+            </div>
           </div>
         </div>
 
@@ -117,7 +183,7 @@ export default function SettingsModal({
               disabled={walletSaving}
               className="px-4 py-3 bg-[#007A5E] rounded-xl font-bold text-sm disabled:opacity-50"
             >
-              {walletSaving ? "..." : walletSaved ? "✓" : "Save"}
+              {walletSaving ? "..." : walletSaved ? "&#10003;" : "Save"}
             </button>
           </div>
         </div>
@@ -144,7 +210,7 @@ export default function SettingsModal({
             className="mt-3 block text-center text-sm text-[#007A5E] hover:underline"
             onClick={onClose}
           >
-            View full stats →
+            View full stats &rarr;
           </Link>
         </div>
 

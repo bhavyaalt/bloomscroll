@@ -15,7 +15,8 @@ import { getStreakData, updateStreak, getStreakEmoji, getStreakMessage } from "@
 import { shareCard, copyQuote } from "@/lib/share";
 import { generateQuizQuestion, updateQuizStats, getQuizStats, QuizQuestion } from "@/lib/quiz";
 import { getCollectionCards, Collection } from "@/lib/collections";
-import { recordCardRead, recordQuizResult } from "@/lib/reading-stats";
+import { recordCardRead, recordQuizResult, getDailyProgress, markDailyGoalCompleted, setDailyGoal as saveDailyGoal, setStreakFreeze as saveStreakFreeze, DailyProgress } from "@/lib/reading-stats";
+import { incrementViewCount } from "@/lib/supabase";
 import { sounds, haptic, getSoundEnabled, setSoundEnabled } from "@/lib/sounds";
 import { celebrate } from "@/lib/confetti";
 import { getDailyCard, isDailyCardDismissed, dismissDailyCard } from "@/lib/daily-card";
@@ -62,7 +63,7 @@ export default function AppPage() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Streak state
-  const [streak, setStreak] = useState<StreakState>({ currentStreak: 0, longestStreak: 0, totalDays: 0, lastVisitDate: "" });
+  const [streak, setStreak] = useState<StreakState>({ currentStreak: 0, longestStreak: 0, totalDays: 0, lastVisitDate: "", streakFreezeActive: false, streakFreezeUsedDate: "" });
   const [showStreakModal, setShowStreakModal] = useState(false);
 
   // Quiz state
@@ -81,8 +82,8 @@ export default function AppPage() {
   const [showBookFilter, setShowBookFilter] = useState(false);
   const [selectedBook, setSelectedBook] = useState<string | null>(null);
 
-  // Session stats
-  const [sessionCardsViewed, setSessionCardsViewed] = useState(0);
+  // Daily progress (persisted)
+  const [dailyProgress, setDailyProgress] = useState<DailyProgress>({ read: 0, goal: 5, completed: false });
 
   // Audio mode state
   const [audioMode, setAudioMode] = useState(false);
@@ -139,6 +140,7 @@ export default function AppPage() {
 
     setSoundEnabledState(getSoundEnabled());
     setQuizStats(getQuizStats());
+    setDailyProgress(getDailyProgress());
 
     // Daily card
     if (!isDailyCardDismissed()) {
@@ -163,10 +165,20 @@ export default function AppPage() {
 
   // Show install prompt after viewing enough cards
   useEffect(() => {
-    if (shouldShowInstallPrompt(sessionCardsViewed)) {
+    if (shouldShowInstallPrompt(dailyProgress.read)) {
       setShowInstallPrompt(true);
     }
-  }, [sessionCardsViewed]);
+  }, [dailyProgress.read]);
+
+  // Celebrate daily goal completion (fires once per day)
+  useEffect(() => {
+    if (dailyProgress.read >= dailyProgress.goal && !dailyProgress.completed) {
+      markDailyGoalCompleted();
+      setDailyProgress(prev => ({ ...prev, completed: true }));
+      celebrate();
+      sounds.milestone();
+    }
+  }, [dailyProgress.read, dailyProgress.goal, dailyProgress.completed]);
 
   // Generate smart feed
   useEffect(() => {
@@ -228,8 +240,11 @@ export default function AppPage() {
         newViewed.add(card.id);
         setViewedCards(newViewed);
         localStorage.setItem(VIEW_STORAGE_KEY, JSON.stringify([...newViewed]));
-        setSessionCardsViewed(prev => prev + 1);
         recordCardRead(card.id, card.topic);
+        if (profile && !isSubscribed) {
+          incrementViewCount(profile.id);
+        }
+        setDailyProgress(getDailyProgress());
       }
     }
   }, [currentIndex, feed, isLoaded]);
@@ -382,6 +397,16 @@ export default function AppPage() {
     return await updateWallet(address);
   };
 
+  const handleSetDailyGoal = (goal: number) => {
+    saveDailyGoal(goal);
+    setDailyProgress(getDailyProgress());
+  };
+
+  const handleSetStreakFreeze = (active: boolean) => {
+    saveStreakFreeze(active);
+    setStreak(prev => ({ ...prev, streakFreezeActive: active }));
+  };
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -410,7 +435,7 @@ export default function AppPage() {
       <div className="min-h-screen bg-gradient-to-b from-[#102219] to-[#0a1610] flex items-center justify-center">
         <div className="text-center">
           <div className="text-5xl mb-4">🌱</div>
-          <div className="font-impact text-2xl text-[#007A5E]">Loading...</div>
+          <div className="text-2xl font-bold text-primary">Loading...</div>
         </div>
       </div>
     );
@@ -440,6 +465,7 @@ export default function AppPage() {
       {showStreakModal && (
         <StreakModal
           streak={streak}
+          dailyProgress={dailyProgress}
           onClose={() => setShowStreakModal(false)}
         />
       )}
@@ -468,7 +494,7 @@ export default function AppPage() {
           audioMode={audioMode}
           isSpeaking={isSpeaking}
           autoScroll={autoScroll}
-          sessionCardsViewed={sessionCardsViewed}
+          dailyProgress={dailyProgress}
           feedLength={feed.length}
           hasChapter={!!currentCard?.chapter}
           dailyCard={dailyCard}
@@ -506,6 +532,9 @@ export default function AppPage() {
           streak={streak}
           viewedCount={viewedCards.size}
           savedCount={savedCards.size}
+          dailyGoal={dailyProgress.goal}
+          onSetDailyGoal={handleSetDailyGoal}
+          onSetStreakFreeze={handleSetStreakFreeze}
           onSaveWallet={handleSaveWallet}
           onClose={() => setShowSettings(false)}
         />

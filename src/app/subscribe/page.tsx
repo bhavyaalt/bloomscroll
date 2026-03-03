@@ -19,7 +19,7 @@ export default function SubscribePage() {
   const router = useRouter();
   const { user, profile, loading, isSubscribed, isAuthenticated, refreshProfile } = useAuth();
   const { isInFrame, walletAddress: fcWallet, username, displayName, pfpUrl, requestWallet } = useFarcaster();
-  
+
   const [status, setStatus] = useState<PaymentStatus>("idle");
   const [error, setError] = useState<string | null>(null);
   const [txHash, setTxHash] = useState<string | null>(null);
@@ -41,7 +41,7 @@ export default function SubscribePage() {
 
   const handlePayment = async () => {
     if (!profile) return;
-    
+
     setStatus("pending");
     setError(null);
 
@@ -68,7 +68,7 @@ export default function SubscribePage() {
       // Poll for payment completion
       let attempts = 0;
       const maxAttempts = 30;
-      
+
       while (attempts < maxAttempts) {
         const { status: paymentStatus } = await getPaymentStatus({
           id: payment.id,
@@ -112,8 +112,8 @@ export default function SubscribePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#EACCD4] flex items-center justify-center">
-        <div className="animate-pulse font-impact text-4xl text-[#007A5E]">
+      <div className="min-h-screen bg-bglight flex items-center justify-center">
+        <div className="animate-pulse text-4xl font-bold text-bgdark">
           Loading...
         </div>
       </div>
@@ -121,13 +121,13 @@ export default function SubscribePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#EACCD4] text-[#007A5E]">
+    <div className="min-h-screen bg-bglight text-bgdark">
       {/* Header */}
-      <header className="border-b border-[#007A5E]/20">
+      <header className="border-b border-sage">
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-baseline">
-            <span className="font-impact text-2xl uppercase tracking-tighter">Scroll</span>
-            <span className="font-times italic text-2xl">bliss</span>
+          <Link href="/" className="flex items-baseline gap-0.5">
+            <span className="text-2xl font-bold tracking-tight uppercase">Scroll</span>
+            <span className="italic text-2xl">bliss</span>
           </Link>
           <Link href="/app" className="text-sm font-bold uppercase hover:opacity-70">
             Back to App
@@ -140,11 +140,11 @@ export default function SubscribePage() {
         {status === "success" ? (
           // Success State
           <div className="text-center">
-            <div className="w-20 h-20 bg-[#007A5E] rounded-full flex items-center justify-center mx-auto mb-6">
-              <span className="text-4xl text-[#EACCD4]">✓</span>
+            <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
+              <span className="text-4xl text-bgdark">✓</span>
             </div>
-            <h1 className="font-impact text-4xl uppercase mb-4">Welcome to Scrollbliss Pro!</h1>
-            <p className="font-times italic text-xl mb-8 opacity-80">
+            <h1 className="text-4xl font-bold tracking-tight uppercase mb-4">Welcome to Scrollbliss Pro!</h1>
+            <p className="italic text-xl mb-8 opacity-80">
               Your subscription is now active.
             </p>
             {txHash && (
@@ -154,7 +154,7 @@ export default function SubscribePage() {
             )}
             <Link
               href="/app"
-              className="inline-block px-8 py-4 bg-[#007A5E] text-[#EACCD4] font-bold uppercase tracking-wide hover:bg-[#004a39] transition-colors"
+              className="inline-block px-8 py-4 bg-primary text-bgdark font-bold uppercase tracking-wide hover:bg-primary/90 transition-colors"
             >
               Start Reading →
             </Link>
@@ -163,13 +163,13 @@ export default function SubscribePage() {
           // Payment Form
           <>
             <div className="text-center mb-12">
-              <span className="inline-block py-1 px-3 border border-[#007A5E] rounded-full text-xs font-bold uppercase tracking-widest mb-4">
+              <span className="inline-block py-1 px-3 border border-bgdark rounded-full text-xs font-bold uppercase tracking-widest mb-4">
                 Membership
               </span>
-              <h1 className="font-impact text-5xl uppercase mb-4">
+              <h1 className="text-5xl font-bold tracking-tight uppercase mb-4">
                 Unlock Scrollbliss Pro
               </h1>
-              <p className="font-times italic text-xl opacity-80">
+              <p className="italic text-xl opacity-80">
                 Infinite wisdom for the price of a coffee.
               </p>
               {user && (
@@ -185,31 +185,31 @@ export default function SubscribePage() {
             </div>
 
             {/* Pricing Card */}
-            <div className="bg-white border border-[#007A5E] p-1 shadow-[8px_8px_0px_0px_rgba(0,122,94,1)] mb-8">
-              <div className="border border-[#007A5E] p-8 bg-[#EACCD4]">
+            <div className="bg-white border border-bgdark p-1 shadow-[8px_8px_0px_0px_rgba(16,34,25,1)] mb-8">
+              <div className="border border-bgdark p-8 bg-bglight">
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-5xl font-impact">$5</span>
-                  <span className="font-times italic text-xl opacity-70">/ month</span>
+                  <span className="text-5xl font-bold">$5</span>
+                  <span className="italic text-xl opacity-70">/ month</span>
                 </div>
-                <p className="text-sm font-bold uppercase tracking-widest text-[#007A5E]/60 mb-6">
+                <p className="text-sm font-bold uppercase tracking-widest text-bgdark/60 mb-6">
                   Paid in USDC on Base
                 </p>
 
                 <ul className="space-y-3 mb-8">
                   <li className="flex items-center gap-3">
-                    <span className="w-5 h-5 flex items-center justify-center bg-[#007A5E] text-[#EACCD4] text-xs">✓</span>
+                    <span className="w-5 h-5 flex items-center justify-center bg-primary text-bgdark text-xs rounded">✓</span>
                     <span className="font-bold">Unlimited Daily Reads</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <span className="w-5 h-5 flex items-center justify-center bg-[#007A5E] text-[#EACCD4] text-xs">✓</span>
+                    <span className="w-5 h-5 flex items-center justify-center bg-primary text-bgdark text-xs rounded">✓</span>
                     <span className="font-bold">Full Archive (136+ Ideas)</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <span className="w-5 h-5 flex items-center justify-center bg-[#007A5E] text-[#EACCD4] text-xs">✓</span>
+                    <span className="w-5 h-5 flex items-center justify-center bg-primary text-bgdark text-xs rounded">✓</span>
                     <span className="font-bold">Sync Across Devices</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <span className="w-5 h-5 flex items-center justify-center bg-[#007A5E] text-[#EACCD4] text-xs">✓</span>
+                    <span className="w-5 h-5 flex items-center justify-center bg-primary text-bgdark text-xs rounded">✓</span>
                     <span className="font-bold">No Ads, Ever</span>
                   </li>
                 </ul>
@@ -226,7 +226,7 @@ export default function SubscribePage() {
                   <div className="space-y-4">
                     {/* Farcaster User Info */}
                     {isInFrame && (displayName || username) && (
-                      <div className="flex items-center gap-3 p-3 bg-[#007A5E]/10 rounded-lg mb-4">
+                      <div className="flex items-center gap-3 p-3 bg-bgdark/10 rounded-lg mb-4">
                         {pfpUrl && (
                           <img src={pfpUrl} alt="" className="w-10 h-10 rounded-full" />
                         )}
@@ -249,7 +249,7 @@ export default function SubscribePage() {
                           className={`flex-1 py-2 px-4 rounded-lg font-bold text-sm transition-all ${
                             paymentMethod === "farcaster"
                               ? "bg-[#855DCD] text-white"
-                              : "bg-white/50 text-[#007A5E]"
+                              : "bg-white/50 text-bgdark"
                           }`}
                         >
                           🟣 Farcaster Wallet
@@ -259,7 +259,7 @@ export default function SubscribePage() {
                           className={`flex-1 py-2 px-4 rounded-lg font-bold text-sm transition-all ${
                             paymentMethod === "base"
                               ? "bg-[#0052FF] text-white"
-                              : "bg-white/50 text-[#007A5E]"
+                              : "bg-white/50 text-bgdark"
                           }`}
                         >
                           🔵 Base Pay
@@ -269,12 +269,12 @@ export default function SubscribePage() {
 
                     <button
                       onClick={handlePayment}
-                      className="w-full py-4 bg-[#007A5E] text-[#EACCD4] font-bold uppercase tracking-widest hover:bg-[#004a39] transition-all hover:scale-[1.02] shadow-lg"
+                      className="w-full py-4 bg-primary text-bgdark font-bold uppercase tracking-widest hover:bg-primary/90 transition-all hover:scale-[1.02] shadow-lg"
                     >
                       Pay $5 USDC
                     </button>
                     <p className="text-xs text-center opacity-60">
-                      {isInFrame && paymentMethod === "farcaster" 
+                      {isInFrame && paymentMethod === "farcaster"
                         ? "Pay with your connected Farcaster wallet"
                         : "Powered by Base Pay • Gas-free checkout"
                       }
@@ -282,14 +282,14 @@ export default function SubscribePage() {
                   </div>
                 ) : status === "pending" ? (
                   <div className="text-center py-4">
-                    <div className="animate-spin w-8 h-8 border-2 border-[#007A5E] border-t-transparent rounded-full mx-auto mb-4"></div>
+                    <div className="animate-spin w-8 h-8 border-2 border-bgdark border-t-transparent rounded-full mx-auto mb-4"></div>
                     <p className="font-bold">Waiting for wallet...</p>
                     <p className="text-sm opacity-60">Confirm the transaction in your wallet</p>
                   </div>
                 ) : status === "verifying" ? (
                   <div className="text-center py-4">
                     <div className="animate-pulse">
-                      <div className="w-8 h-8 bg-[#007A5E] rounded-full mx-auto mb-4"></div>
+                      <div className="w-8 h-8 bg-primary rounded-full mx-auto mb-4"></div>
                     </div>
                     <p className="font-bold">Verifying payment...</p>
                     <p className="text-sm opacity-60">This may take a few seconds</p>
@@ -301,11 +301,11 @@ export default function SubscribePage() {
             {/* Trust Signals */}
             <div className="flex justify-center gap-8 opacity-50">
               <div className="flex items-center gap-2 text-sm font-bold">
-                <div className="w-5 h-5 rounded-full bg-[#007A5E]"></div>
+                <div className="w-5 h-5 rounded-full bg-bgdark"></div>
                 BASE
               </div>
               <div className="flex items-center gap-2 text-sm font-bold">
-                <div className="w-5 h-5 border-2 border-[#007A5E] rounded-full flex items-center justify-center text-xs">$</div>
+                <div className="w-5 h-5 border-2 border-bgdark rounded-full flex items-center justify-center text-xs">$</div>
                 USDC
               </div>
             </div>
@@ -330,7 +330,7 @@ export default function SubscribePage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-[#007A5E]/20 py-8">
+      <footer className="border-t border-sage py-8">
         <div className="max-w-4xl mx-auto px-6 text-center text-sm opacity-60">
           <p>Cancel anytime. 100% money-back guarantee.</p>
         </div>

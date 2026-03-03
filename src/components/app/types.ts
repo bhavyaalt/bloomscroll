@@ -9,4 +9,6 @@ export interface StreakState {
   longestStreak: number;
   totalDays: number;
   lastVisitDate: string;
+  streakFreezeActive: boolean;
+  streakFreezeUsedDate: string;
 }
