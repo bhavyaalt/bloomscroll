@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getProfileByUsername, getPinnedCards } from "@/lib/pinned-cards";
 import { getCardById } from "@/lib/content-library";
 import { UserProfile } from "@/lib/supabase";
+import GardenClient from "@/components/app/GardenClient";
 
 interface PageProps {
   params: Promise<{ username: string }>;
@@ -84,9 +85,10 @@ export default async function GardenPage({ params }: PageProps) {
           >
             {displayName}&apos;s Garden
           </h1>
-          <p className="text-[#007A5E]/60 text-sm">
+          <p className="text-[#007A5E]/60 text-sm mb-4">
             {pins.length} quote{pins.length !== 1 ? "s" : ""} planted
           </p>
+          <GardenClient targetUserId={profile.id} />
         </div>
 
         {/* Masonry grid */}

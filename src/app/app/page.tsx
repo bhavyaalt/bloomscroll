@@ -23,6 +23,9 @@ import { celebrate } from "@/lib/confetti";
 import { getDailyCard, isDailyCardDismissed, dismissDailyCard } from "@/lib/daily-card";
 import { shouldShowInstallPrompt } from "@/lib/pwa";
 import { addToReview, removeFromReview, getReviewStats } from "@/lib/spaced-repetition";
+import { getAchievementState, checkAchievements, getLevelInfo, Achievement } from "@/lib/achievements";
+import { syncStatsToProfile } from "@/lib/social";
+import { getAudioAsCards } from "@/lib/audio-content";
 
 import { Preferences, StreakState } from "@/components/app/types";
 import AppHeader from "@/components/app/AppHeader";
@@ -36,6 +39,8 @@ import CardFeed from "@/components/app/CardFeed";
 import PinModal from "@/components/app/PinModal";
 import InstallPrompt from "@/components/app/InstallPrompt";
 import ReviewView from "@/components/app/ReviewView";
+import AchievementsModal from "@/components/app/AchievementsModal";
+import LeaderboardModal from "@/components/app/LeaderboardModal";
 import { AnimatePresence } from "framer-motion";
 
 const SWIPE_THRESHOLD = 100;
@@ -113,6 +118,11 @@ export default function AppPage() {
   const [pinnedCards, setPinnedCards] = useState<Set<string>>(new Set());
   const [showPinModal, setShowPinModal] = useState(false);
   const [cardToPin, setCardToPin] = useState<Card | null>(null);
+
+  // Achievements & Leaderboard state
+  const [showAchievements, setShowAchievements] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [newAchievement, setNewAchievement] = useState<Achievement | null>(null);
 
   // Load saved cards, viewed cards, and preferences from localStorage
   useEffect(() => {
@@ -212,7 +222,9 @@ export default function AppPage() {
     } else if (selectedTopic) {
       availableCards = [...contentLibrary].filter(c => c.topic.includes(selectedTopic));
     } else {
-      availableCards = [...contentLibrary];
+      // Mix in audio content (podcasts/audiobooks) with regular cards
+      const audioCards = getAudioAsCards() as Card[];
+      availableCards = [...contentLibrary, ...audioCards];
     }
 
     if (!selectedTopic && !selectedCollection && preferences?.topics && preferences.topics.length > 0) {
@@ -512,6 +524,8 @@ export default function AppPage() {
         onShowCollections={() => setShowCollections(true)}
         onShowSettings={() => setShowSettings(true)}
         onShowReview={() => setShowReview(true)}
+        onShowAchievements={() => setShowAchievements(true)}
+        onShowLeaderboard={() => setShowLeaderboard(true)}
         onSignOut={signOut}
       />
 
@@ -653,6 +667,38 @@ export default function AppPage() {
               window.location.href = "/subscribe";
             }}
           />
+        )}
+      </AnimatePresence>
+
+      {/* Achievements Modal */}
+      <AchievementsModal
+        isOpen={showAchievements}
+        onClose={() => setShowAchievements(false)}
+      />
+
+      {/* Leaderboard Modal */}
+      <LeaderboardModal
+        isOpen={showLeaderboard}
+        onClose={() => setShowLeaderboard(false)}
+        currentUserId={profile?.id}
+      />
+
+      {/* Achievement Unlock Toast */}
+      <AnimatePresence>
+        {newAchievement && (
+          <div
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-[#007A5E] text-[#EACCD4] px-6 py-3 rounded-2xl shadow-xl flex items-center gap-3 cursor-pointer"
+            onClick={() => {
+              setNewAchievement(null);
+              setShowAchievements(true);
+            }}
+          >
+            <span className="text-2xl">{newAchievement.icon}</span>
+            <div>
+              <div className="font-bold">{newAchievement.name}</div>
+              <div className="text-xs opacity-80">+{newAchievement.xpReward} XP</div>
+            </div>
+          </div>
         )}
       </AnimatePresence>
     </div>

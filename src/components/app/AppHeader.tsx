@@ -21,6 +21,8 @@ interface AppHeaderProps {
   onShowCollections: () => void;
   onShowSettings: () => void;
   onShowReview?: () => void;
+  onShowAchievements?: () => void;
+  onShowLeaderboard?: () => void;
   onSignOut: () => void;
 }
 
@@ -39,6 +41,8 @@ export default function AppHeader({
   onShowCollections,
   onShowSettings,
   onShowReview,
+  onShowAchievements,
+  onShowLeaderboard,
   onSignOut,
   reviewDueCount = 0,
 }: AppHeaderProps) {
@@ -91,6 +95,28 @@ export default function AppHeader({
               <span className="text-sm">🔥</span>
               <span className="text-sm font-bold text-white/70">{streak.currentStreak}</span>
             </button>
+
+            {/* Achievements */}
+            {onShowAchievements && (
+              <button
+                onClick={onShowAchievements}
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-white/60 hover:text-white/80 hover:bg-white/5 transition-all"
+                title="Achievements"
+              >
+                <span className="text-sm">🏆</span>
+              </button>
+            )}
+
+            {/* Leaderboard */}
+            {onShowLeaderboard && (
+              <button
+                onClick={onShowLeaderboard}
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-white/60 hover:text-white/80 hover:bg-white/5 transition-all"
+                title="Leaderboard"
+              >
+                <span className="text-sm">📊</span>
+              </button>
+            )}
 
             {/* Saved */}
             <button
