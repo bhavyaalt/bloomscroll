@@ -1,11 +1,23 @@
 // Social features - followers, leaderboards, reactions
 
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+let supabaseInstance: SupabaseClient | null = null;
+
+function getSupabase(): SupabaseClient {
+  if (!supabaseInstance) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!url || !key) {
+      throw new Error("Missing Supabase credentials");
+    }
+    supabaseInstance = createClient(url, key);
+  }
+  return supabaseInstance;
+}
+
+// Alias for backwards compatibility
+const getClient = () => getSupabase();
 
 // Types
 export interface Follow {
@@ -47,7 +59,7 @@ export interface LeaderboardEntry {
 
 // Follow functions
 export async function followUser(followerId: string, followingId: string): Promise<boolean> {
-  const { error } = await supabase
+  const { error } = await getClient()
     .from("bloomscroll_follows")
     .insert({ follower_id: followerId, following_id: followingId });
   
@@ -55,7 +67,7 @@ export async function followUser(followerId: string, followingId: string): Promi
 }
 
 export async function unfollowUser(followerId: string, followingId: string): Promise<boolean> {
-  const { error } = await supabase
+  const { error } = await getClient()
     .from("bloomscroll_follows")
     .delete()
     .eq("follower_id", followerId)
@@ -65,7 +77,7 @@ export async function unfollowUser(followerId: string, followingId: string): Pro
 }
 
 export async function isFollowing(followerId: string, followingId: string): Promise<boolean> {
-  const { data } = await supabase
+  const { data } = await getClient()
     .from("bloomscroll_follows")
     .select("id")
     .eq("follower_id", followerId)
@@ -76,7 +88,7 @@ export async function isFollowing(followerId: string, followingId: string): Prom
 }
 
 export async function getFollowers(userId: string): Promise<string[]> {
-  const { data } = await supabase
+  const { data } = await getClient()
     .from("bloomscroll_follows")
     .select("follower_id")
     .eq("following_id", userId);
@@ -85,7 +97,7 @@ export async function getFollowers(userId: string): Promise<string[]> {
 }
 
 export async function getFollowing(userId: string): Promise<string[]> {
-  const { data } = await supabase
+  const { data } = await getClient()
     .from("bloomscroll_follows")
     .select("following_id")
     .eq("follower_id", userId);
@@ -95,8 +107,8 @@ export async function getFollowing(userId: string): Promise<string[]> {
 
 export async function getFollowCounts(userId: string): Promise<{ followers: number; following: number }> {
   const [followers, following] = await Promise.all([
-    supabase.from("bloomscroll_follows").select("id", { count: "exact" }).eq("following_id", userId),
-    supabase.from("bloomscroll_follows").select("id", { count: "exact" }).eq("follower_id", userId),
+    getClient().from("bloomscroll_follows").select("id", { count: "exact" }).eq("following_id", userId),
+    getClient().from("bloomscroll_follows").select("id", { count: "exact" }).eq("follower_id", userId),
   ]);
   
   return {
@@ -108,13 +120,13 @@ export async function getFollowCounts(userId: string): Promise<{ followers: numb
 // Reaction functions (for pins)
 export async function addReaction(userId: string, pinId: string, emoji: string): Promise<boolean> {
   // Remove existing reaction first (one per user per pin)
-  await supabase
+  await getClient()
     .from("bloomscroll_reactions")
     .delete()
     .eq("user_id", userId)
     .eq("pin_id", pinId);
   
-  const { error } = await supabase
+  const { error } = await getClient()
     .from("bloomscroll_reactions")
     .insert({ user_id: userId, pin_id: pinId, emoji });
   
@@ -122,7 +134,7 @@ export async function addReaction(userId: string, pinId: string, emoji: string):
 }
 
 export async function removeReaction(userId: string, pinId: string): Promise<boolean> {
-  const { error } = await supabase
+  const { error } = await getClient()
     .from("bloomscroll_reactions")
     .delete()
     .eq("user_id", userId)
@@ -132,7 +144,7 @@ export async function removeReaction(userId: string, pinId: string): Promise<boo
 }
 
 export async function getReactions(pinId: string): Promise<{ emoji: string; count: number; users: string[] }[]> {
-  const { data } = await supabase
+  const { data } = await getClient()
     .from("bloomscroll_reactions")
     .select("emoji, user_id")
     .eq("pin_id", pinId);
@@ -154,7 +166,7 @@ export async function getReactions(pinId: string): Promise<{ emoji: string; coun
 
 // Comment functions
 export async function addComment(userId: string, pinId: string, content: string): Promise<Comment | null> {
-  const { data, error } = await supabase
+  const { data, error } = await getClient()
     .from("bloomscroll_comments")
     .insert({ user_id: userId, pin_id: pinId, content })
     .select()
@@ -165,7 +177,7 @@ export async function addComment(userId: string, pinId: string, content: string)
 }
 
 export async function getComments(pinId: string): Promise<Comment[]> {
-  const { data } = await supabase
+  const { data } = await getClient()
     .from("bloomscroll_comments")
     .select(`
       *,
@@ -185,7 +197,7 @@ export async function getComments(pinId: string): Promise<Comment[]> {
 }
 
 export async function deleteComment(commentId: string, userId: string): Promise<boolean> {
-  const { error } = await supabase
+  const { error } = await getClient()
     .from("bloomscroll_comments")
     .delete()
     .eq("id", commentId)
@@ -196,7 +208,7 @@ export async function deleteComment(commentId: string, userId: string): Promise<
 
 // Leaderboard functions
 export async function getStreakLeaderboard(limit = 10): Promise<LeaderboardEntry[]> {
-  const { data } = await supabase
+  const { data } = await getClient()
     .from("profiles")
     .select("id, fc_username, fc_display_name, fc_pfp_url, current_streak")
     .not("current_streak", "is", null)
@@ -214,7 +226,7 @@ export async function getStreakLeaderboard(limit = 10): Promise<LeaderboardEntry
 }
 
 export async function getCardsReadLeaderboard(limit = 10): Promise<LeaderboardEntry[]> {
-  const { data } = await supabase
+  const { data } = await getClient()
     .from("profiles")
     .select("id, fc_username, fc_display_name, fc_pfp_url, total_cards_read")
     .not("total_cards_read", "is", null)
@@ -232,7 +244,7 @@ export async function getCardsReadLeaderboard(limit = 10): Promise<LeaderboardEn
 }
 
 export async function getXpLeaderboard(limit = 10): Promise<LeaderboardEntry[]> {
-  const { data } = await supabase
+  const { data } = await getClient()
     .from("profiles")
     .select("id, fc_username, fc_display_name, fc_pfp_url, total_xp")
     .not("total_xp", "is", null)
@@ -255,7 +267,7 @@ export async function syncStatsToProfile(userId: string, stats: {
   totalCardsRead: number;
   totalXp: number;
 }): Promise<boolean> {
-  const { error } = await supabase
+  const { error } = await getClient()
     .from("profiles")
     .update({
       current_streak: stats.currentStreak,
