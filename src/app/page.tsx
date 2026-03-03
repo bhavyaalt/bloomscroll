@@ -26,10 +26,10 @@ const Hero = () => (
         </div>
         <div className="flex flex-col sm:flex-row gap-4">
           <Link
-            href="/app"
+            href="/auth?redirect=/app"
             className="flex min-w-[180px] cursor-pointer items-center justify-center rounded-xl h-14 px-8 bg-primary text-bgdark text-lg font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all"
           >
-            Start Reading Free
+            Sign In to Start
           </Link>
           <Link
             href="#how-it-works"
@@ -316,10 +316,10 @@ const CTA = () => (
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
           <Link
-            href="/app"
+            href="/auth?redirect=/app"
             className="flex items-center justify-center gap-3 rounded-2xl h-16 px-10 bg-primary text-bgdark text-xl font-bold transition-transform hover:scale-105"
           >
-            Get Started Free
+            Sign In to Start
             <svg className="size-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
             </svg>
@@ -359,7 +359,7 @@ const Footer = () => (
       </div>
       <div className="flex flex-col gap-4">
         <h4 className="font-bold text-slate-900">Product</h4>
-        <Link href="/app" className="text-sm text-slate-500 hover:text-primary transition-colors">Web Reader</Link>
+        <Link href="/auth?redirect=/app" className="text-sm text-slate-500 hover:text-primary transition-colors">Web Reader</Link>
         <a href="#features" className="text-sm text-slate-500 hover:text-primary transition-colors">Features</a>
         <Link href="/subscribe" className="text-sm text-slate-500 hover:text-primary transition-colors">Pricing</Link>
       </div>

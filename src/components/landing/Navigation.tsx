@@ -77,7 +77,7 @@ export const Navigation = () => {
             </Link>
           )}
           <Link
-            href="/app"
+            href={isAuthenticated ? "/app" : "/auth?redirect=/app"}
             className="flex items-center justify-center rounded-full h-10 px-6 bg-primary text-bgdark text-sm font-bold transition-transform hover:scale-105 active:scale-95"
           >
             Start Reading
@@ -101,7 +101,7 @@ export const Navigation = () => {
           <a href="#how-it-works" className="text-sm font-medium text-slate-700" onClick={() => setMobileOpen(false)}>How it Works</a>
           <a href="#pricing" className="text-sm font-medium text-slate-700" onClick={() => setMobileOpen(false)}>Pricing</a>
           <Link
-            href="/app"
+            href={isAuthenticated ? "/app" : "/auth?redirect=/app"}
             className="flex items-center justify-center rounded-full h-10 px-6 bg-primary text-bgdark text-sm font-bold mt-2"
             onClick={() => setMobileOpen(false)}
           >

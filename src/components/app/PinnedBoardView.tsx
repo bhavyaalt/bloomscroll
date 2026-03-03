@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, getCardById } from "@/lib/content-library";
 import { PinnedCard } from "@/lib/pinned-cards";
+import { useNotifications } from "@/components/NotificationProvider";
 
 interface PinnedBoardViewProps {
   pins: PinnedCard[];
@@ -142,12 +143,18 @@ export default function PinnedBoardView({
   onEditNote,
 }: PinnedBoardViewProps) {
   const [copied, setCopied] = useState(false);
+  const { notify } = useNotifications();
 
   const handleShareGarden = () => {
     const url = `${window.location.origin}/garden/${username}`;
     navigator.clipboard.writeText(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+    notify({
+      title: "Garden link copied",
+      message: "Your public garden URL is ready to share.",
+      tone: "success",
+    });
   };
 
   if (pins.length === 0) {

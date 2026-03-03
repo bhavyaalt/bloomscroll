@@ -11,6 +11,7 @@ interface AppHeaderProps {
   isSubscribed: boolean;
   streak: StreakState;
   savedCount: number;
+  saveLimit: number;
   showSaved: boolean;
   showUserMenu: boolean;
   reviewDueCount?: number;
@@ -32,6 +33,7 @@ export default function AppHeader({
   isSubscribed,
   streak,
   savedCount,
+  saveLimit,
   showSaved,
   showUserMenu,
   onToggleSaved,
@@ -130,7 +132,19 @@ export default function AppHeader({
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
               </svg>
               <span className="text-xs sm:text-sm font-bold">{savedCount}</span>
+              {!isSubscribed && (
+                <span className="hidden sm:inline text-[10px] text-white/35">/ {saveLimit}</span>
+              )}
             </button>
+
+            {!isSubscribed && (
+              <Link
+                href="/subscribe"
+                className="hidden min-[520px]:inline-flex rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-primary hover:bg-primary/15"
+              >
+                Pro
+              </Link>
+            )}
 
             {/* User avatar / Login */}
             {user || profile ? (
@@ -193,20 +207,39 @@ export default function AppHeader({
                 Collections
               </button>
               {onShowReview && (
-                <button
-                  onClick={() => { onShowReview(); onToggleUserMenu(); }}
-                  className="w-full px-3 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg flex items-center gap-2.5 text-white/70"
-                >
-                  <svg className="size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" />
-                  </svg>
-                  Review Cards
-                  {reviewDueCount > 0 && (
-                    <span className="ml-auto text-xs bg-primary/20 text-primary px-1.5 py-0.5 rounded-full font-bold">
-                      {reviewDueCount}
-                    </span>
+                <>
+                  <button
+                    onClick={() => { onShowReview(); onToggleUserMenu(); }}
+                    className="w-full px-3 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg flex items-center gap-2.5 text-white/70"
+                  >
+                    <svg className="size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" />
+                    </svg>
+                    Review Cards
+                    {reviewDueCount > 0 && (
+                      <span className="ml-auto text-xs bg-primary/20 text-primary px-1.5 py-0.5 rounded-full font-bold">
+                        {reviewDueCount}
+                      </span>
+                    )}
+                  </button>
+                  {!isSubscribed && (
+                    <Link
+                      href="/subscribe?source=header_review_teaser"
+                      onClick={onToggleUserMenu}
+                      className="block rounded-xl border border-primary/15 bg-primary/10 px-3 py-3 text-sm text-white/75"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-semibold text-primary">
+                          {reviewDueCount > 0 ? `${reviewDueCount} cards waiting to stick` : "Make your saved cards memorable"}
+                        </span>
+                        <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-primary">Pro</span>
+                      </div>
+                      <p className="mt-1 text-xs text-white/50">
+                        Unlock review mode, unlimited saves, and deeper learning tools.
+                      </p>
+                    </Link>
                   )}
-                </button>
+                </>
               )}
               <Link
                 href="/profile"

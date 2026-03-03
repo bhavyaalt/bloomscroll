@@ -77,10 +77,10 @@ export default function Pricing() {
               </li>
             </ul>
             <Link
-              href="/app"
+              href="/auth?redirect=/app"
               className="w-full py-4 rounded-xl border-2 border-sage font-bold text-center hover:bg-sage/10 transition-colors mt-8 text-slate-700 block"
             >
-              Start Free
+              Sign In to Start
             </Link>
           </div>
         </div>

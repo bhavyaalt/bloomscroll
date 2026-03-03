@@ -15,6 +15,7 @@ import {
   FarcasterUser,
 } from "@/lib/supabase";
 import { useFarcaster } from "./FarcasterProvider";
+import { useNotifications } from "./NotificationProvider";
 
 interface AuthContextType {
   user: User | null;
@@ -59,8 +60,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [viewsRemaining, setViewsRemaining] = useState(FREE_VIEWS);
 
   const { isSDKLoaded, isInFrame, fid, username, displayName, pfpUrl, walletAddress } = useFarcaster();
+  const { notify, notifyAcrossNavigation } = useNotifications();
   const requestVersionRef = useRef(0);
   const mountedRef = useRef(true);
+  const lastNotifiedSignInUserRef = useRef<string | null>(null);
 
   const isAuthenticated = !!user || (isInFrame && !!fid);
   const authMethod = profile?.auth_method || (user ? "email" : fid ? "farcaster" : null);
@@ -163,16 +166,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, nextSession) => {
       loadAuthState(nextSession).finally(() => {
         if (mountedRef.current) {
           setLoading(false);
         }
       });
+
+      if (event === "SIGNED_IN" && nextSession?.user) {
+        if (lastNotifiedSignInUserRef.current !== nextSession.user.id) {
+          lastNotifiedSignInUserRef.current = nextSession.user.id;
+          notify({
+            title: "Signed in",
+            message: "Your progress and subscription are now synced.",
+            tone: "success",
+          });
+        }
+      }
+
+      if (event === "SIGNED_OUT") {
+        lastNotifiedSignInUserRef.current = null;
+      }
     });
 
     return () => subscription.unsubscribe();
-  }, [isSDKLoaded, fid, username, displayName, pfpUrl, walletAddress]);
+  }, [isSDKLoaded, fid, username, displayName, notify, pfpUrl, walletAddress]);
 
   const handleSignOut = async () => {
     const requestVersion = ++requestVersionRef.current;
@@ -182,9 +200,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     resetProfileState();
 
     try {
+      notifyAcrossNavigation({
+        title: "Signed out",
+        message: "You have been logged out successfully.",
+        tone: "info",
+      });
       await supabase.auth.signOut({ scope: "local" });
     } catch (err) {
       console.error("Sign out error:", err);
+      notify({
+        title: "Log out failed",
+        message: "We could not complete sign out cleanly.",
+        tone: "error",
+      });
     }
 
     if (!mountedRef.current || requestVersion !== requestVersionRef.current) return;

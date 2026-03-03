@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAuth } from "@/components/AuthProvider";
 import { signInWithProvider } from "@/lib/supabase";
+import { trackGrowthEvent } from "@/lib/analytics";
 import {
   PRICING,
   REGION_NAMES,
@@ -17,11 +18,46 @@ import {
   calculateYearlySavings
 } from "@/lib/pricing";
 
+const SOURCE_COPY: Record<string, { eyebrow: string; title: string; subtitle: string }> = {
+  save_limit: {
+    eyebrow: "Unlimited Library",
+    title: "Keep Every Quote Worth Revisiting",
+    subtitle: "Turn your saved cards into a permanent library and review system.",
+  },
+  pin_limit: {
+    eyebrow: "Grow Your Garden",
+    title: "Build A Garden You Actually Keep",
+    subtitle: "Pin every quote that matters and turn your garden into your public wisdom board.",
+  },
+  saved_cards_view: {
+    eyebrow: "Library Upgrade",
+    title: "Your Best Quotes Should Not Expire",
+    subtitle: "Pro keeps your full library, review queue, and deeper reading tools together.",
+  },
+  profile_review_preview: {
+    eyebrow: "Remember What You Read",
+    title: "Turn Reading Into Memory",
+    subtitle: "Use review mode to keep ideas alive instead of letting them vanish after one scroll.",
+  },
+  profile_book_preview: {
+    eyebrow: "Go Deeper By Book",
+    title: "Stop Reading Randomly",
+    subtitle: "Browse by book, listen in audio mode, and follow ideas all the way through.",
+  },
+  feed_controls: {
+    eyebrow: "Upgrade Your Ritual",
+    title: "Listen, Review, And Go Deeper",
+    subtitle: "Pro turns the feed into a complete daily learning system.",
+  },
+};
+
 function SubscribeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const autoCheckout = searchParams.get('auto_checkout') === '1';
+  const source = searchParams.get("source") || "default";
   const autoCheckoutFiredRef = useRef(false);
+  const trackedViewRef = useRef(false);
   const { user, profile, loading, isSubscribed, isAuthenticated } = useAuth();
 
   const [region, setRegion] = useState<Region>('OTHER');
@@ -43,13 +79,13 @@ function SubscribeContent() {
   useEffect(() => {
     if (!loading && isAuthenticated && autoCheckout && !autoCheckoutFiredRef.current) {
       autoCheckoutFiredRef.current = true;
-      const successUrl = `${window.location.origin}/subscribe/success?billing=${billingCycle}`;
+      const successUrl = `${window.location.origin}/subscribe/success?billing=${billingCycle}&source=${encodeURIComponent(source)}`;
       const pricing = PRICING[region];
       const plan = pricing[billingCycle];
       const checkoutUrl = getCheckoutUrl(plan.productId, user?.email || undefined, successUrl);
       window.location.href = checkoutUrl;
     }
-  }, [loading, isAuthenticated, autoCheckout, region, billingCycle, user]);
+  }, [loading, isAuthenticated, autoCheckout, region, billingCycle, source, user]);
 
   // Show message if already subscribed
   const alreadySubscribed = !loading && isSubscribed;
@@ -57,12 +93,30 @@ function SubscribeContent() {
   const pricing = PRICING[region];
   const plan = pricing[billingCycle];
   const savings = calculateYearlySavings(region);
+  const sourceCopy = SOURCE_COPY[source] || {
+    eyebrow: "Pro Membership",
+    title: "Unlock Your Potential",
+    subtitle: "Unlimited wisdom, ad-free experience, and exclusive features.",
+  };
+
+  useEffect(() => {
+    if (trackedViewRef.current) return;
+    trackedViewRef.current = true;
+    trackGrowthEvent({
+      event: "subscribe_page_viewed",
+      metadata: { source, is_authenticated: isAuthenticated },
+    });
+  }, [isAuthenticated, source]);
 
   const handleSocialSignIn = async (provider: 'google' | 'twitter') => {
     setSocialLoading(provider);
     setAuthError(null);
     try {
-      document.cookie = `auth_redirect=/subscribe?auto_checkout=1; path=/; max-age=600; SameSite=Lax`;
+      trackGrowthEvent({
+        event: "subscribe_auth_started",
+        metadata: { provider, source },
+      });
+      document.cookie = `auth_redirect=/subscribe?auto_checkout=1&source=${encodeURIComponent(source)}; path=/; max-age=600; SameSite=Lax`;
       await signInWithProvider(provider);
     } catch {
       setAuthError(`Could not sign in with ${provider === 'google' ? 'Google' : 'X'}. Please try again.`);
@@ -71,7 +125,16 @@ function SubscribeContent() {
   };
 
   const handleCheckout = () => {
-    const successUrl = `${window.location.origin}/subscribe/success?billing=${billingCycle}`;
+    trackGrowthEvent({
+      event: "checkout_started",
+      metadata: {
+        source,
+        billing_cycle: billingCycle,
+        region,
+        authenticated: isAuthenticated,
+      },
+    });
+    const successUrl = `${window.location.origin}/subscribe/success?billing=${billingCycle}&source=${encodeURIComponent(source)}`;
     const checkoutUrl = getCheckoutUrl(plan.productId, user?.email || undefined, successUrl);
     window.location.href = checkoutUrl;
   };
@@ -144,13 +207,13 @@ function SubscribeContent() {
           className={`text-center mb-8 sm:mb-12 ${alreadySubscribed ? "hidden" : ""}`}
         >
           <span className="inline-block py-1 px-3 border border-[#007A5E] rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-3 sm:mb-4">
-            Pro Membership
+            {sourceCopy.eyebrow}
           </span>
           <h1 className="font-impact text-3xl sm:text-5xl md:text-6xl uppercase mb-3 sm:mb-4">
-            Unlock Your Potential
+            {sourceCopy.title}
           </h1>
           <p className="font-times italic text-base sm:text-xl opacity-80 max-w-md mx-auto">
-            Unlimited wisdom, ad-free experience, and exclusive features.
+            {sourceCopy.subtitle}
           </p>
           {user && (
             <p className="text-xs sm:text-sm opacity-60 mt-3 sm:mt-4 truncate px-4">
@@ -268,7 +331,7 @@ function SubscribeContent() {
               </div>
               {billingCycle === 'yearly' && (
                 <p className="text-sm opacity-60 mt-2">
-                  That's just {pricing.symbol}{Math.round(plan.price / 12)}/month
+                  That&apos;s just {pricing.symbol}{Math.round(plan.price / 12)}/month
                 </p>
               )}
               <p className="text-xs uppercase tracking-widest opacity-40 mt-2">

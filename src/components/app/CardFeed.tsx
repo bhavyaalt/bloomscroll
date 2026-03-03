@@ -9,6 +9,10 @@ interface CardFeedProps {
   direction: number;
   savedCards: Set<string>;
   pinnedCards: Set<string>;
+  savedCount: number;
+  pinnedCount: number;
+  saveLimit: number;
+  pinLimit: number;
   justSaved: boolean;
   showCopied: boolean;
   isSharing: boolean;
@@ -19,6 +23,7 @@ interface CardFeedProps {
   feedLength: number;
   hasChapter: boolean;
   isSubscribed: boolean;
+  reviewDueCount: number;
   dailyCard?: Card | null;
   onDismissDailyCard?: () => void;
   onShareDailyCard?: (e: React.MouseEvent) => void;
@@ -105,6 +110,10 @@ export default function CardFeed({
   direction,
   savedCards,
   pinnedCards,
+  savedCount,
+  pinnedCount,
+  saveLimit,
+  pinLimit,
   justSaved,
   showCopied,
   isSharing,
@@ -115,6 +124,7 @@ export default function CardFeed({
   feedLength,
   hasChapter,
   isSubscribed,
+  reviewDueCount,
   onDragEnd,
   onDoubleTap,
   onToggleSave,
@@ -133,6 +143,8 @@ export default function CardFeed({
   onShowSubscribe,
 }: CardFeedProps) {
   const progressPercent = Math.min((dailyProgress.read / dailyProgress.goal) * 100, 100);
+  const savedProgressPercent = isSubscribed ? 100 : Math.min((savedCount / saveLimit) * 100, 100);
+  const pinnedProgressPercent = isSubscribed ? 100 : Math.min((pinnedCount / pinLimit) * 100, 100);
 
   return (
     <div className="fixed inset-0 pt-12 sm:pt-14 pb-0 px-3 sm:px-4 touch-pan-y flex flex-col">
@@ -396,6 +408,60 @@ export default function CardFeed({
                   />
                 </div>
               </div>
+
+              {!isSubscribed && (
+                <div className="mt-3 rounded-2xl border border-[#007A5E]/15 bg-white/45 p-3 text-[#007A5E] flex-shrink-0">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#007A5E]/65">
+                        BloomScroll Pro
+                      </p>
+                      <p className="mt-1 text-sm font-semibold">
+                        Turn this into a personal wisdom system
+                      </p>
+                    </div>
+                    <button
+                      onClick={onShowSubscribe}
+                      className="rounded-full bg-[#007A5E] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-white"
+                    >
+                      Upgrade
+                    </button>
+                  </div>
+
+                  <div className="mt-3 grid grid-cols-2 gap-2 text-[11px]">
+                    <div className="rounded-xl bg-[#007A5E]/7 px-3 py-2">
+                      <div className="flex items-center justify-between font-semibold">
+                        <span>Library</span>
+                        <span>{savedCount}/{saveLimit}</span>
+                      </div>
+                      <div className="mt-1 h-1 rounded-full bg-[#007A5E]/10">
+                        <div className="h-full rounded-full bg-[#007A5E]" style={{ width: `${savedProgressPercent}%` }} />
+                      </div>
+                      <p className="mt-1 text-[#007A5E]/60">Unlock unlimited saved cards.</p>
+                    </div>
+                    <div className="rounded-xl bg-[#007A5E]/7 px-3 py-2">
+                      <div className="flex items-center justify-between font-semibold">
+                        <span>Garden</span>
+                        <span>{pinnedCount}/{pinLimit}</span>
+                      </div>
+                      <div className="mt-1 h-1 rounded-full bg-[#007A5E]/10">
+                        <div className="h-full rounded-full bg-[#007A5E]" style={{ width: `${pinnedProgressPercent}%` }} />
+                      </div>
+                      <p className="mt-1 text-[#007A5E]/60">Keep every quote worth revisiting.</p>
+                    </div>
+                    <div className="rounded-xl bg-[#007A5E]/7 px-3 py-2">
+                      <div className="font-semibold">Remember what you read</div>
+                      <p className="mt-1 text-[#007A5E]/60">
+                        {reviewDueCount > 0 ? `${reviewDueCount} cards ready for review with Pro.` : "Build a review queue that sticks."}
+                      </p>
+                    </div>
+                    <div className="rounded-xl bg-[#007A5E]/7 px-3 py-2">
+                      <div className="font-semibold">Go deeper by book</div>
+                      <p className="mt-1 text-[#007A5E]/60">Browse full books, audio mode, and premium reading.</p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Swipe hint */}
               <div className="mt-2 sm:mt-4 flex flex-col items-center text-white/30 flex-shrink-0">

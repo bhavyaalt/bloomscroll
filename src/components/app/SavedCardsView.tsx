@@ -5,16 +5,40 @@ import { Card } from "@/lib/content-library";
 
 interface SavedCardsViewProps {
   cards: Card[];
+  isSubscribed: boolean;
+  saveLimit: number;
   onRemove: (cardId: string) => void;
+  onUpgrade: () => void;
 }
 
-export default function SavedCardsView({ cards, onRemove }: SavedCardsViewProps) {
+export default function SavedCardsView({ cards, isSubscribed, saveLimit, onRemove, onUpgrade }: SavedCardsViewProps) {
   return (
     <div className="pt-14 sm:pt-16 pb-20 px-3 sm:px-4 max-w-lg mx-auto">
       <div className="flex justify-between items-center mb-4 sm:mb-6">
         <h2 className="font-bold text-lg sm:text-xl">Your Library</h2>
-        <span className="text-white/40 text-xs sm:text-sm">{cards.length} saved</span>
+        <span className="text-white/40 text-xs sm:text-sm">
+          {isSubscribed ? `${cards.length} saved` : `${cards.length}/${saveLimit} free saves used`}
+        </span>
       </div>
+      {!isSubscribed && (
+        <div className="mb-4 rounded-2xl border border-primary/20 bg-primary/10 p-4 text-sm text-white/80">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary">Pro unlock</p>
+              <p className="mt-1 font-semibold">Keep an unlimited personal library</p>
+              <p className="mt-1 text-white/55">
+                Save every quote worth revisiting and turn your library into a review queue.
+              </p>
+            </div>
+            <button
+              onClick={onUpgrade}
+              className="shrink-0 rounded-full bg-primary px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-[#102219]"
+            >
+              Upgrade
+            </button>
+          </div>
+        </div>
+      )}
       {cards.length === 0 ? (
         <div className="text-center py-20 text-white/40">
           <div className="mb-4 flex justify-center">

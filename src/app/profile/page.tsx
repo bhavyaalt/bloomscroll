@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useAuth } from "@/components/AuthProvider";
+import { getAllBooks } from "@/lib/content-library";
 import {
   getReadingStats,
   getWeeklyGrid,
@@ -22,6 +23,10 @@ import {
 import { getSoundEnabled, setSoundEnabled, sounds } from "@/lib/sounds";
 import { getPinnedCards, unpinCard, updatePinNote, PinnedCard } from "@/lib/pinned-cards";
 import PinnedBoardView from "@/components/app/PinnedBoardView";
+import { useNotifications } from "@/components/NotificationProvider";
+import CancelSubscriptionModal from "@/components/app/CancelSubscriptionModal";
+import { getCardsForReview } from "@/lib/spaced-repetition";
+import { trackGrowthEvent } from "@/lib/analytics";
 
 const LEVEL_COLORS = [
   "bg-lvl0",
@@ -44,6 +49,7 @@ const TOPIC_COLORS = [
 
 export default function ProfilePage() {
   const { user, profile, isSubscribed, signOut, updateWallet } = useAuth();
+  const { notify } = useNotifications();
 
   const [stats, setStats] = useState<ReadingStats | null>(null);
   const [grid, setGrid] = useState<{ date: string; count: number; level: number }[][]>([]);
@@ -62,24 +68,30 @@ export default function ProfilePage() {
   const [dailyGoal, setDailyGoal] = useState(5);
   const [streakFreezeActive, setStreakFreezeActive] = useState(false);
   const [pinnedCards, setPinnedCards] = useState<PinnedCard[]>([]);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
+  const reviewPreviewCount = getCardsForReview().length;
+  const totalBooks = getAllBooks().length;
 
   useEffect(() => {
-    const s = getReadingStats();
-    setStats(s);
-    setGrid(getWeeklyGrid(52));
-    setTopTopics(getTopTopics(5));
-    setStreak(getStreakData());
-    setShareUrl(`${window.location.origin}/profile`);
-    const notifSettings = getNotificationSettings();
-    setNotificationsEnabled(notifSettings.enabled);
-    setReminderTime(notifSettings.reminderTime || "09:00");
-    setSoundEnabledState(getSoundEnabled());
-    setDailyGoal(s.dailyGoal || 5);
-    setStreakFreezeActive(s.streakFreezeActive ?? false);
-    if (profile?.wallet_address) setWalletInput(profile.wallet_address);
-    if (profile?.id) {
-      getPinnedCards(profile.id).then(setPinnedCards).catch(() => {});
-    }
+    queueMicrotask(() => {
+      const s = getReadingStats();
+      setStats(s);
+      setGrid(getWeeklyGrid(52));
+      setTopTopics(getTopTopics(5));
+      setStreak(getStreakData());
+      setShareUrl(`${window.location.origin}/profile`);
+      const notifSettings = getNotificationSettings();
+      setNotificationsEnabled(notifSettings.enabled);
+      setReminderTime(notifSettings.reminderTime || "09:00");
+      setSoundEnabledState(getSoundEnabled());
+      setDailyGoal(s.dailyGoal || 5);
+      setStreakFreezeActive(s.streakFreezeActive ?? false);
+      if (profile?.wallet_address) setWalletInput(profile.wallet_address);
+      if (profile?.id) {
+        getPinnedCards(profile.id).then(setPinnedCards).catch(() => {});
+      }
+    });
   }, [profile]);
 
   const handleShare = async () => {
@@ -90,19 +102,53 @@ export default function ProfilePage() {
       navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+      notify({
+        title: "Profile copied",
+        message: "Your profile summary was copied to the clipboard.",
+        tone: "success",
+      });
     }
   };
 
   const handleNotificationToggle = async () => {
     if (!notificationsEnabled) {
       const granted = await requestNotificationPermission();
-      if (granted) { setNotificationsEnabled(true); scheduleDailyReminder(reminderTime); }
-    } else { setNotificationsEnabled(false); cancelDailyReminder(); }
+      if (granted) {
+        setNotificationsEnabled(true);
+        scheduleDailyReminder(reminderTime);
+        notify({
+          title: "Reminders enabled",
+          message: `Daily reminders are set for ${reminderTime}.`,
+          tone: "success",
+        });
+      } else {
+        notify({
+          title: "Notifications blocked",
+          message: "Enable browser notifications to get daily reminders.",
+          tone: "error",
+        });
+      }
+    } else {
+      setNotificationsEnabled(false);
+      cancelDailyReminder();
+      notify({
+        title: "Reminders turned off",
+        message: "Daily reading reminders have been disabled.",
+        tone: "info",
+      });
+    }
   };
 
   const handleReminderTimeChange = (time: string) => {
     setReminderTime(time);
-    if (notificationsEnabled) scheduleDailyReminder(time);
+    if (notificationsEnabled) {
+      scheduleDailyReminder(time);
+      notify({
+        title: "Reminder updated",
+        message: `Daily reminder moved to ${time}.`,
+        tone: "success",
+      });
+    }
   };
 
   const handleWalletSave = async () => {
@@ -110,26 +156,119 @@ export default function ProfilePage() {
     setWalletSaving(true);
     try {
       const success = await updateWallet(walletInput);
-      if (success) { setWalletSaved(true); setTimeout(() => setWalletSaved(false), 2000); }
+      if (success) {
+        setWalletSaved(true);
+        setTimeout(() => setWalletSaved(false), 2000);
+        notify({
+          title: "Wallet saved",
+          message: "Your wallet address was updated.",
+          tone: "success",
+        });
+      } else {
+        notify({
+          title: "Wallet update failed",
+          message: "We could not save that wallet address.",
+          tone: "error",
+        });
+      }
     } catch (err) { console.error("Error saving wallet:", err); }
     setWalletSaving(false);
   };
 
   const handleUnpin = async (cardId: string) => {
     if (!profile) return;
-    await unpinCard(profile.id, cardId);
-    setPinnedCards(prev => prev.filter(p => p.card_id !== cardId));
+    try {
+      await unpinCard(profile.id, cardId);
+      setPinnedCards(prev => prev.filter(p => p.card_id !== cardId));
+      notify({
+        title: "Removed from garden",
+        message: "The quote was unpinned.",
+        tone: "info",
+      });
+    } catch (err) {
+      console.error("Error removing pinned card:", err);
+      notify({
+        title: "Could not remove quote",
+        message: "Please try again.",
+        tone: "error",
+      });
+    }
   };
 
   const handleEditNote = async (cardId: string, note: string | null) => {
     if (!profile) return;
-    await updatePinNote(profile.id, cardId, note);
-    setPinnedCards(prev =>
-      prev.map(p => (p.card_id === cardId ? { ...p, note } : p))
-    );
+    try {
+      await updatePinNote(profile.id, cardId, note);
+      setPinnedCards(prev =>
+        prev.map(p => (p.card_id === cardId ? { ...p, note } : p))
+      );
+      notify({
+        title: note ? "Garden note saved" : "Garden note cleared",
+        message: note ? "Your note was updated successfully." : "The note was removed from this quote.",
+        tone: "success",
+      });
+    } catch (err) {
+      console.error("Error updating note:", err);
+      notify({
+        title: "Could not update note",
+        message: "Please try again.",
+        tone: "error",
+      });
+    }
+  };
+
+  const handleCancelSubscription = async ({ reason, details }: { reason: string; details: string }) => {
+    setCancelLoading(true);
+
+    try {
+      const response = await fetch("/api/subscription/cancel", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ reason, details }),
+      });
+
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok || !payload.url) {
+        notify({
+          title: "Could not open cancellation",
+          message: payload.error || "Please try again in a moment.",
+          tone: "error",
+        });
+        return;
+      }
+
+      notify({
+        title: "Opening billing portal",
+        message: "Finish cancellation securely in Dodo.",
+        tone: "info",
+      });
+
+      window.location.href = payload.url;
+    } catch (error) {
+      console.error("Cancellation flow failed:", error);
+      notify({
+        title: "Cancellation unavailable",
+        message: "We could not connect to billing right now.",
+        tone: "error",
+      });
+    } finally {
+      setCancelLoading(false);
+      setShowCancelModal(false);
+    }
   };
 
   const gardenUsername = profile?.fc_username || user?.email?.split("@")[0] || "";
+
+  const handleUpgradeClick = (source: string) => {
+    trackGrowthEvent({
+      event: "profile_upgrade_click",
+      metadata: { source, review_preview_count: reviewPreviewCount, total_books: totalBooks },
+    });
+    window.location.href = `/subscribe?source=${encodeURIComponent(source)}`;
+  };
 
   const displayName = profile?.display_name
     || profile?.fc_display_name
@@ -363,6 +502,62 @@ export default function ProfilePage() {
             </motion.div>
 
             {/* Share CTA */}
+            {!isSubscribed && (
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
+                className="grid gap-4 md:grid-cols-2 mb-10"
+              >
+                <div className="rounded-3xl border border-botsage/20 bg-white p-6 shadow-sm">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-botgreen">Pro Preview</p>
+                  <h4 className="mt-2 text-2xl font-bold text-darkteal" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                    Review queue
+                  </h4>
+                  <p className="mt-2 text-sm text-botsagedark">
+                    {reviewPreviewCount > 0
+                      ? `${reviewPreviewCount} saved cards are ready to become lasting knowledge.`
+                      : "Build a review queue that helps you remember what you read."}
+                  </p>
+                  <div className="mt-4 h-2 rounded-full bg-botsage/15 overflow-hidden">
+                    <div className="h-full w-2/3 rounded-full bg-botgreen/70" />
+                  </div>
+                  <button
+                    onClick={() => handleUpgradeClick("profile_review_preview")}
+                    className="mt-5 rounded-full bg-botgreen px-5 py-3 text-sm font-bold text-cream"
+                  >
+                    Unlock review mode
+                  </button>
+                </div>
+                <div className="rounded-3xl border border-botsage/20 bg-white p-6 shadow-sm">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-botgreen">Pro Preview</p>
+                  <h4 className="mt-2 text-2xl font-bold text-darkteal" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                    Browse by book
+                  </h4>
+                  <p className="mt-2 text-sm text-botsagedark">
+                    Explore {totalBooks}+ books by theme, author, and depth instead of relying on random feed order.
+                  </p>
+                  <div className="mt-4 rounded-2xl bg-cream p-4">
+                    <div className="grid gap-2">
+                      {getAllBooks().slice(0, 3).map(({ book, author }) => (
+                        <div key={book} className="flex items-center justify-between rounded-xl bg-white px-3 py-2 text-sm">
+                          <span className="font-semibold text-darkteal truncate">{book}</span>
+                          <span className="ml-3 shrink-0 text-botsagedark text-xs">{author}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-3 text-center text-xs font-bold uppercase tracking-[0.16em] text-botsagedark/60">
+                      Full browser available with Pro
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleUpgradeClick("profile_book_preview")}
+                    className="mt-5 rounded-full border border-botgreen/30 px-5 py-3 text-sm font-bold text-botgreen"
+                  >
+                    Unlock book browsing
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Share CTA */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
               className="bg-botgreen rounded-3xl p-10 text-center relative overflow-hidden shadow-xl mb-10"
             >
@@ -433,10 +628,19 @@ export default function ProfilePage() {
               {!isSubscribed && (
                 <Link
                   href="/subscribe"
+                  onClick={() => trackGrowthEvent({ event: "profile_upgrade_click", metadata: { source: "account_card" } })}
                   className="block w-full mt-4 py-3 bg-botgreen rounded-xl text-center font-bold text-cream"
                 >
                   Upgrade to Pro
                 </Link>
+              )}
+              {isSubscribed && (
+                <button
+                  onClick={() => setShowCancelModal(true)}
+                  className="mt-4 w-full rounded-xl border border-softclay/30 py-3 text-sm font-bold text-softclay transition-colors hover:bg-softclay/5"
+                >
+                  Manage or cancel subscription
+                </button>
               )}
             </motion.div>
 
@@ -614,6 +818,17 @@ export default function ProfilePage() {
           </>
         )}
       </main>
+
+      <CancelSubscriptionModal
+        isOpen={showCancelModal}
+        loading={cancelLoading}
+        onClose={() => {
+          if (!cancelLoading) {
+            setShowCancelModal(false);
+          }
+        }}
+        onConfirm={handleCancelSubscription}
+      />
 
       {/* Footer */}
       <footer className="p-10 text-center text-botsagedark text-sm border-t border-botsage/10">

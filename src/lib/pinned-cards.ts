@@ -42,7 +42,10 @@ export async function pinCard(userId: string, cardId: string, note?: string): Pr
       { onConflict: "user_id,card_id" }
     );
 
-  if (error) console.error("Error pinning card:", error);
+  if (error) {
+    console.error("Error pinning card:", error);
+    throw error;
+  }
 }
 
 export async function unpinCard(userId: string, cardId: string): Promise<void> {
@@ -52,7 +55,10 @@ export async function unpinCard(userId: string, cardId: string): Promise<void> {
     .eq("user_id", userId)
     .eq("card_id", cardId);
 
-  if (error) console.error("Error unpinning card:", error);
+  if (error) {
+    console.error("Error unpinning card:", error);
+    throw error;
+  }
 }
 
 export async function updatePinNote(userId: string, cardId: string, note: string | null): Promise<void> {
@@ -62,7 +68,10 @@ export async function updatePinNote(userId: string, cardId: string, note: string
     .eq("user_id", userId)
     .eq("card_id", cardId);
 
-  if (error) console.error("Error updating pin note:", error);
+  if (error) {
+    console.error("Error updating pin note:", error);
+    throw error;
+  }
 }
 
 export async function reorderPins(userId: string, orderedCardIds: string[]): Promise<void> {

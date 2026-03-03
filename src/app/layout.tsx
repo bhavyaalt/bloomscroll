@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/components/AuthProvider";
 import { FarcasterProvider } from "@/components/FarcasterProvider";
+import { NotificationProvider } from "@/components/NotificationProvider";
 
 const appUrl = process.env.NEXT_PUBLIC_URL || "https://bloomscroll.club";
 
@@ -155,11 +156,13 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <FarcasterProvider>
-          <AuthProvider>
-            {children}
-          </AuthProvider>
-        </FarcasterProvider>
+        <NotificationProvider>
+          <FarcasterProvider>
+            <AuthProvider>
+              {children}
+            </AuthProvider>
+          </FarcasterProvider>
+        </NotificationProvider>
       </body>
     </html>
   );

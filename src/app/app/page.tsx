@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { PanInfo } from "framer-motion";
 import { useAuth } from "@/components/AuthProvider";
 import {
@@ -42,14 +44,21 @@ import ReviewView from "@/components/app/ReviewView";
 import AchievementsModal from "@/components/app/AchievementsModal";
 import LeaderboardModal from "@/components/app/LeaderboardModal";
 import { AnimatePresence } from "framer-motion";
+import { useNotifications } from "@/components/NotificationProvider";
+import ProUpsellModal from "@/components/app/ProUpsellModal";
+import { trackGrowthEvent } from "@/lib/analytics";
 
 const SWIPE_THRESHOLD = 100;
 const VIEW_STORAGE_KEY = "bloomscroll_viewed_cards";
 const SAVE_STORAGE_KEY = "bloomscroll_saved_cards";
 const PREFERENCES_KEY = "bloomscroll_preferences";
+const FREE_SAVE_LIMIT = 10;
+const FREE_PIN_LIMIT = 3;
 
 export default function AppPage() {
-  const { user, profile, isSubscribed, viewsRemaining, signOut, updateWallet } = useAuth();
+  const router = useRouter();
+  const { user, profile, loading, isAuthenticated, isSubscribed, viewsRemaining, signOut, updateWallet } = useAuth();
+  const { notify } = useNotifications();
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [savedCards, setSavedCards] = useState<Set<string>>(new Set());
@@ -118,6 +127,7 @@ export default function AppPage() {
   const [pinnedCards, setPinnedCards] = useState<Set<string>>(new Set());
   const [showPinModal, setShowPinModal] = useState(false);
   const [cardToPin, setCardToPin] = useState<Card | null>(null);
+  const [upsellContext, setUpsellContext] = useState<"save_limit" | "pin_limit" | null>(null);
 
   // Achievements & Leaderboard state
   const [showAchievements, setShowAchievements] = useState(false);
@@ -126,6 +136,8 @@ export default function AppPage() {
 
   // Load saved cards, viewed cards, and preferences from localStorage
   useEffect(() => {
+    if (loading || !isAuthenticated) return;
+
     const savedJson = localStorage.getItem(SAVE_STORAGE_KEY);
     const viewedJson = localStorage.getItem(VIEW_STORAGE_KEY);
     const prefsJson = localStorage.getItem(PREFERENCES_KEY);
@@ -168,24 +180,26 @@ export default function AppPage() {
     setReviewDueCount(getReviewStats().dueToday);
 
     setIsLoaded(true);
-  }, []);
+  }, [isAuthenticated, loading]);
 
   // PWA beforeinstallprompt listener
   useEffect(() => {
+    if (loading || !isAuthenticated) return;
     const handler = (e: Event) => {
       e.preventDefault();
       setInstallEvent(e);
     };
     window.addEventListener("beforeinstallprompt", handler);
     return () => window.removeEventListener("beforeinstallprompt", handler);
-  }, []);
+  }, [isAuthenticated, loading]);
 
   // Show install prompt after viewing enough cards
   useEffect(() => {
+    if (loading || !isAuthenticated) return;
     if (shouldShowInstallPrompt(dailyProgress.read)) {
       setShowInstallPrompt(true);
     }
-  }, [dailyProgress.read]);
+  }, [dailyProgress.read, isAuthenticated, loading]);
 
   // Load pinned cards on auth
   useEffect(() => {
@@ -198,16 +212,25 @@ export default function AppPage() {
 
   // Celebrate daily goal completion (fires once per day)
   useEffect(() => {
+    if (loading) return;
+    if (!isAuthenticated) {
+      router.replace("/auth?redirect=/app");
+    }
+  }, [isAuthenticated, loading, router]);
+
+  useEffect(() => {
+    if (loading || !isAuthenticated) return;
     if (dailyProgress.read >= dailyProgress.goal && !dailyProgress.completed) {
       markDailyGoalCompleted();
       setDailyProgress(prev => ({ ...prev, completed: true }));
       celebrate();
       sounds.milestone();
     }
-  }, [dailyProgress.read, dailyProgress.goal, dailyProgress.completed]);
+  }, [dailyProgress.read, dailyProgress.goal, dailyProgress.completed, isAuthenticated, loading]);
 
   // Generate smart feed
   useEffect(() => {
+    if (loading || !isAuthenticated) return;
     if (!isLoaded) return;
 
     // Read viewedCards once at build time via ref to avoid re-triggering on every view
@@ -249,14 +272,15 @@ export default function AppPage() {
 
     setCurrentIndex(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTopic, selectedCollection, selectedBook, isLoaded, preferences]);
+  }, [selectedTopic, selectedCollection, selectedBook, isLoaded, isAuthenticated, loading, preferences]);
 
   // Save to localStorage when savedCards changes
   useEffect(() => {
+    if (loading || !isAuthenticated) return;
     if (isLoaded) {
       localStorage.setItem(SAVE_STORAGE_KEY, JSON.stringify([...savedCards]));
     }
-  }, [savedCards, isLoaded]);
+  }, [savedCards, isAuthenticated, isLoaded, loading]);
 
   // Mark card as viewed when displayed
   useEffect(() => {
@@ -355,6 +379,20 @@ export default function AppPage() {
   };
 
   const toggleSave = (cardId: string) => {
+    if (!isSubscribed && !savedCards.has(cardId) && savedCards.size >= FREE_SAVE_LIMIT) {
+      trackGrowthEvent({
+        event: "save_limit_hit",
+        metadata: { saved_count: savedCards.size, save_limit: FREE_SAVE_LIMIT },
+      });
+      notify({
+        title: "Free library full",
+        message: "Upgrade to Pro to keep an unlimited personal library and review queue.",
+        tone: "info",
+      });
+      setUpsellContext("save_limit");
+      return;
+    }
+
     setSavedCards(prev => {
       const newSet = new Set(prev);
       if (newSet.has(cardId)) {
@@ -380,6 +418,19 @@ export default function AppPage() {
   // Pin to garden handlers
   const handlePinCard = (cardId: string) => {
     if (!profile) return;
+    if (!isSubscribed && !pinnedCards.has(cardId) && pinnedCards.size >= FREE_PIN_LIMIT) {
+      trackGrowthEvent({
+        event: "pin_limit_hit",
+        metadata: { pinned_count: pinnedCards.size, pin_limit: FREE_PIN_LIMIT },
+      });
+      notify({
+        title: "Garden limit reached",
+        message: "Upgrade to Pro to pin unlimited quotes and grow your full garden.",
+        tone: "info",
+      });
+      setUpsellContext("pin_limit");
+      return;
+    }
     const card = feed.find(c => c.id === cardId) || currentCard;
     if (!card) return;
     setCardToPin(card);
@@ -393,11 +444,29 @@ export default function AppPage() {
       setPinnedCards(prev => new Set([...prev, cardToPin.id]));
       sounds.save();
       haptic("medium");
+      notify({
+        title: "Planted in your garden",
+        message: note ? "Your quote and note are live on your garden." : "Your quote is now saved to your garden.",
+        tone: "success",
+      });
     } catch (err) {
       console.error("Error pinning card:", err);
+      notify({
+        title: "Could not pin quote",
+        message: "Please try planting it again.",
+        tone: "error",
+      });
     }
     setShowPinModal(false);
     setCardToPin(null);
+  };
+
+  const handleUpgrade = (source: string) => {
+    trackGrowthEvent({
+      event: "pro_strip_upgrade_click",
+      metadata: { source },
+    });
+    window.location.href = `/subscribe?source=${encodeURIComponent(source)}`;
   };
 
   const handleUnpin = async (cardId: string) => {
@@ -409,8 +478,18 @@ export default function AppPage() {
         s.delete(cardId);
         return s;
       });
+      notify({
+        title: "Removed from garden",
+        message: "The quote was unpinned successfully.",
+        tone: "info",
+      });
     } catch (err) {
       console.error("Error unpinning card:", err);
+      notify({
+        title: "Could not unpin quote",
+        message: "Please try again.",
+        tone: "error",
+      });
     }
   };
 
@@ -496,6 +575,26 @@ export default function AppPage() {
   const savedCardsList = contentLibrary.filter(card => savedCards.has(card.id));
 
   if (!isLoaded) {
+    if (!loading && !isAuthenticated) {
+      return (
+        <div className="min-h-screen bg-gradient-to-b from-[#102219] to-[#0a1610] flex items-center justify-center px-6 text-center">
+          <div className="max-w-md">
+            <div className="text-5xl mb-4">🌱</div>
+            <h1 className="text-3xl font-bold text-primary mb-3">Sign in to start reading</h1>
+            <p className="text-white/60 mb-6">
+              BloomScroll now requires an account before you can open the reader, save cards, and grow your garden.
+            </p>
+            <Link
+              href="/auth?redirect=/app"
+              className="inline-flex items-center justify-center rounded-full h-12 px-6 bg-primary text-[#102219] text-sm font-bold"
+            >
+              Continue to sign in
+            </Link>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#102219] to-[#0a1610] flex items-center justify-center">
         <div className="text-center">
@@ -514,6 +613,7 @@ export default function AppPage() {
         isSubscribed={isSubscribed}
         streak={streak}
         savedCount={savedCards.size}
+        saveLimit={FREE_SAVE_LIMIT}
         showSaved={showSaved}
         showUserMenu={showUserMenu}
         reviewDueCount={reviewDueCount}
@@ -549,13 +649,23 @@ export default function AppPage() {
       )}
 
       {showSaved ? (
-        <SavedCardsView cards={savedCardsList} onRemove={toggleSave} />
+        <SavedCardsView
+          cards={savedCardsList}
+          isSubscribed={isSubscribed}
+          saveLimit={FREE_SAVE_LIMIT}
+          onRemove={toggleSave}
+          onUpgrade={() => handleUpgrade("saved_cards_view")}
+        />
       ) : (
         <CardFeed
           currentCard={currentCard}
           direction={direction}
           savedCards={savedCards}
           pinnedCards={pinnedCards}
+          savedCount={savedCards.size}
+          pinnedCount={pinnedCards.size}
+          saveLimit={FREE_SAVE_LIMIT}
+          pinLimit={FREE_PIN_LIMIT}
           justSaved={justSaved}
           showCopied={showCopied}
           isSharing={isSharing}
@@ -566,6 +676,7 @@ export default function AppPage() {
           feedLength={feed.length}
           hasChapter={!!currentCard?.chapter}
           isSubscribed={isSubscribed}
+          reviewDueCount={reviewDueCount}
           dailyCard={dailyCard}
           onDismissDailyCard={handleDismissDailyCard}
           onShareDailyCard={handleShareDailyCard}
@@ -581,7 +692,7 @@ export default function AppPage() {
           onToggleAudio={toggleAudioMode}
           onToggleAutoScroll={() => setAutoScroll(!autoScroll)}
           onClearFilters={() => { setSelectedTopic(null); setSelectedCollection(null); }}
-          onShowSubscribe={() => window.location.href = '/subscribe'}
+          onShowSubscribe={() => handleUpgrade("feed_controls")}
         />
       )}
 
@@ -605,6 +716,38 @@ export default function AppPage() {
             card={cardToPin}
             onConfirm={handleConfirmPin}
             onClose={() => { setShowPinModal(false); setCardToPin(null); }}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {upsellContext && (
+          <ProUpsellModal
+            isOpen={true}
+            title={upsellContext === "save_limit" ? "Your library wants more room" : "Your garden is ready to grow"}
+            description={
+              upsellContext === "save_limit"
+                ? "Free saved cards are capped so you can sample the habit. Pro turns your library into a long-term reading system."
+                : "Free garden pins are capped so you can feel the value. Pro lets you keep every quote worth revisiting."
+            }
+            points={
+              upsellContext === "save_limit"
+                ? [
+                    "Unlimited saved cards",
+                    "Review queue that helps you remember what you read",
+                    "Audio mode and full book browsing",
+                  ]
+                : [
+                    "Unlimited garden pins",
+                    "A permanent public garden worth sharing",
+                    "Keep notes and your best insights together",
+                  ]
+            }
+            onClose={() => setUpsellContext(null)}
+            onUpgrade={() => {
+              handleUpgrade(upsellContext);
+              setUpsellContext(null);
+            }}
           />
         )}
       </AnimatePresence>

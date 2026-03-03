@@ -5,12 +5,17 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAuth } from "@/components/AuthProvider";
+import { useNotifications } from "@/components/NotificationProvider";
+import { trackGrowthEvent } from "@/lib/analytics";
 
 function SuccessContent() {
   const { user, refreshProfile, isSubscribed } = useAuth();
+  const { notify } = useNotifications();
   const searchParams = useSearchParams();
   const [checking, setChecking] = useState(true);
   const activationAttempted = useRef(false);
+  const hasNotifiedSuccess = useRef(false);
+  const trackedConfirmation = useRef(false);
 
   useEffect(() => {
     // Refresh profile to get updated subscription status
@@ -61,6 +66,27 @@ function SuccessContent() {
       clearTimeout(fallbackTimeout);
     };
   }, [refreshProfile, user, searchParams]);
+
+  useEffect(() => {
+    if (!isSubscribed || hasNotifiedSuccess.current) return;
+    if (!trackedConfirmation.current) {
+      trackedConfirmation.current = true;
+      trackGrowthEvent({
+        event: "subscription_confirmed",
+        metadata: {
+          billing_cycle: searchParams.get("billing") || "yearly",
+          source: searchParams.get("source") || "unknown",
+        },
+      });
+    }
+    notify({
+      title: "Pro unlocked",
+      message: "Your subscription is active and premium features are ready.",
+      tone: "success",
+      duration: 3600,
+    });
+    hasNotifiedSuccess.current = true;
+  }, [isSubscribed, notify, searchParams]);
 
   return (
     <div className="min-h-screen bg-[#EACCD4] text-[#007A5E] flex items-center justify-center">
