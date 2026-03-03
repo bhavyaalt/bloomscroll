@@ -8,6 +8,7 @@ interface CardFeedProps {
   currentCard: Card | undefined;
   direction: number;
   savedCards: Set<string>;
+  pinnedCards: Set<string>;
   justSaved: boolean;
   showCopied: boolean;
   isSharing: boolean;
@@ -23,6 +24,8 @@ interface CardFeedProps {
   onDragEnd: (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => void;
   onDoubleTap: () => void;
   onToggleSave: (cardId: string) => void;
+  onPin: (cardId: string) => void;
+  onUnpin: (cardId: string) => void;
   onShare: (e: React.MouseEvent) => void;
   onCopy: () => void;
   onExpand: () => void;
@@ -83,6 +86,12 @@ const CopyIcon = () => (
   </svg>
 );
 
+const PinIcon = ({ filled }: { filled: boolean }) => (
+  <svg className="size-5" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 2C9.243 2 7 4.243 7 7c0 2.475 2.5 6.225 4.35 8.75a.812.812 0 001.3 0C14.5 13.225 17 9.475 17 7c0-2.757-2.243-5-5-5zm0 7a2 2 0 110-4 2 2 0 010 4z" />
+  </svg>
+);
+
 const ChevronUpIcon = () => (
   <svg className="size-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
@@ -93,6 +102,7 @@ export default function CardFeed({
   currentCard,
   direction,
   savedCards,
+  pinnedCards,
   justSaved,
   showCopied,
   isSharing,
@@ -105,6 +115,8 @@ export default function CardFeed({
   onDragEnd,
   onDoubleTap,
   onToggleSave,
+  onPin,
+  onUnpin,
   onShare,
   onCopy,
   onExpand,
@@ -283,6 +295,22 @@ export default function CardFeed({
                         title={savedCards.has(currentCard.id) ? "Unsave" : "Save"}
                       >
                         <StarIcon filled={savedCards.has(currentCard.id)} />
+                      </motion.button>
+                      <motion.button
+                        onClick={() =>
+                          pinnedCards.has(currentCard.id)
+                            ? onUnpin(currentCard.id)
+                            : onPin(currentCard.id)
+                        }
+                        whileTap={{ scale: 0.9 }}
+                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                          pinnedCards.has(currentCard.id)
+                            ? "bg-[#007A5E] text-white"
+                            : "bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E]"
+                        }`}
+                        title={pinnedCards.has(currentCard.id) ? "Unpin from garden" : "Pin to garden"}
+                      >
+                        <PinIcon filled={pinnedCards.has(currentCard.id)} />
                       </motion.button>
                       <button
                         onClick={onShare}

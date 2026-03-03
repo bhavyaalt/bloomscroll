@@ -6,11 +6,14 @@ import { Card } from "@/lib/content-library";
 interface ExpandedCardViewProps {
   card: Card;
   isSaved: boolean;
+  isPinned: boolean;
   onToggleSave: () => void;
+  onPin: (cardId: string) => void;
+  onUnpin: (cardId: string) => void;
   onClose: () => void;
 }
 
-export default function ExpandedCardView({ card, isSaved, onToggleSave, onClose }: ExpandedCardViewProps) {
+export default function ExpandedCardView({ card, isSaved, isPinned, onToggleSave, onPin, onUnpin, onClose }: ExpandedCardViewProps) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -90,6 +93,19 @@ export default function ExpandedCardView({ card, isSaved, onToggleSave, onClose 
           >
             <svg className="size-5" fill={isSaved ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+          </button>
+          <button
+            onClick={() => isPinned ? onUnpin(card.id) : onPin(card.id)}
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+              isPinned
+                ? "bg-primary text-[#102219]"
+                : "bg-white/10 text-white hover:bg-white/20"
+            }`}
+            title={isPinned ? "Unpin from garden" : "Pin to garden"}
+          >
+            <svg className="size-5" fill={isPinned ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 2C9.243 2 7 4.243 7 7c0 2.475 2.5 6.225 4.35 8.75a.812.812 0 001.3 0C14.5 13.225 17 9.475 17 7c0-2.757-2.243-5-5-5zm0 7a2 2 0 110-4 2 2 0 010 4z" />
             </svg>
           </button>
           <button

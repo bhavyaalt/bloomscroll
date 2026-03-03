@@ -17,6 +17,7 @@ import { generateQuizQuestion, updateQuizStats, getQuizStats, QuizQuestion } fro
 import { getCollectionCards, Collection } from "@/lib/collections";
 import { recordCardRead, recordQuizResult, getDailyProgress, markDailyGoalCompleted, setDailyGoal as saveDailyGoal, setStreakFreeze as saveStreakFreeze, DailyProgress } from "@/lib/reading-stats";
 import { incrementViewCount } from "@/lib/supabase";
+import { getPinnedCards, pinCard, unpinCard } from "@/lib/pinned-cards";
 import { sounds, haptic, getSoundEnabled, setSoundEnabled } from "@/lib/sounds";
 import { celebrate } from "@/lib/confetti";
 import { getDailyCard, isDailyCardDismissed, dismissDailyCard } from "@/lib/daily-card";
@@ -32,6 +33,7 @@ import SettingsModal from "@/components/app/SettingsModal";
 import ExpandedCardView from "@/components/app/ExpandedCardView";
 import SavedCardsView from "@/components/app/SavedCardsView";
 import CardFeed from "@/components/app/CardFeed";
+import PinModal from "@/components/app/PinModal";
 import InstallPrompt from "@/components/app/InstallPrompt";
 import ReviewView from "@/components/app/ReviewView";
 import { AnimatePresence } from "framer-motion";
@@ -107,6 +109,11 @@ export default function AppPage() {
   const [showReview, setShowReview] = useState(false);
   const [reviewDueCount, setReviewDueCount] = useState(0);
 
+  // Pin to garden state
+  const [pinnedCards, setPinnedCards] = useState<Set<string>>(new Set());
+  const [showPinModal, setShowPinModal] = useState(false);
+  const [cardToPin, setCardToPin] = useState<Card | null>(null);
+
   // Load saved cards, viewed cards, and preferences from localStorage
   useEffect(() => {
     const savedJson = localStorage.getItem(SAVE_STORAGE_KEY);
@@ -169,6 +176,15 @@ export default function AppPage() {
       setShowInstallPrompt(true);
     }
   }, [dailyProgress.read]);
+
+  // Load pinned cards on auth
+  useEffect(() => {
+    if (profile) {
+      getPinnedCards(profile.id).then(pins =>
+        setPinnedCards(new Set(pins.map(p => p.card_id)))
+      );
+    }
+  }, [profile]);
 
   // Celebrate daily goal completion (fires once per day)
   useEffect(() => {
@@ -349,6 +365,35 @@ export default function AppPage() {
     if (currentCard) toggleSave(currentCard.id);
   };
 
+  // Pin to garden handlers
+  const handlePinCard = (cardId: string) => {
+    if (!profile) return;
+    const card = feed.find(c => c.id === cardId) || currentCard;
+    if (!card) return;
+    setCardToPin(card);
+    setShowPinModal(true);
+  };
+
+  const handleConfirmPin = async (note: string) => {
+    if (!cardToPin || !profile) return;
+    await pinCard(profile.id, cardToPin.id, note || undefined);
+    setPinnedCards(prev => new Set([...prev, cardToPin.id]));
+    setShowPinModal(false);
+    setCardToPin(null);
+    sounds.save();
+    haptic("medium");
+  };
+
+  const handleUnpin = async (cardId: string) => {
+    if (!profile) return;
+    await unpinCard(profile.id, cardId);
+    setPinnedCards(prev => {
+      const s = new Set(prev);
+      s.delete(cardId);
+      return s;
+    });
+  };
+
   // Derive ref username for share attribution
   const refUsername = profile?.fc_username || user?.email?.split("@")[0] || undefined;
 
@@ -488,6 +533,7 @@ export default function AppPage() {
           currentCard={currentCard}
           direction={direction}
           savedCards={savedCards}
+          pinnedCards={pinnedCards}
           justSaved={justSaved}
           showCopied={showCopied}
           isSharing={isSharing}
@@ -503,6 +549,8 @@ export default function AppPage() {
           onDragEnd={handleDragEnd}
           onDoubleTap={handleDoubleTap}
           onToggleSave={toggleSave}
+          onPin={handlePinCard}
+          onUnpin={handleUnpin}
           onShare={handleShare}
           onCopy={handleCopy}
           onExpand={() => setIsExpanded(true)}
@@ -518,8 +566,21 @@ export default function AppPage() {
           <ExpandedCardView
             card={currentCard}
             isSaved={savedCards.has(currentCard.id)}
+            isPinned={pinnedCards.has(currentCard.id)}
             onToggleSave={() => toggleSave(currentCard.id)}
+            onPin={handlePinCard}
+            onUnpin={handleUnpin}
             onClose={() => setIsExpanded(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showPinModal && cardToPin && (
+          <PinModal
+            card={cardToPin}
+            onConfirm={handleConfirmPin}
+            onClose={() => { setShowPinModal(false); setCardToPin(null); }}
           />
         )}
       </AnimatePresence>

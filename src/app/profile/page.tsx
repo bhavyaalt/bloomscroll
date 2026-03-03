@@ -20,6 +20,8 @@ import {
   getNotificationSettings,
 } from "@/lib/push-notifications";
 import { getSoundEnabled, setSoundEnabled, sounds } from "@/lib/sounds";
+import { getPinnedCards, unpinCard, updatePinNote, PinnedCard } from "@/lib/pinned-cards";
+import PinnedBoardView from "@/components/app/PinnedBoardView";
 
 const LEVEL_COLORS = [
   "bg-lvl0",
@@ -54,11 +56,12 @@ export default function ProfilePage() {
   const [walletSaving, setWalletSaving] = useState(false);
   const [walletSaved, setWalletSaved] = useState(false);
   const [soundEnabled, setSoundEnabledState] = useState(true);
-  const [activeTab, setActiveTab] = useState<"stats" | "settings">("stats");
+  const [activeTab, setActiveTab] = useState<"stats" | "garden" | "settings">("stats");
   const [copied, setCopied] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
   const [dailyGoal, setDailyGoal] = useState(5);
   const [streakFreezeActive, setStreakFreezeActive] = useState(false);
+  const [pinnedCards, setPinnedCards] = useState<PinnedCard[]>([]);
 
   useEffect(() => {
     const s = getReadingStats();
@@ -74,6 +77,9 @@ export default function ProfilePage() {
     setDailyGoal(s.dailyGoal || 5);
     setStreakFreezeActive(s.streakFreezeActive ?? false);
     if (profile?.wallet_address) setWalletInput(profile.wallet_address);
+    if (profile?.id) {
+      getPinnedCards(profile.id).then(setPinnedCards);
+    }
   }, [profile]);
 
   const handleShare = async () => {
@@ -108,6 +114,22 @@ export default function ProfilePage() {
     } catch (err) { console.error("Error saving wallet:", err); }
     setWalletSaving(false);
   };
+
+  const handleUnpin = async (cardId: string) => {
+    if (!profile) return;
+    await unpinCard(profile.id, cardId);
+    setPinnedCards(prev => prev.filter(p => p.card_id !== cardId));
+  };
+
+  const handleEditNote = async (cardId: string, note: string | null) => {
+    if (!profile) return;
+    await updatePinNote(profile.id, cardId, note);
+    setPinnedCards(prev =>
+      prev.map(p => (p.card_id === cardId ? { ...p, note } : p))
+    );
+  };
+
+  const gardenUsername = profile?.fc_username || user?.email?.split("@")[0] || "";
 
   const displayName = profile?.fc_username
     ? `@${profile.fc_username}`
@@ -206,6 +228,7 @@ export default function ProfilePage() {
         <div className="flex border-b border-botsage/20 mb-10 justify-center">
           {[
             { id: "stats" as const, label: "Stats" },
+            { id: "garden" as const, label: "Garden" },
             { id: "settings" as const, label: "Settings" },
           ].map((tab) => (
             <button
@@ -357,6 +380,18 @@ export default function ProfilePage() {
               </div>
             </motion.div>
           </>
+        )}
+
+        {activeTab === "garden" && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <PinnedBoardView
+              pins={pinnedCards}
+              isOwner={true}
+              username={gardenUsername}
+              onUnpin={handleUnpin}
+              onEditNote={handleEditNote}
+            />
+          </motion.div>
         )}
 
         {activeTab === "settings" && (

@@ -1,14 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAuth } from "@/components/AuthProvider";
 
-export default function SubscribeSuccessPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+function SuccessContent() {
   const { refreshProfile, isSubscribed } = useAuth();
   const [checking, setChecking] = useState(true);
 
@@ -105,5 +102,19 @@ export default function SubscribeSuccessPage() {
         </p>
       </motion.div>
     </div>
+  );
+}
+
+export default function SubscribeSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#EACCD4] flex items-center justify-center">
+          <div className="animate-pulse text-2xl font-bold text-[#007A5E]">Loading...</div>
+        </div>
+      }
+    >
+      <SuccessContent />
+    </Suspense>
   );
 }

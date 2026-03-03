@@ -85,14 +85,6 @@ export function recordCardRead(cardId: string, topics: string[]): ReadingStats {
   const stats = getReadingStats();
   const today = new Date().toISOString().split("T")[0];
 
-  // Update total
-  stats.totalCardsRead++;
-
-  // Update topics
-  topics.forEach(topic => {
-    stats.topicsExplored[topic] = (stats.topicsExplored[topic] || 0) + 1;
-  });
-
   // Update daily reads
   let todayEntry = stats.dailyReads.find(d => d.date === today);
   if (!todayEntry) {
@@ -101,9 +93,16 @@ export function recordCardRead(cardId: string, topics: string[]): ReadingStats {
     stats.totalDaysActive++;
   }
 
+  // Only count unique cards per day
   if (!todayEntry.cardIds.includes(cardId)) {
     todayEntry.count++;
     todayEntry.cardIds.push(cardId);
+    stats.totalCardsRead++;
+
+    // Update topics only for new reads
+    topics.forEach(topic => {
+      stats.topicsExplored[topic] = (stats.topicsExplored[topic] || 0) + 1;
+    });
   }
 
   // Update streak
