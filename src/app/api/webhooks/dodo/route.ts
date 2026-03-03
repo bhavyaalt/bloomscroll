@@ -1,11 +1,20 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
+let supabase: SupabaseClient | null = null;
+
+function getSupabase() {
+  if (!supabase) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.SUPABASE_SERVICE_KEY;
+    if (!url || !key) {
+      throw new Error('Missing Supabase credentials');
+    }
+    supabase = createClient(url, key);
+  }
+  return supabase;
+}
 
 // Verify Dodo webhook signature
 function verifyWebhookSignature(
@@ -82,7 +91,7 @@ async function handleSubscriptionCreated(data: any) {
   const { customer, subscription, product } = data;
   
   // Find user by email
-  const { data: profile, error: findError } = await supabase
+  const { data: profile, error: findError } = await getSupabase()
     .from('profiles')
     .select('id')
     .eq('email', customer.email)
@@ -94,7 +103,7 @@ async function handleSubscriptionCreated(data: any) {
   }
 
   // Update profile with subscription info
-  const { error: updateError } = await supabase
+  const { error: updateError } = await getSupabase()
     .from('profiles')
     .update({
       is_subscribed: true,
@@ -118,7 +127,7 @@ async function handleSubscriptionCreated(data: any) {
 async function handleSubscriptionUpdated(data: any) {
   const { subscription } = data;
 
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from('profiles')
     .update({
       subscription_status: subscription.status,
@@ -134,7 +143,7 @@ async function handleSubscriptionUpdated(data: any) {
 async function handleSubscriptionCancelled(data: any) {
   const { subscription } = data;
 
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from('profiles')
     .update({
       is_subscribed: false,
@@ -155,7 +164,7 @@ async function handlePaymentSucceeded(data: any) {
   console.log('Payment succeeded:', payment.id, 'for', customer.email);
   
   // Optionally record in a payments table
-  // await supabase.from('payments').insert({ ... });
+  // await getSupabase().from('payments').insert({ ... });
 }
 
 async function handlePaymentFailed(data: any) {
