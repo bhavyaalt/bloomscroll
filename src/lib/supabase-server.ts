@@ -2,15 +2,22 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+function getSupabaseConfig() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) {
+    throw new Error('Missing Supabase env vars');
+  }
+  return { url, key };
+}
 
 /**
  * Create a Supabase client for use in middleware.
  * Reads/writes cookies on the request/response pair.
  */
 export function createMiddlewareClient(request: NextRequest, response: NextResponse) {
-  return createServerClient(supabaseUrl, supabaseAnonKey, {
+  const { url, key } = getSupabaseConfig();
+  return createServerClient(url, key, {
     cookies: {
       getAll() {
         return request.cookies.getAll();
@@ -31,8 +38,9 @@ export function createMiddlewareClient(request: NextRequest, response: NextRespo
  */
 export async function createRouteHandlerClient() {
   const cookieStore = await cookies();
+  const { url, key } = getSupabaseConfig();
 
-  return createServerClient(supabaseUrl, supabaseAnonKey, {
+  return createServerClient(url, key, {
     cookies: {
       getAll() {
         return cookieStore.getAll();
