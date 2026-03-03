@@ -3,23 +3,28 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 
 let supabaseInstance: SupabaseClient | null = null;
 
-function createSupabaseClient(): SupabaseClient {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) {
-    throw new Error('Missing Supabase env vars');
+function getSupabaseClient(): SupabaseClient {
+  if (!supabaseInstance) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!url || !key) {
+      throw new Error('Missing Supabase env vars: NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are required');
+    }
+    supabaseInstance = createBrowserClient(url, key);
   }
-  return createBrowserClient(url, key);
+  return supabaseInstance;
 }
 
-// Getter pattern for lazy initialization
+// Getter pattern for lazy initialization with proper method binding
 export const supabase: SupabaseClient = new Proxy({} as SupabaseClient, {
   get(_target, prop) {
-    if (!supabaseInstance) {
-      supabaseInstance = createSupabaseClient();
+    const client = getSupabaseClient();
+    const value = (client as Record<string, unknown>)[prop as string];
+    // Bind functions to preserve `this` context
+    if (typeof value === 'function') {
+      return value.bind(client);
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (supabaseInstance as any)[prop];
+    return value;
   }
 });
 
