@@ -9,13 +9,8 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Protected routes — redirect to auth if no session
+  // Note: /subscribe handles auth inline (shows sign-in buttons on the page)
   if (!user) {
-    if (pathname === '/subscribe') {
-      const redirectUrl = new URL('/auth', request.url);
-      redirectUrl.searchParams.set('redirect', '/subscribe');
-      return NextResponse.redirect(redirectUrl);
-    }
-
     if (pathname === '/oauth/consent') {
       // Preserve OAuth query params through the auth redirect
       const fullPath = `${pathname}${request.nextUrl.search}`;
@@ -29,5 +24,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/subscribe', '/oauth/consent'],
+  matcher: ['/oauth/consent'],
 };
