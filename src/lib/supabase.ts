@@ -522,6 +522,13 @@ export async function recordSubscription(
 
 const FREE_DAILY_LIMIT = 5;
 
+function getLocalDateKey(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 // Check if user can view more content
 export async function canViewContent(userId: string): Promise<{ allowed: boolean; remaining: number; isSubscribed: boolean }> {
   const isSubscribed = await checkSubscription(userId);
@@ -542,10 +549,11 @@ export async function canViewContent(userId: string): Promise<{ allowed: boolean
   }
 
   // Check if we need to reset the daily count
-  const resetAt = new Date(profile.daily_views_reset_at);
   const now = new Date();
+  const todayKey = getLocalDateKey(now);
+  const resetKey = profile.daily_views_reset_at ? getLocalDateKey(new Date(profile.daily_views_reset_at)) : '';
   
-  if (now.toDateString() !== resetAt.toDateString()) {
+  if (todayKey !== resetKey) {
     // New day, reset count
     await updateProfile(userId, {
       daily_views_count: 0,
@@ -566,13 +574,19 @@ export async function canViewContent(userId: string): Promise<{ allowed: boolean
 export async function incrementViewCount(userId: string) {
   const { data: profile } = await supabase
     .from('bloomscroll_profiles')
-    .select('daily_views_count')
+    .select('daily_views_count, daily_views_reset_at')
     .eq('id', userId)
     .single();
 
   if (profile) {
+    const now = new Date();
+    const todayKey = getLocalDateKey(now);
+    const resetKey = profile.daily_views_reset_at ? getLocalDateKey(new Date(profile.daily_views_reset_at)) : '';
+    const nextCount = todayKey === resetKey ? profile.daily_views_count + 1 : 1;
+
     await updateProfile(userId, {
-      daily_views_count: profile.daily_views_count + 1,
+      daily_views_count: nextCount,
+      daily_views_reset_at: now.toISOString(),
     });
   }
 }

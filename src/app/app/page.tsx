@@ -52,9 +52,42 @@ const SWIPE_THRESHOLD = 100;
 const VIEW_STORAGE_KEY = "bloomscroll_viewed_cards";
 const SAVE_STORAGE_KEY = "bloomscroll_saved_cards";
 const PREFERENCES_KEY = "bloomscroll_preferences";
+const DAILY_VIEW_STORAGE_KEY = "bloomscroll_daily_viewed_cards";
 const FREE_DAILY_READ_LIMIT = 5;
 const FREE_SAVE_LIMIT = 10;
 const FREE_PIN_LIMIT = 3;
+
+function getTodayKey() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function getDailyViewedCardIds() {
+  if (typeof window === "undefined") return new Set<string>();
+
+  try {
+    const stored = localStorage.getItem(DAILY_VIEW_STORAGE_KEY);
+    if (!stored) return new Set<string>();
+
+    const parsed = JSON.parse(stored) as { date?: string; cardIds?: string[] };
+    if (parsed.date !== getTodayKey()) return new Set<string>();
+    return new Set(parsed.cardIds || []);
+  } catch {
+    return new Set<string>();
+  }
+}
+
+function saveDailyViewedCardIds(cardIds: Set<string>) {
+  if (typeof window === "undefined") return;
+
+  localStorage.setItem(
+    DAILY_VIEW_STORAGE_KEY,
+    JSON.stringify({ date: getTodayKey(), cardIds: [...cardIds] })
+  );
+}
 
 export default function AppPage() {
   const router = useRouter();
@@ -195,6 +228,28 @@ export default function AppPage() {
     return () => window.removeEventListener("beforeinstallprompt", handler);
   }, [isAuthenticated, loading]);
 
+  useEffect(() => {
+    if (loading || !isAuthenticated) return;
+
+    const syncDailyEntitlement = () => {
+      refreshProfile().catch(() => {});
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        syncDailyEntitlement();
+      }
+    };
+
+    window.addEventListener("focus", syncDailyEntitlement);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener("focus", syncDailyEntitlement);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [isAuthenticated, loading, refreshProfile]);
+
   // Show install prompt after viewing enough cards
   useEffect(() => {
     if (loading || !isAuthenticated) return;
@@ -312,7 +367,12 @@ export default function AppPage() {
         localStorage.setItem(VIEW_STORAGE_KEY, JSON.stringify([...newViewed]));
         recordCardRead(card.id, card.topic);
         if (profile && !isSubscribed) {
-          incrementViewCount(profile.id).then(() => refreshProfile()).catch(() => {});
+          const dailyViewed = getDailyViewedCardIds();
+          if (!dailyViewed.has(card.id)) {
+            dailyViewed.add(card.id);
+            saveDailyViewedCardIds(dailyViewed);
+            incrementViewCount(profile.id).then(() => refreshProfile()).catch(() => {});
+          }
         }
         setDailyProgress(getDailyProgress());
       }
