@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { contentLibrary, Card } from "@/lib/content-library";
+import { Card } from "@/lib/content-library";
+import { allCards } from "@/lib/card-resolver";
 import { getCardsForReview, recordReview, ReviewCard } from "@/lib/spaced-repetition";
 
 interface ReviewViewProps {
@@ -12,20 +13,15 @@ interface ReviewViewProps {
 }
 
 export default function ReviewView({ isSubscribed, onClose, onUpgrade }: ReviewViewProps) {
-  const [dueCards, setDueCards] = useState<{ review: ReviewCard; card: Card }[]>([]);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [revealed, setRevealed] = useState(false);
 
-  useEffect(() => {
-    const reviews = getCardsForReview();
-    const mapped = reviews
-      .map(r => {
-        const card = contentLibrary.find(c => c.id === r.cardId);
-        return card ? { review: r, card } : null;
-      })
-      .filter(Boolean) as { review: ReviewCard; card: Card }[];
-    setDueCards(mapped);
-  }, []);
+  const dueCards = getCardsForReview()
+    .map((r) => {
+      const card = allCards.find((c) => c.id === r.cardId);
+      return card ? { review: r, card } : null;
+    })
+    .filter(Boolean) as { review: ReviewCard; card: Card }[];
 
   if (!isSubscribed) {
     return (

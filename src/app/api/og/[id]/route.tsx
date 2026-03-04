@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
-import { getCardById } from "@/lib/content-library";
+import { getAnyCardById } from "@/lib/card-resolver";
 
 export const runtime = "edge";
 
@@ -10,7 +10,7 @@ export async function GET(
 ) {
   const { id } = await params;
   const ref = request.nextUrl.searchParams.get("ref");
-  const card = getCardById(id);
+  const card = getAnyCardById(id);
 
   if (!card) {
     return new ImageResponse(

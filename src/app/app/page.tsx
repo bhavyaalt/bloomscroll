@@ -28,6 +28,13 @@ import { addToReview, removeFromReview, getReviewStats } from "@/lib/spaced-repe
 import { getAchievementState, checkAchievements, getLevelInfo, Achievement } from "@/lib/achievements";
 import { syncStatsToProfile } from "@/lib/social";
 import { getAudioAsCards } from "@/lib/audio-content";
+import {
+  ALL_LEARNING_TRACKS_ID,
+  getLearningCardsByTrack,
+  getLearningTrackById,
+  learningCards,
+} from "@/lib/learning-cards";
+import { allCards } from "@/lib/card-resolver";
 
 import { Preferences, StreakState } from "@/components/app/types";
 import AppHeader from "@/components/app/AppHeader";
@@ -47,6 +54,7 @@ import { AnimatePresence } from "framer-motion";
 import { useNotifications } from "@/components/NotificationProvider";
 import ProUpsellModal from "@/components/app/ProUpsellModal";
 import { trackGrowthEvent } from "@/lib/analytics";
+import LearningTracksModal from "@/components/app/LearningTracksModal";
 
 const SWIPE_THRESHOLD = 100;
 const VIEW_STORAGE_KEY = "bloomscroll_viewed_cards";
@@ -100,6 +108,7 @@ export default function AppPage() {
   const viewedCardsRef = useRef(viewedCards);
   viewedCardsRef.current = viewedCards;
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+  const [selectedLearningTrack, setSelectedLearningTrack] = useState<string | null>(null);
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [showSaved, setShowSaved] = useState(false);
   const [showCollections, setShowCollections] = useState(false);
@@ -130,6 +139,7 @@ export default function AppPage() {
   // Settings & modals
   const [showSettings, setShowSettings] = useState(false);
   const [showBookFilter, setShowBookFilter] = useState(false);
+  const [showLearningTracks, setShowLearningTracks] = useState(false);
   const [selectedBook, setSelectedBook] = useState<string | null>(null);
 
   // Daily progress (persisted)
@@ -161,7 +171,7 @@ export default function AppPage() {
   const [pinnedCards, setPinnedCards] = useState<Set<string>>(new Set());
   const [showPinModal, setShowPinModal] = useState(false);
   const [cardToPin, setCardToPin] = useState<Card | null>(null);
-  const [upsellContext, setUpsellContext] = useState<"save_limit" | "pin_limit" | null>(null);
+  const [upsellContext, setUpsellContext] = useState<"save_limit" | "pin_limit" | "learning_tracks" | null>(null);
   const [dailyLimitPrompted, setDailyLimitPrompted] = useState(false);
   const [optimisticViewsRemaining, setOptimisticViewsRemaining] = useState(viewsRemaining);
   const shouldConsumeCurrentCardRef = useRef(false);
@@ -304,6 +314,11 @@ export default function AppPage() {
   }, [optimisticViewsRemaining]);
 
   useEffect(() => {
+    if (isSubscribed || !selectedLearningTrack) return;
+    setSelectedLearningTrack(null);
+  }, [isSubscribed, selectedLearningTrack]);
+
+  useEffect(() => {
     setOptimisticViewsRemaining(viewsRemaining);
   }, [viewsRemaining]);
 
@@ -317,7 +332,11 @@ export default function AppPage() {
 
     let availableCards: Card[];
 
-    if (selectedBook) {
+    if (selectedLearningTrack === ALL_LEARNING_TRACKS_ID) {
+      availableCards = learningCards;
+    } else if (selectedLearningTrack) {
+      availableCards = getLearningCardsByTrack(selectedLearningTrack);
+    } else if (selectedBook) {
       availableCards = getCardsByBook(selectedBook);
     } else if (selectedCollection) {
       availableCards = getCollectionCards(selectedCollection);
@@ -329,7 +348,7 @@ export default function AppPage() {
       availableCards = [...contentLibrary, ...audioCards];
     }
 
-    if (!selectedTopic && !selectedCollection && preferences?.topics && preferences.topics.length > 0) {
+    if (!selectedTopic && !selectedCollection && !selectedLearningTrack && preferences?.topics && preferences.topics.length > 0) {
       const preferredCards = availableCards.filter(card =>
         card.topic.some(t => preferences.topics.includes(t))
       );
@@ -352,7 +371,7 @@ export default function AppPage() {
     setCurrentIndex(0);
     shouldConsumeCurrentCardRef.current = false;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTopic, selectedCollection, selectedBook, isLoaded, isAuthenticated, loading, preferences]);
+  }, [selectedTopic, selectedCollection, selectedBook, selectedLearningTrack, isLoaded, isAuthenticated, loading, preferences]);
 
   // Save to localStorage when savedCards changes
   useEffect(() => {
@@ -399,6 +418,12 @@ export default function AppPage() {
   const currentCard = feed[currentIndex];
   const effectiveViewsRemaining = isSubscribed ? -1 : optimisticViewsRemaining;
   const freeReadLimitReached = !isSubscribed && effectiveViewsRemaining <= 0;
+  const activeModeLabel =
+    selectedLearningTrack === ALL_LEARNING_TRACKS_ID
+      ? "Learn: All Tracks"
+      : selectedLearningTrack
+        ? `Learn: ${getLearningTrackById(selectedLearningTrack)?.name ?? "Track"}`
+        : null;
 
   const goToNext = useCallback(() => {
     if (freeReadLimitReached) return;
@@ -570,6 +595,23 @@ export default function AppPage() {
     window.location.href = `/subscribe?source=${encodeURIComponent(source)}`;
   };
 
+  const handleOpenLearningTracks = () => {
+    if (!isSubscribed) {
+      trackGrowthEvent({
+        event: "learning_tracks_teaser_opened",
+        metadata: { source: "app_header" },
+      });
+    }
+    setShowLearningTracks(true);
+  };
+
+  const handleSelectLearningTrack = (trackId: string) => {
+    setSelectedLearningTrack(trackId);
+    setSelectedBook(null);
+    setSelectedTopic(null);
+    setSelectedCollection(null);
+  };
+
   const handleUnpin = async (cardId: string) => {
     if (!profile) return;
     try {
@@ -673,7 +715,7 @@ export default function AppPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [goToNext, goToPrev, currentCard, showQuiz, isExpanded]);
 
-  const savedCardsList = contentLibrary.filter(card => savedCards.has(card.id));
+  const savedCardsList = allCards.filter(card => savedCards.has(card.id));
 
   if (!isLoaded) {
     if (!loading && !isAuthenticated) {
@@ -722,6 +764,7 @@ export default function AppPage() {
         onToggleUserMenu={() => setShowUserMenu(!showUserMenu)}
         onShowStreakModal={() => setShowStreakModal(true)}
         onShowBookFilter={() => setShowBookFilter(true)}
+        onShowLearningTracks={handleOpenLearningTracks}
         onShowCollections={() => setShowCollections(true)}
         onShowSettings={() => setShowSettings(true)}
         onShowReview={() => setShowReview(true)}
@@ -743,6 +786,8 @@ export default function AppPage() {
           onSelect={(collection) => {
             setSelectedCollection(collection);
             setSelectedTopic(null);
+            setSelectedLearningTrack(null);
+            setSelectedBook(null);
             setShowCollections(false);
           }}
           onClose={() => setShowCollections(false)}
@@ -819,6 +864,7 @@ export default function AppPage() {
           viewsRemaining={effectiveViewsRemaining}
           freeDailyLimit={FREE_DAILY_READ_LIMIT}
           reviewDueCount={reviewDueCount}
+          activeModeLabel={activeModeLabel}
           dailyCard={dailyCard}
           onDismissDailyCard={handleDismissDailyCard}
           onShareDailyCard={handleShareDailyCard}
@@ -833,7 +879,11 @@ export default function AppPage() {
           onReadingMode={() => setShowReadingMode(true)}
           onToggleAudio={toggleAudioMode}
           onToggleAutoScroll={() => setAutoScroll(!autoScroll)}
-          onClearFilters={() => { setSelectedTopic(null); setSelectedCollection(null); }}
+          onClearFilters={() => {
+            setSelectedTopic(null);
+            setSelectedCollection(null);
+            setSelectedLearningTrack(null);
+          }}
           onShowSubscribe={() => handleUpgrade("feed_controls")}
         />
       )}
@@ -866,11 +916,19 @@ export default function AppPage() {
         {upsellContext && (
           <ProUpsellModal
             isOpen={true}
-            title={upsellContext === "save_limit" ? "Your library wants more room" : "Your garden is ready to grow"}
+            title={
+              upsellContext === "save_limit"
+                ? "Your library wants more room"
+                : upsellContext === "pin_limit"
+                  ? "Your garden is ready to grow"
+                  : "Turn BloomScroll into a learning app"
+            }
             description={
               upsellContext === "save_limit"
                 ? "Free saved cards are capped so you can sample the habit. Pro turns your library into a long-term reading system."
-                : "Free garden pins are capped so you can feel the value. Pro lets you keep every quote worth revisiting."
+                : upsellContext === "pin_limit"
+                  ? "Free garden pins are capped so you can feel the value. Pro lets you keep every quote worth revisiting."
+                  : "Pro turns BloomScroll from quote scrolling into topic-based learning with curated lesson decks."
             }
             points={
               upsellContext === "save_limit"
@@ -879,11 +937,17 @@ export default function AppPage() {
                     "Review queue that helps you remember what you read",
                     "Audio mode and full book browsing",
                   ]
-                : [
-                    "Unlimited garden pins",
-                    "A permanent public garden worth sharing",
-                    "Keep notes and your best insights together",
-                  ]
+                : upsellContext === "pin_limit"
+                  ? [
+                      "Unlimited garden pins",
+                      "A permanent public garden worth sharing",
+                      "Keep notes and your best insights together",
+                    ]
+                  : [
+                      "Dedicated tracks for finance, crypto, AI, and startup strategy",
+                      "Focused card decks that teach concepts instead of random inspiration",
+                      "Learning chapters, review mode, and unlimited reading in one Pro flow",
+                    ]
             }
             onClose={() => setUpsellContext(null)}
             onUpgrade={() => {
@@ -893,6 +957,19 @@ export default function AppPage() {
           />
         )}
       </AnimatePresence>
+
+      {showLearningTracks && (
+        <LearningTracksModal
+          selectedTrack={selectedLearningTrack}
+          isSubscribed={isSubscribed}
+          onSelect={handleSelectLearningTrack}
+          onClose={() => setShowLearningTracks(false)}
+          onUpgrade={() => {
+            setShowLearningTracks(false);
+            setUpsellContext("learning_tracks");
+          }}
+        />
+      )}
 
       {showSettings && (
         <SettingsModal
@@ -914,7 +991,12 @@ export default function AppPage() {
         <BookFilterModal
           selectedBook={selectedBook}
           isSubscribed={isSubscribed}
-          onSelect={setSelectedBook}
+          onSelect={(book) => {
+            setSelectedBook(book);
+            setSelectedLearningTrack(null);
+            setSelectedCollection(null);
+            setSelectedTopic(null);
+          }}
           onClose={() => setShowBookFilter(false)}
         />
       )}

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import Link from "next/link";
 import { getProfileByUsername, getPinnedCards } from "@/lib/pinned-cards";
-import { getCardById } from "@/lib/content-library";
+import { getAnyCardById } from "@/lib/card-resolver";
 import { UserProfile } from "@/lib/supabase";
 import GardenClient from "@/components/app/GardenClient";
 
@@ -100,7 +100,7 @@ export default async function GardenPage({ params }: PageProps) {
         ) : (
           <div className="columns-1 sm:columns-2 gap-3">
             {pins.map((pin) => {
-              const card = getCardById(pin.card_id);
+              const card = getAnyCardById(pin.card_id);
               if (!card) return null;
               return (
                 <div

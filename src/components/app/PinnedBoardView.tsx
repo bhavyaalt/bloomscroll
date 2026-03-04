@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Card, getCardById } from "@/lib/content-library";
+import { Card } from "@/lib/content-library";
+import { getAnyCardById } from "@/lib/card-resolver";
 import { PinnedCard } from "@/lib/pinned-cards";
 import { useNotifications } from "@/components/NotificationProvider";
 
@@ -212,9 +213,9 @@ export default function PinnedBoardView({
       </div>
 
       {/* Masonry grid */}
-      <div className="columns-1 sm:columns-2 gap-3">
+        <div className="columns-1 sm:columns-2 gap-3">
         {pins.map((pin) => {
-          const card = getCardById(pin.card_id);
+          const card = getAnyCardById(pin.card_id);
           if (!card) return null;
           return (
             <PinnedCardTile

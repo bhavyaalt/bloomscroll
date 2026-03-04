@@ -26,6 +26,7 @@ interface CardFeedProps {
   viewsRemaining: number;
   freeDailyLimit: number;
   reviewDueCount: number;
+  activeModeLabel?: string | null;
   dailyCard?: Card | null;
   onDismissDailyCard?: () => void;
   onShareDailyCard?: (e: React.MouseEvent) => void;
@@ -129,6 +130,7 @@ export default function CardFeed({
   viewsRemaining,
   freeDailyLimit,
   reviewDueCount,
+  activeModeLabel,
   onDragEnd,
   onDoubleTap,
   onToggleSave,
@@ -217,7 +219,14 @@ export default function CardFeed({
               <div className="flex-1 bg-gradient-to-b from-[#EACCD4] to-[#e0bfc8] rounded-2xl overflow-hidden flex flex-col relative shadow-2xl shadow-black/30 min-h-0">
                 <div className="relative flex-1 p-4 sm:p-6 md:p-8 flex flex-col overflow-y-auto min-h-0">
                   {/* Saved badge */}
-                  <div className="flex justify-end mb-1 sm:mb-2 min-h-[28px] sm:min-h-[32px] flex-shrink-0">
+                  <div className="flex items-center justify-between gap-2 mb-1 sm:mb-2 min-h-[28px] sm:min-h-[32px] flex-shrink-0">
+                    <div className="min-w-0">
+                      {activeModeLabel && (
+                        <span className="inline-flex max-w-full items-center gap-1 rounded-full border border-[#007A5E]/15 bg-white/45 px-2.5 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-[0.14em] text-[#007A5E]">
+                          <span className="truncate">{activeModeLabel}</span>
+                        </span>
+                      )}
+                    </div>
                     <AnimatePresence>
                       {savedCards.has(currentCard.id) && (
                         <motion.span
@@ -442,6 +451,10 @@ export default function CardFeed({
                       <span className="text-[#007A5E]/65">
                         {reviewDueCount > 0 ? `${reviewDueCount} ready` : "unlock memory mode"}
                       </span>
+                    </div>
+                    <div className="shrink-0 rounded-full bg-white/70 px-3 py-1.5 text-[11px]">
+                      <span className="font-semibold">Learn</span>{" "}
+                      <span className="text-[#007A5E]/65">finance, crypto, AI</span>
                     </div>
                     <button
                       onClick={onShowSubscribe}

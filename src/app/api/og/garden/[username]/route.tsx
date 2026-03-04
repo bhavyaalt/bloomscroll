@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import { getProfileByUsername, getPinnedCards } from "@/lib/pinned-cards";
-import { getCardById } from "@/lib/content-library";
+import { getAnyCardById } from "@/lib/card-resolver";
 import { UserProfile } from "@/lib/supabase";
 
 // Using serverless instead of edge to avoid size limits
@@ -46,7 +46,7 @@ export async function GET(
 
   // Get first 4 pin quotes for preview
   const previewQuotes = pins.slice(0, 4).map((pin) => {
-    const card = getCardById(pin.card_id);
+    const card = getAnyCardById(pin.card_id);
     if (!card) return "...";
     return card.quote.length > 60 ? card.quote.slice(0, 57) + "..." : card.quote;
   });

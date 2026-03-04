@@ -19,6 +19,7 @@ interface AppHeaderProps {
   onToggleUserMenu: () => void;
   onShowStreakModal: () => void;
   onShowBookFilter: () => void;
+  onShowLearningTracks: () => void;
   onShowCollections: () => void;
   onShowSettings: () => void;
   onShowReview?: () => void;
@@ -40,6 +41,7 @@ export default function AppHeader({
   onToggleUserMenu,
   onShowStreakModal,
   onShowBookFilter,
+  onShowLearningTracks,
   onShowCollections,
   onShowSettings,
   onShowReview,
@@ -95,6 +97,18 @@ export default function AppHeader({
             >
               <span className="text-xs sm:text-sm">🔥</span>
               <span className="text-xs sm:text-sm font-bold text-white/70">{streak.currentStreak}</span>
+            </button>
+
+            <button
+              onClick={onShowLearningTracks}
+              className="hidden min-[440px]:flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-white/60 hover:text-white/80 hover:bg-white/5 transition-all"
+              title="Learning tracks"
+            >
+              <svg className="size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 14.25c-3.728 0-6.75 1.679-6.75 3.75V21h13.5v-3c0-2.071-3.022-3.75-6.75-3.75zm0 0a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5zM6.75 9.75c0-2.9 2.35-5.25 5.25-5.25 1.595 0 3.024.712 3.987 1.834" />
+              </svg>
+              <span className="text-xs sm:text-sm font-medium">Learn</span>
+              {!isSubscribed && <span className="text-[9px] uppercase tracking-[0.16em] text-primary">Pro</span>}
             </button>
 
             {/* Achievements */}
@@ -198,6 +212,15 @@ export default function AppHeader({
                 Browse Books {!isSubscribed && <span className="text-xs text-white/30 ml-auto">PRO</span>}
               </button>
               <button
+                onClick={() => { onShowLearningTracks(); onToggleUserMenu(); }}
+                className="w-full px-3 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg flex items-center gap-2.5 text-white/70"
+              >
+                <svg className="size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 14.25c-3.728 0-6.75 1.679-6.75 3.75V21h13.5v-3c0-2.071-3.022-3.75-6.75-3.75zm0 0a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5zM6.75 9.75c0-2.9 2.35-5.25 5.25-5.25 1.595 0 3.024.712 3.987 1.834" />
+                </svg>
+                Learning Tracks {!isSubscribed && <span className="text-xs text-white/30 ml-auto">PRO</span>}
+              </button>
+              <button
                 onClick={() => { onShowCollections(); onToggleUserMenu(); }}
                 className="w-full px-3 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg flex items-center gap-2.5 text-white/70"
               >
@@ -282,6 +305,12 @@ export default function AppHeader({
               >
                 Sign in to sync
               </Link>
+              <button
+                onClick={() => { onShowLearningTracks(); onToggleUserMenu(); }}
+                className="w-full px-3 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg flex items-center gap-2.5 text-white/60"
+              >
+                Learning Tracks
+              </button>
               <button
                 onClick={() => { onShowCollections(); onToggleUserMenu(); }}
                 className="w-full px-3 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg flex items-center gap-2.5 text-white/60"

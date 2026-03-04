@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getCardById } from "@/lib/content-library";
+import { getAnyCardById } from "@/lib/card-resolver";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -11,7 +11,7 @@ interface PageProps {
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const { ref } = await searchParams;
-  const card = getCardById(id);
+  const card = getAnyCardById(id);
   if (!card) return { title: "Card not found — Scrollbliss" };
 
   const title = `"${card.quote.slice(0, 60)}${card.quote.length > 60 ? "..." : ""}" — ${card.author}`;
@@ -42,7 +42,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 export default async function CardPage({ params, searchParams }: PageProps) {
   const { id } = await params;
   const { ref } = await searchParams;
-  const card = getCardById(id);
+  const card = getAnyCardById(id);
 
   if (!card) notFound();
 
