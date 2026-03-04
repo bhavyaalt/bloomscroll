@@ -25,6 +25,8 @@ interface CardFeedProps {
   isSubscribed: boolean;
   viewsRemaining: number;
   freeDailyLimit: number;
+  canUseAssistMode?: boolean;
+  assistModePreviewRemaining?: number;
   reviewDueCount: number;
   activeModeLabel?: string | null;
   dailyCard?: Card | null;
@@ -129,6 +131,8 @@ export default function CardFeed({
   isSubscribed,
   viewsRemaining,
   freeDailyLimit,
+  canUseAssistMode = false,
+  assistModePreviewRemaining = 0,
   reviewDueCount,
   activeModeLabel,
   onDragEnd,
@@ -294,32 +298,49 @@ export default function CardFeed({
                         <BookmarkIcon />
                       </button>
                       <button
-                        onClick={isSubscribed ? onToggleAudio : onShowSubscribe}
+                        onClick={canUseAssistMode ? onToggleAudio : onShowSubscribe}
                         className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all relative ${
                           audioMode
                             ? "bg-[#007A5E] text-white"
-                            : isSubscribed
+                            : canUseAssistMode
                               ? "bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E]"
                               : "bg-[#007A5E]/5 text-[#007A5E]/40"
                         }`}
-                        title={isSubscribed ? (audioMode ? "Stop audio" : "Read aloud") : "Pro feature"}
+                        title={
+                          canUseAssistMode
+                            ? (audioMode ? "Stop audio" : "Read aloud")
+                            : "Pro feature"
+                        }
                       >
                         <VolumeIcon active={audioMode || isSpeaking} />
-                        {!isSubscribed && <span className="absolute -top-1 -right-1 text-[8px] bg-[#007A5E] text-white px-1 rounded">PRO</span>}
+                        {!isSubscribed && !canUseAssistMode && (
+                          <span className="absolute -top-1 -right-1 text-[8px] bg-[#007A5E] text-white px-1 rounded">PRO</span>
+                        )}
+                        {!isSubscribed && canUseAssistMode && (
+                          <span className="absolute -top-1 -right-1 text-[8px] bg-[#007A5E] text-white px-1 rounded">
+                            {assistModePreviewRemaining}
+                          </span>
+                        )}
                       </button>
                       <button
-                        onClick={isSubscribed ? onToggleAutoScroll : onShowSubscribe}
+                        onClick={canUseAssistMode ? onToggleAutoScroll : onShowSubscribe}
                         className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all relative ${
                           autoScroll
                             ? "bg-[#007A5E] text-white"
-                            : isSubscribed
+                            : canUseAssistMode
                               ? "bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E]"
                               : "bg-[#007A5E]/5 text-[#007A5E]/40"
                         }`}
-                        title={isSubscribed ? (autoScroll ? "Stop auto-scroll" : "Auto-scroll") : "Pro feature"}
+                        title={
+                          canUseAssistMode
+                            ? (autoScroll ? "Stop auto-scroll" : "Auto-scroll")
+                            : "Pro feature"
+                        }
                       >
                         <PlayIcon active={autoScroll} />
-                        {!isSubscribed && <span className="absolute -top-1 -right-1 text-[8px] bg-[#007A5E] text-white px-1 rounded">PRO</span>}
+                        {!isSubscribed && !canUseAssistMode && (
+                          <span className="absolute -top-1 -right-1 text-[8px] bg-[#007A5E] text-white px-1 rounded">PRO</span>
+                        )}
                       </button>
                     </div>
 

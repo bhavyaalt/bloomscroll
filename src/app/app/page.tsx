@@ -62,6 +62,7 @@ const SAVE_STORAGE_KEY = "bloomscroll_saved_cards";
 const PREFERENCES_KEY = "bloomscroll_preferences";
 const DAILY_VIEW_STORAGE_KEY = "bloomscroll_daily_viewed_cards";
 const FREE_DAILY_READ_LIMIT = 15;
+const FREE_ASSIST_MODE_PREVIEW_LIMIT = 5;
 const FREE_SAVE_LIMIT = 10;
 const FREE_PIN_LIMIT = 3;
 
@@ -418,6 +419,11 @@ export default function AppPage() {
   const currentCard = feed[currentIndex];
   const effectiveViewsRemaining = isSubscribed ? -1 : optimisticViewsRemaining;
   const freeReadLimitReached = !isSubscribed && effectiveViewsRemaining <= 0;
+  const freeReadsUsed = isSubscribed ? 0 : Math.max(0, FREE_DAILY_READ_LIMIT - effectiveViewsRemaining);
+  const canUseAssistMode = isSubscribed || freeReadsUsed < FREE_ASSIST_MODE_PREVIEW_LIMIT;
+  const assistModePreviewRemaining = isSubscribed
+    ? FREE_ASSIST_MODE_PREVIEW_LIMIT
+    : Math.max(0, FREE_ASSIST_MODE_PREVIEW_LIMIT - freeReadsUsed);
   const activeModeLabel =
     selectedLearningTrack === ALL_LEARNING_TRACKS_ID
       ? "Learn: All Tracks"
@@ -489,7 +495,28 @@ export default function AppPage() {
     return () => clearTimeout(timer);
   }, [autoScroll, audioMode, currentIndex, isLoaded, goToNext]);
 
+  useEffect(() => {
+    if (canUseAssistMode) return;
+
+    if (audioMode) {
+      if (typeof window !== "undefined" && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      setAudioMode(false);
+      setIsSpeaking(false);
+    }
+
+    if (autoScroll) {
+      setAutoScroll(false);
+    }
+  }, [canUseAssistMode, audioMode, autoScroll]);
+
   const toggleAudioMode = () => {
+    if (!canUseAssistMode) {
+      handleUpgrade("assist_mode_preview_limit");
+      return;
+    }
+
     if (audioMode) {
       if (typeof window !== "undefined" && window.speechSynthesis) window.speechSynthesis.cancel();
       setIsSpeaking(false);
@@ -497,6 +524,15 @@ export default function AppPage() {
     } else {
       setAudioMode(true);
     }
+  };
+
+  const toggleAutoScrollMode = () => {
+    if (!canUseAssistMode) {
+      handleUpgrade("assist_mode_preview_limit");
+      return;
+    }
+
+    setAutoScroll((prev) => !prev);
   };
 
   const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
@@ -863,6 +899,8 @@ export default function AppPage() {
           isSubscribed={isSubscribed}
           viewsRemaining={effectiveViewsRemaining}
           freeDailyLimit={FREE_DAILY_READ_LIMIT}
+          canUseAssistMode={canUseAssistMode}
+          assistModePreviewRemaining={assistModePreviewRemaining}
           reviewDueCount={reviewDueCount}
           activeModeLabel={activeModeLabel}
           dailyCard={dailyCard}
@@ -878,7 +916,7 @@ export default function AppPage() {
           onExpand={() => setIsExpanded(true)}
           onReadingMode={() => setShowReadingMode(true)}
           onToggleAudio={toggleAudioMode}
-          onToggleAutoScroll={() => setAutoScroll(!autoScroll)}
+          onToggleAutoScroll={toggleAutoScrollMode}
           onClearFilters={() => {
             setSelectedTopic(null);
             setSelectedCollection(null);
