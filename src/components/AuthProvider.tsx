@@ -39,7 +39,7 @@ const AuthContext = createContext<AuthContextType>({
   profile: null,
   loading: true,
   isSubscribed: false,
-  viewsRemaining: 5,
+  viewsRemaining: 15,
   isAuthenticated: false,
   authMethod: null,
   refreshProfile: async () => {},
@@ -49,7 +49,7 @@ const AuthContext = createContext<AuthContextType>({
   updateWallet: async () => false,
 });
 
-const FREE_VIEWS = 5;
+const FREE_VIEWS = 15;
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);

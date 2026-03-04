@@ -520,7 +520,7 @@ export async function recordSubscription(
 // CONTENT GATING FUNCTIONS
 // ============================================
 
-const FREE_DAILY_LIMIT = 5;
+const FREE_DAILY_LIMIT = 15;
 
 function getLocalDateKey(date: Date) {
   const year = date.getFullYear();

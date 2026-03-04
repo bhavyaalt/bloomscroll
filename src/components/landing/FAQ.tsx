@@ -6,7 +6,7 @@ const faqs = [
   {
     question: "Is BloomScroll really free?",
     answer:
-      "Yes, 5 cards per day are free forever. Pro unlocks unlimited access plus spaced repetition to help you retain what you learn.",
+      "Yes, 15 cards per day are free forever. Pro unlocks unlimited access plus spaced repetition to help you retain what you learn.",
   },
   {
     question: "How is this different from Blinkist?",

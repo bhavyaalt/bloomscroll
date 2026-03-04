@@ -61,7 +61,7 @@ const VIEW_STORAGE_KEY = "bloomscroll_viewed_cards";
 const SAVE_STORAGE_KEY = "bloomscroll_saved_cards";
 const PREFERENCES_KEY = "bloomscroll_preferences";
 const DAILY_VIEW_STORAGE_KEY = "bloomscroll_daily_viewed_cards";
-const FREE_DAILY_READ_LIMIT = 5;
+const FREE_DAILY_READ_LIMIT = 15;
 const FREE_SAVE_LIMIT = 10;
 const FREE_PIN_LIMIT = 3;
 

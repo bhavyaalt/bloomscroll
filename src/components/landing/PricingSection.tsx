@@ -48,7 +48,7 @@ export function PricingSection() {
             <ul className="flex flex-col gap-4 mt-4 flex-grow">
               <li className="flex items-center gap-3 text-sm text-slate-700">
                 <span className="text-primary text-lg">✓</span>
-                5 daily wisdom cards
+                15 daily wisdom cards
               </li>
               <li className="flex items-center gap-3 text-sm text-slate-700">
                 <span className="text-primary text-lg">✓</span>
