@@ -163,6 +163,8 @@ export default function AppPage() {
   const [cardToPin, setCardToPin] = useState<Card | null>(null);
   const [upsellContext, setUpsellContext] = useState<"save_limit" | "pin_limit" | null>(null);
   const [dailyLimitPrompted, setDailyLimitPrompted] = useState(false);
+  const [optimisticViewsRemaining, setOptimisticViewsRemaining] = useState(viewsRemaining);
+  const shouldConsumeCurrentCardRef = useRef(false);
 
   // Achievements & Leaderboard state
   const [showAchievements, setShowAchievements] = useState(false);
@@ -286,19 +288,23 @@ export default function AppPage() {
   }, [dailyProgress.read, dailyProgress.goal, dailyProgress.completed, isAuthenticated, loading]);
 
   useEffect(() => {
-    if (loading || !isAuthenticated || isSubscribed || viewsRemaining > 0 || dailyLimitPrompted) return;
+    if (loading || !isAuthenticated || isSubscribed || optimisticViewsRemaining > 0 || dailyLimitPrompted) return;
     notify({
       title: "Daily free reading complete",
       message: "Upgrade to Pro for unlimited reading, audio mode, and review.",
       tone: "info",
     });
     setDailyLimitPrompted(true);
-  }, [dailyLimitPrompted, isAuthenticated, isSubscribed, loading, notify, viewsRemaining]);
+  }, [dailyLimitPrompted, isAuthenticated, isSubscribed, loading, notify, optimisticViewsRemaining]);
 
   useEffect(() => {
-    if (viewsRemaining > 0) {
+    if (optimisticViewsRemaining > 0) {
       setDailyLimitPrompted(false);
     }
+  }, [optimisticViewsRemaining]);
+
+  useEffect(() => {
+    setOptimisticViewsRemaining(viewsRemaining);
   }, [viewsRemaining]);
 
   // Generate smart feed
@@ -344,6 +350,7 @@ export default function AppPage() {
     }
 
     setCurrentIndex(0);
+    shouldConsumeCurrentCardRef.current = false;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTopic, selectedCollection, selectedBook, isLoaded, isAuthenticated, loading, preferences]);
 
@@ -355,7 +362,7 @@ export default function AppPage() {
     }
   }, [savedCards, isAuthenticated, isLoaded, loading]);
 
-  // Mark card as viewed when displayed
+  // Mark cards as seen for feed ordering, without consuming a daily read.
   useEffect(() => {
     if (feed[currentIndex] && isLoaded) {
       const card = feed[currentIndex];
@@ -365,42 +372,57 @@ export default function AppPage() {
         newViewed.add(card.id);
         setViewedCards(newViewed);
         localStorage.setItem(VIEW_STORAGE_KEY, JSON.stringify([...newViewed]));
-        recordCardRead(card.id, card.topic);
-        if (profile && !isSubscribed) {
-          const dailyViewed = getDailyViewedCardIds();
-          if (!dailyViewed.has(card.id)) {
-            dailyViewed.add(card.id);
-            saveDailyViewedCardIds(dailyViewed);
-            incrementViewCount(profile.id).then(() => refreshProfile()).catch(() => {});
-          }
-        }
-        setDailyProgress(getDailyProgress());
+      }
+    }
+  }, [currentIndex, feed, isLoaded]);
+
+  // Consume a read only after an intentional navigation lands on a card.
+  useEffect(() => {
+    if (!shouldConsumeCurrentCardRef.current || !feed[currentIndex] || !isLoaded) return;
+
+    shouldConsumeCurrentCardRef.current = false;
+    const card = feed[currentIndex];
+    recordCardRead(card.id, card.topic);
+    setDailyProgress(getDailyProgress());
+
+    if (profile && !isSubscribed) {
+      const dailyViewed = getDailyViewedCardIds();
+      if (!dailyViewed.has(card.id)) {
+        dailyViewed.add(card.id);
+        saveDailyViewedCardIds(dailyViewed);
+        setOptimisticViewsRemaining((prev) => Math.max(prev - 1, 0));
+        incrementViewCount(profile.id).then(() => refreshProfile()).catch(() => {});
       }
     }
   }, [currentIndex, feed, isLoaded, isSubscribed, profile, refreshProfile]);
 
   const currentCard = feed[currentIndex];
-  const freeReadLimitReached = !isSubscribed && viewsRemaining <= 0;
+  const effectiveViewsRemaining = isSubscribed ? -1 : optimisticViewsRemaining;
+  const freeReadLimitReached = !isSubscribed && effectiveViewsRemaining <= 0;
 
   const goToNext = useCallback(() => {
+    if (freeReadLimitReached) return;
     if (currentIndex < feed.length - 1) {
+      shouldConsumeCurrentCardRef.current = true;
       setDirection(1);
       setCurrentIndex(prev => prev + 1);
       setIsExpanded(false);
       sounds.swipe();
       haptic("light");
     }
-  }, [currentIndex, feed.length]);
+  }, [currentIndex, feed.length, freeReadLimitReached]);
 
   const goToPrev = useCallback(() => {
+    if (freeReadLimitReached) return;
     if (currentIndex > 0) {
+      shouldConsumeCurrentCardRef.current = true;
       setDirection(-1);
       setCurrentIndex(prev => prev - 1);
       setIsExpanded(false);
       sounds.swipe();
       haptic("light");
     }
-  }, [currentIndex]);
+  }, [currentIndex, freeReadLimitReached]);
 
   // Audio mode: speak quote
   const speakQuote = useCallback((card: Card) => {
@@ -794,7 +816,7 @@ export default function AppPage() {
           feedLength={feed.length}
           hasChapter={!!currentCard?.chapter}
           isSubscribed={isSubscribed}
-          viewsRemaining={viewsRemaining}
+          viewsRemaining={effectiveViewsRemaining}
           freeDailyLimit={FREE_DAILY_READ_LIMIT}
           reviewDueCount={reviewDueCount}
           dailyCard={dailyCard}
