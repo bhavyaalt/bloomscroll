@@ -8,7 +8,6 @@ import { useAuth } from "@/components/AuthProvider";
 import {
   contentLibrary,
   Card,
-  shuffleCards,
   getCardsByTopic,
   getCardsByBook,
 } from "@/lib/content-library";
@@ -65,6 +64,7 @@ const FREE_DAILY_READ_LIMIT = 15;
 const FREE_ASSIST_MODE_PREVIEW_LIMIT = 5;
 const FREE_SAVE_LIMIT = 10;
 const FREE_PIN_LIMIT = 3;
+const CARD_VIEW_DWELL_MS = 1200;
 
 function getTodayKey() {
   const now = new Date();
@@ -72,6 +72,22 @@ function getTodayKey() {
   const month = String(now.getMonth() + 1).padStart(2, "0");
   const day = String(now.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+}
+
+function stableHash(input: string) {
+  let hash = 5381;
+  for (let i = 0; i < input.length; i++) {
+    hash = ((hash << 5) + hash) ^ input.charCodeAt(i);
+  }
+  return hash >>> 0;
+}
+
+function deterministicShuffle(cards: Card[], seed: string): Card[] {
+  return [...cards].sort((a, b) => {
+    const aScore = stableHash(`${seed}:${a.id}`);
+    const bScore = stableHash(`${seed}:${b.id}`);
+    return aScore - bScore;
+  });
 }
 
 function getDailyViewedCardIds() {
@@ -175,7 +191,6 @@ export default function AppPage() {
   const [upsellContext, setUpsellContext] = useState<"save_limit" | "pin_limit" | "learning_tracks" | null>(null);
   const [dailyLimitPrompted, setDailyLimitPrompted] = useState(false);
   const [optimisticViewsRemaining, setOptimisticViewsRemaining] = useState(viewsRemaining);
-  const shouldConsumeCurrentCardRef = useRef(false);
 
   // Achievements & Leaderboard state
   const [showAchievements, setShowAchievements] = useState(false);
@@ -349,6 +364,15 @@ export default function AppPage() {
       availableCards = [...contentLibrary, ...audioCards];
     }
 
+    const feedSeed = [
+      getTodayKey(),
+      selectedBook || "all-books",
+      selectedCollection?.id || "all-collections",
+      selectedTopic || "all-topics",
+      selectedLearningTrack || "all-learning-tracks",
+      preferences?.topics?.slice().sort().join(",") || "no-pref",
+    ].join("|");
+
     if (!selectedTopic && !selectedCollection && !selectedLearningTrack && preferences?.topics && preferences.topics.length > 0) {
       const preferredCards = availableCards.filter(card =>
         card.topic.some(t => preferences.topics.includes(t))
@@ -357,20 +381,16 @@ export default function AppPage() {
         !card.topic.some(t => preferences.topics.includes(t))
       );
       const smartFeed = [
-        ...shuffleCards(preferredCards.filter(c => !viewed.has(c.id))),
-        ...shuffleCards(otherCards.filter(c => !viewed.has(c.id))),
-        ...shuffleCards(preferredCards.filter(c => viewed.has(c.id))),
-        ...shuffleCards(otherCards.filter(c => viewed.has(c.id))),
+        ...deterministicShuffle(preferredCards.filter(c => !viewed.has(c.id)), `${feedSeed}:preferred:unseen`),
+        ...deterministicShuffle(otherCards.filter(c => !viewed.has(c.id)), `${feedSeed}:other:unseen`),
       ];
       setFeed(smartFeed);
     } else {
       const unseenCards = availableCards.filter(card => !viewed.has(card.id));
-      const seenCards = availableCards.filter(card => viewed.has(card.id));
-      setFeed([...shuffleCards(unseenCards), ...shuffleCards(seenCards)]);
+      setFeed(deterministicShuffle(unseenCards, `${feedSeed}:unseen`));
     }
 
     setCurrentIndex(0);
-    shouldConsumeCurrentCardRef.current = false;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTopic, selectedCollection, selectedBook, selectedLearningTrack, isLoaded, isAuthenticated, loading, preferences]);
 
@@ -396,24 +416,27 @@ export default function AppPage() {
     }
   }, [currentIndex, feed, isLoaded]);
 
-  // Consume a read only after an intentional navigation lands on a card.
+  // Consume a read after a short dwell on the currently visible card.
   useEffect(() => {
-    if (!shouldConsumeCurrentCardRef.current || !feed[currentIndex] || !isLoaded) return;
+    if (!feed[currentIndex] || !isLoaded) return;
 
-    shouldConsumeCurrentCardRef.current = false;
     const card = feed[currentIndex];
-    recordCardRead(card.id, card.topic);
-    setDailyProgress(getDailyProgress());
+    const timer = setTimeout(() => {
+      recordCardRead(card.id, card.topic);
+      setDailyProgress(getDailyProgress());
 
-    if (profile && !isSubscribed) {
-      const dailyViewed = getDailyViewedCardIds();
-      if (!dailyViewed.has(card.id)) {
-        dailyViewed.add(card.id);
-        saveDailyViewedCardIds(dailyViewed);
-        setOptimisticViewsRemaining((prev) => Math.max(prev - 1, 0));
-        incrementViewCount(profile.id).then(() => refreshProfile()).catch(() => {});
+      if (profile && !isSubscribed) {
+        const dailyViewed = getDailyViewedCardIds();
+        if (!dailyViewed.has(card.id)) {
+          dailyViewed.add(card.id);
+          saveDailyViewedCardIds(dailyViewed);
+          setOptimisticViewsRemaining((prev) => Math.max(prev - 1, 0));
+          incrementViewCount(profile.id).then(() => refreshProfile()).catch(() => {});
+        }
       }
-    }
+    }, CARD_VIEW_DWELL_MS);
+
+    return () => clearTimeout(timer);
   }, [currentIndex, feed, isLoaded, isSubscribed, profile, refreshProfile]);
 
   const currentCard = feed[currentIndex];
@@ -434,7 +457,6 @@ export default function AppPage() {
   const goToNext = useCallback(() => {
     if (freeReadLimitReached) return;
     if (currentIndex < feed.length - 1) {
-      shouldConsumeCurrentCardRef.current = true;
       setDirection(1);
       setCurrentIndex(prev => prev + 1);
       setIsExpanded(false);
@@ -446,7 +468,6 @@ export default function AppPage() {
   const goToPrev = useCallback(() => {
     if (freeReadLimitReached) return;
     if (currentIndex > 0) {
-      shouldConsumeCurrentCardRef.current = true;
       setDirection(-1);
       setCurrentIndex(prev => prev - 1);
       setIsExpanded(false);
