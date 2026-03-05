@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="600" viewBox="0 0 1920 600">
+  <defs>
+    <linearGradient id="ba-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f0e8f5"/>
+      <stop offset="100%" stop-color="#c4a8d8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="600" fill="url(#ba-sky)"/>
+  <ellipse cx="960" cy="400" rx="1400" ry="250" fill="#8b6aae" opacity="0.3"/>
+  <text x="960" y="500" text-anchor="middle" fill="#fff" opacity="0.3" font-size="20" font-family="sans-serif">Replace with before-after-bg.svg</text>
+</svg>

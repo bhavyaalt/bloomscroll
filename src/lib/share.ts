@@ -12,13 +12,13 @@ export async function generateShareImage(card: Card): Promise<Blob> {
   
   // Background gradient
   const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  gradient.addColorStop(0, "#EACCD4");
-  gradient.addColorStop(1, "#d4a5b0");
+  gradient.addColorStop(0, "#FFF5FE");
+  gradient.addColorStop(1, "#F3EAFA");
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   
   // Decorative elements
-  ctx.fillStyle = "#007A5E";
+  ctx.fillStyle = "#7B2CBF";
   ctx.globalAlpha = 0.1;
   ctx.beginPath();
   ctx.arc(100, 200, 300, 0, Math.PI * 2);
@@ -29,35 +29,35 @@ export async function generateShareImage(card: Card): Promise<Blob> {
   ctx.globalAlpha = 1;
   
   // Topic badge
-  ctx.fillStyle = "#007A5E";
+  ctx.fillStyle = "#7B2CBF";
   roundRect(ctx, 80, 120, 200, 50, 25);
   ctx.fill();
-  ctx.fillStyle = "#EACCD4";
-  ctx.font = "bold 24px system-ui";
+  ctx.fillStyle = "#FFF5FE";
+  ctx.font = "500 24px system-ui";
   ctx.textAlign = "center";
-  ctx.fillText(`◆ ${card.topic[0].toUpperCase()}`, 180, 153);
+  ctx.fillText(`◆ ${card.topic[0]}`, 180, 153);
   
   // Author name
-  ctx.fillStyle = "#007A5E";
-  ctx.font = "bold 72px Impact, sans-serif";
+  ctx.fillStyle = "#7B2CBF";
+  ctx.font = "500 72px system-ui";
   ctx.textAlign = "left";
-  ctx.fillText(card.author.toUpperCase(), 80, 350);
+  ctx.fillText(card.author, 80, 350);
   
   // Book name
   ctx.font = "italic 36px Georgia, serif";
-  ctx.fillStyle = "#007A5E";
+  ctx.fillStyle = "#7B2CBF";
   ctx.globalAlpha = 0.8;
   ctx.fillText(card.book, 80, 410);
   ctx.globalAlpha = 1;
   
   // Quote with word wrapping
-  ctx.fillStyle = "#007A5E";
+  ctx.fillStyle = "#7B2CBF";
   ctx.font = "36px Georgia, serif";
   const quoteLines = wrapText(ctx, `"${card.quote}"`, 920);
   let y = 520;
   
   // Quote bar
-  ctx.fillStyle = "#007A5E";
+  ctx.fillStyle = "#7B2CBF";
   ctx.fillRect(80, 490, 6, quoteLines.length * 50 + 40);
   
   quoteLines.forEach(line => {
@@ -67,7 +67,7 @@ export async function generateShareImage(card: Card): Promise<Blob> {
   
   // Insight
   ctx.font = "32px system-ui";
-  ctx.fillStyle = "#007A5E";
+  ctx.fillStyle = "#7B2CBF";
   ctx.globalAlpha = 0.7;
   const insightLines = wrapText(ctx, card.insight, 920);
   y += 40;
@@ -78,16 +78,13 @@ export async function generateShareImage(card: Card): Promise<Blob> {
   ctx.globalAlpha = 1;
   
   // Branding
-  ctx.fillStyle = "#007A5E";
-  ctx.font = "bold 48px Impact, sans-serif";
+  ctx.fillStyle = "#7B2CBF";
+  ctx.font = "500 48px system-ui";
   ctx.textAlign = "center";
-  ctx.fillText("BLOOM", canvas.width / 2 - 60, canvas.height - 150);
-  ctx.font = "italic 48px Georgia, serif";
-  ctx.fillStyle = "#4D9E8A";
-  ctx.fillText("scroll", canvas.width / 2 + 80, canvas.height - 150);
+  ctx.fillText("BloomScroll", canvas.width / 2, canvas.height - 150);
   
   ctx.font = "24px system-ui";
-  ctx.fillStyle = "#007A5E";
+  ctx.fillStyle = "#7B2CBF";
   ctx.globalAlpha = 0.6;
   ctx.fillText("bloomscroll.club", canvas.width / 2, canvas.height - 90);
   
@@ -158,7 +155,7 @@ export async function shareCard(card: Card, refUsername?: string): Promise<void>
     if (navigator.share && navigator.canShare({ files: [file] })) {
       await navigator.share({
         files: [file],
-        title: `${card.author} - Scrollbliss`,
+        title: `${card.author} - BloomScroll`,
         text: `"${card.quote}" — ${card.author}\n\n${cardUrl}`,
       });
     } else {

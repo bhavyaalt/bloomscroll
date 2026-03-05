@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="384" height="640" viewBox="0 0 384 640">
+  <rect width="384" height="640" rx="40" fill="#1a1a2e" stroke="#333" stroke-width="4"/>
+  <rect x="20" y="40" width="344" height="560" rx="8" fill="#f3f0f8"/>
+  <rect x="40" y="80" width="304" height="200" rx="12" fill="#d4c4e8"/>
+  <rect x="40" y="300" width="200" height="16" rx="4" fill="#7c3aed" opacity="0.4"/>
+  <rect x="40" y="328" width="280" height="12" rx="4" fill="#7c3aed" opacity="0.2"/>
+  <rect x="40" y="352" width="220" height="12" rx="4" fill="#7c3aed" opacity="0.2"/>
+  <text x="192" y="480" text-anchor="middle" fill="#7c3aed" opacity="0.4" font-size="14" font-family="sans-serif">center-phone.svg</text>
+</svg>

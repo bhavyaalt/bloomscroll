@@ -31,22 +31,22 @@ const STORAGE_KEY = "bloomscroll_pending_notifications";
 function toneClasses(tone: NotificationTone) {
   switch (tone) {
     case "success":
-      return "border-[#2f7a62]/35 bg-[#10271f]/95 text-[#e8f5ef]";
+      return "border-emerald-200 bg-white/95 text-slate-900";
     case "error":
-      return "border-[#9a504d]/35 bg-[#2c1716]/95 text-[#fdeeed]";
+      return "border-red-200 bg-white/95 text-slate-900";
     default:
-      return "border-white/10 bg-[#18231d]/95 text-white";
+      return "border-slate-200 bg-white/95 text-slate-900";
   }
 }
 
 function toneBadgeClasses(tone: NotificationTone) {
   switch (tone) {
     case "success":
-      return "bg-[#2f7a62]/20 text-[#87d0b0]";
+      return "bg-emerald-100 text-emerald-700";
     case "error":
-      return "bg-[#9a504d]/20 text-[#f3a8a1]";
+      return "bg-red-100 text-red-700";
     default:
-      return "bg-white/10 text-white/70";
+      return "bg-slate-100 text-slate-500";
   }
 }
 
@@ -136,18 +136,18 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] ${toneBadgeClasses(notification.tone || "info")}`}>
+                      <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${toneBadgeClasses(notification.tone || "info")}`}>
                         {notification.tone || "info"}
                       </span>
-                      <p className="truncate text-sm font-semibold">{notification.title}</p>
+                      <p className="truncate text-sm font-medium">{notification.title}</p>
                     </div>
                     {notification.message ? (
-                      <p className="mt-1 text-sm text-white/70">{notification.message}</p>
+                      <p className="mt-1 text-sm text-slate-500">{notification.message}</p>
                     ) : null}
                   </div>
                   <button
                     onClick={() => dismiss(notification.id)}
-                    className="text-white/35 transition-colors hover:text-white/70"
+                    className="text-slate-400 transition-colors hover:text-slate-600"
                     aria-label="Dismiss notification"
                   >
                     ×

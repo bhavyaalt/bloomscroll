@@ -15,8 +15,8 @@ interface ReadingModeProps {
 }
 
 const THEME_STYLES: Record<Theme, { bg: string; text: string; accent: string }> = {
-  dark: { bg: 'bg-[#102219]', text: 'text-white', accent: 'text-primary' },
-  light: { bg: 'bg-[#fafafa]', text: 'text-gray-900', accent: 'text-[#007A5E]' },
+  dark: { bg: 'bg-slate-900', text: 'text-white', accent: 'text-brand' },
+  light: { bg: 'bg-white', text: 'text-slate-900', accent: 'text-brand' },
   sepia: { bg: 'bg-[#f4ecd8]', text: 'text-[#5c4b37]', accent: 'text-[#8b6914]' },
 };
 
@@ -61,7 +61,7 @@ export default function ReadingMode({ card, isOpen, onClose, isSubscribed, onUpg
         {/* Progress bar */}
         <div className="fixed top-0 left-0 right-0 h-1 bg-white/10 z-50">
           <motion.div
-            className="h-full bg-[#007A5E]"
+            className="h-full bg-brand"
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
           />
@@ -101,7 +101,7 @@ export default function ReadingMode({ card, isOpen, onClose, isSubscribed, onUpg
                     key={t}
                     onClick={() => setTheme(t)}
                     className={`w-6 h-6 rounded-full ${
-                      theme === t ? 'bg-[#007A5E]' : ''
+                      theme === t ? 'bg-brand' : ''
                     } ${
                       t === 'dark' ? 'bg-gray-800' : t === 'light' ? 'bg-white' : 'bg-[#d4c4a8]'
                     }`}
@@ -121,7 +121,7 @@ export default function ReadingMode({ card, isOpen, onClose, isSubscribed, onUpg
           <div className="max-w-2xl mx-auto">
             {/* Book info */}
             <div className="mb-8 text-center">
-              <h1 className="text-2xl font-bold mb-2">{card.book}</h1>
+              <h1 className="text-2xl font-medium mb-2">{card.book}</h1>
               <p className={`${styles.accent} text-lg`}>{card.author}</p>
               {card.chapter && (
                 <p className="text-sm opacity-50 mt-2">
@@ -132,7 +132,7 @@ export default function ReadingMode({ card, isOpen, onClose, isSubscribed, onUpg
 
             {/* The quote */}
             <blockquote
-              className={`text-xl italic border-l-4 border-[#007A5E] pl-4 mb-8 ${styles.accent}`}
+              className={`text-xl italic border-l-4 border-brand pl-4 mb-8 ${styles.accent}`}
               style={{ fontSize: fontSize + 4 }}
             >
               "{card.quote}"
@@ -140,7 +140,7 @@ export default function ReadingMode({ card, isOpen, onClose, isSubscribed, onUpg
 
             {/* Insight */}
             <div className="mb-8 p-4 rounded-xl bg-white/5">
-              <h3 className="font-bold mb-2 text-sm uppercase tracking-wider opacity-50">Key Insight</h3>
+              <h3 className="font-medium mb-2 text-sm opacity-50">Key Insight</h3>
               <p style={{ fontSize }}>{card.insight}</p>
             </div>
 
@@ -152,20 +152,20 @@ export default function ReadingMode({ card, isOpen, onClose, isSubscribed, onUpg
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold mb-2">Premium Content</h3>
+                <h3 className="text-xl font-medium mb-2">Premium Content</h3>
                 <p className="opacity-60 mb-6">
                   Unlock full chapters, {card.genre} genre, and more with Pro
                 </p>
                 <button
                   onClick={onUpgrade}
-                  className="px-8 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full font-bold text-black"
+                  className="px-8 py-3 bg-brand rounded-full font-medium text-white hover:bg-brand-dark transition-colors"
                 >
                   Upgrade to Pro
                 </button>
               </div>
             ) : hasChapter ? (
               <div className="prose prose-invert max-w-none">
-                <h2 className="text-xl font-bold mb-4">{card.chapter!.title}</h2>
+                <h2 className="text-xl font-medium mb-4">{card.chapter!.title}</h2>
                 <div
                   className="leading-relaxed whitespace-pre-wrap"
                   style={{ fontSize, lineHeight: 1.8 }}
@@ -187,7 +187,7 @@ export default function ReadingMode({ card, isOpen, onClose, isSubscribed, onUpg
                   href={card.chapter.amazonLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#FF9900] text-black rounded-full font-bold hover:bg-[#FFa929] transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-brand text-white rounded-full font-medium hover:bg-brand-dark transition-colors"
                 >
                   <svg className="size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />

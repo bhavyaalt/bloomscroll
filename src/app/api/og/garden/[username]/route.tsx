@@ -24,10 +24,10 @@ export async function GET(
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: "#EACCD4",
-            color: "#007A5E",
+            background: "#FFF5FE",
+            color: "#7B2CBF",
             fontSize: 48,
-            fontWeight: "bold",
+            fontWeight: 500,
           }}
         >
           Garden not found
@@ -63,8 +63,8 @@ export async function GET(
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "60px",
-          background: "linear-gradient(135deg, #EACCD4 0%, #d4a5b0 100%)",
-          color: "#007A5E",
+          background: "linear-gradient(135deg, #FFF5FE 0%, #F3EAFA 100%)",
+          color: "#7B2CBF",
         }}
       >
         {/* Top: Avatar + Name */}
@@ -74,19 +74,19 @@ export async function GET(
               width: 80,
               height: 80,
               borderRadius: "50%",
-              background: "#007A5E",
+              background: "#7B2CBF",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "#EACCD4",
+              color: "white",
               fontSize: 36,
-              fontWeight: "bold",
+              fontWeight: 500,
             }}
           >
             {initial}
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ fontSize: 36, fontWeight: "bold" }}>
+            <div style={{ fontSize: 36, fontWeight: 500 }}>
               {displayName}&apos;s Garden
             </div>
             <div
@@ -140,8 +140,7 @@ export async function GET(
             gap: "8px",
           }}
         >
-          <span style={{ fontSize: 28 }}>🌱</span>
-          <span style={{ fontSize: 24, fontWeight: "bold" }}>Bloomscroll</span>
+          <span style={{ fontSize: 24, fontWeight: 500 }}>BloomScroll</span>
         </div>
       </div>
     ),

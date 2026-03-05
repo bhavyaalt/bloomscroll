@@ -95,8 +95,8 @@ function ConsentContent() {
   // Loading state
   if (loading || !user) {
     return (
-      <div className="min-h-screen bg-bglight flex items-center justify-center">
-        <div className="animate-pulse text-2xl font-bold text-bgdark">Loading...</div>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="animate-pulse text-2xl font-medium text-slate-900">Loading...</div>
       </div>
     );
   }
@@ -104,16 +104,11 @@ function ConsentContent() {
   // Missing params error
   if (missingParams) {
     return (
-      <div className="min-h-screen bg-bglight text-bgdark flex flex-col">
-        <header className="border-b border-sage">
+      <div className="min-h-screen bg-white text-slate-900 flex flex-col">
+        <header>
           <div className="max-w-4xl mx-auto px-6 h-16 flex items-center">
-            <Link href="/" className="flex items-center gap-2.5">
-              <div className="size-7 flex items-center justify-center bg-primary rounded-lg">
-                <svg className="size-4 text-bgdark" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 22c4.97 0 9-4.03 9-9-4.97 0-9 4.03-9 9ZM5.6 10.25c0 1.64 1.33 2.97 2.97 2.97h.86c1.97 0 3.56-1.6 3.56-3.57v-5.4C12.99 2.56 11.43 1 9.43 1c-2 0-3.56 1.56-3.56 3.56v5.4c0 .1 0 .2-.27.29ZM3 13c0 4.97 4.03 9 9 9 0-4.97-4.03-9-9-9Z" />
-                </svg>
-              </div>
-              <span className="text-lg font-bold tracking-tight text-bgdark">BloomScroll</span>
+            <Link href="/" className="flex items-center">
+              <span className="font-instrument-serif italic text-xl text-slate-900">BloomScroll</span>
             </Link>
           </div>
         </header>
@@ -124,11 +119,11 @@ function ConsentContent() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold uppercase mb-4">Invalid Authorization Request</h1>
+            <h1 className="font-instrument-serif text-2xl font-medium mb-4">Invalid Authorization Request</h1>
             <p className="text-sm opacity-70 mb-8">
               This authorization request is missing required parameters. Please go back to the application and try again.
             </p>
-            <Link href="/" className="text-sm font-bold text-primary hover:text-primary/80 underline">
+            <Link href="/" className="text-sm font-medium text-brand hover:text-brand-dark underline">
               Go to Bloomscroll
             </Link>
           </div>
@@ -138,17 +133,12 @@ function ConsentContent() {
   }
 
   return (
-    <div className="min-h-screen bg-bglight text-bgdark flex flex-col">
+    <div className="min-h-screen bg-white text-slate-900 flex flex-col">
       {/* Header */}
-      <header className="border-b border-sage">
+      <header>
         <div className="max-w-4xl mx-auto px-6 h-16 flex items-center">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="size-7 flex items-center justify-center bg-primary rounded-lg">
-              <svg className="size-4 text-bgdark" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 22c4.97 0 9-4.03 9-9-4.97 0-9 4.03-9 9ZM5.6 10.25c0 1.64 1.33 2.97 2.97 2.97h.86c1.97 0 3.56-1.6 3.56-3.57v-5.4C12.99 2.56 11.43 1 9.43 1c-2 0-3.56 1.56-3.56 3.56v5.4c0 .1 0 .2-.27.29ZM3 13c0 4.97 4.03 9 9 9 0-4.97-4.03-9-9-9Z" />
-              </svg>
-            </div>
-            <span className="text-lg font-bold tracking-tight text-bgdark">BloomScroll</span>
+          <Link href="/" className="flex items-center">
+            <span className="font-instrument-serif italic text-xl text-slate-900">BloomScroll</span>
           </Link>
         </div>
       </header>
@@ -161,41 +151,39 @@ function ConsentContent() {
           className="w-full max-w-md"
         >
           {/* Consent Card */}
-          <div className="bg-white rounded-2xl border-2 border-sage p-8 shadow-sm">
+          <div className="bg-white rounded-2xl border-2 border-slate-200 p-8 shadow-sm">
             {/* App icon + arrow + Bloomscroll icon */}
             <div className="flex items-center justify-center gap-4 mb-8">
-              <div className="w-14 h-14 bg-sage/50 rounded-xl flex items-center justify-center">
-                <svg className="size-7 text-bgdark/60" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+              <div className="w-14 h-14 bg-slate-100 rounded-xl flex items-center justify-center">
+                <svg className="size-7 text-slate-900/60" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                 </svg>
               </div>
-              <svg className="size-5 text-bgdark/40" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <svg className="size-5 text-slate-900/40" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
               </svg>
-              <div className="w-14 h-14 bg-primary/20 rounded-xl flex items-center justify-center">
-                <svg className="size-7 text-bgdark" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 22c4.97 0 9-4.03 9-9-4.97 0-9 4.03-9 9ZM5.6 10.25c0 1.64 1.33 2.97 2.97 2.97h.86c1.97 0 3.56-1.6 3.56-3.57v-5.4C12.99 2.56 11.43 1 9.43 1c-2 0-3.56 1.56-3.56 3.56v5.4c0 .1 0 .2-.27.29ZM3 13c0 4.97 4.03 9 9 9 0-4.97-4.03-9-9-9Z" />
-                </svg>
+              <div className="w-14 h-14 bg-brand-light rounded-xl flex items-center justify-center">
+                <span className="font-instrument-serif italic text-xl text-slate-900">B</span>
               </div>
             </div>
 
-            <h1 className="text-2xl font-bold tracking-tight text-center mb-2">
+            <h1 className="font-instrument-serif text-2xl font-medium tracking-tight text-center mb-2">
               Authorize Access
             </h1>
             <p className="text-sm text-center opacity-60 mb-1">
-              <span className="font-mono text-xs bg-sage/50 px-2 py-0.5 rounded">{clientId}</span>
+              <span className="font-mono text-xs bg-slate-100 px-2 py-0.5 rounded">{clientId}</span>
             </p>
             <p className="text-sm text-center opacity-70 mb-6">
               wants to access your Bloomscroll account
             </p>
 
             {/* Signed in as */}
-            <div className="bg-sage/30 rounded-xl px-4 py-3 mb-6 flex items-center gap-3">
-              <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-sm font-bold">
+            <div className="bg-slate-100 rounded-xl px-4 py-3 mb-6 flex items-center gap-3">
+              <div className="w-8 h-8 bg-brand-light rounded-full flex items-center justify-center text-sm font-medium">
                 {(profile?.fc_display_name || user.email || "?")[0].toUpperCase()}
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-bold truncate">
+                <p className="text-sm font-medium truncate">
                   {profile?.fc_display_name || user.email}
                 </p>
                 {profile?.fc_username && (
@@ -206,7 +194,7 @@ function ConsentContent() {
 
             {/* Scopes */}
             <div className="mb-8">
-              <p className="text-xs font-bold uppercase tracking-wide opacity-50 mb-3">
+              <p className="text-xs font-medium opacity-50 mb-3">
                 This will allow the application to:
               </p>
               <div className="space-y-2">
@@ -214,7 +202,7 @@ function ConsentContent() {
                   const info = SCOPE_LABELS[s];
                   return (
                     <div key={s} className="flex items-start gap-3 py-2">
-                      <svg className="size-5 text-primary mt-0.5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <svg className="size-5 text-brand mt-0.5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       <div>
@@ -240,7 +228,7 @@ function ConsentContent() {
               <button
                 onClick={handleAllow}
                 disabled={submitting}
-                className="w-full py-4 rounded-full font-bold uppercase tracking-widest transition-all bg-primary text-bgdark hover:bg-primary/90 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-4 rounded-full font-medium transition-all bg-brand text-white hover:bg-brand-dark shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submitting ? (
                   <span className="flex items-center justify-center gap-2">
@@ -255,7 +243,7 @@ function ConsentContent() {
               <button
                 onClick={handleDeny}
                 disabled={submitting}
-                className="w-full py-4 rounded-full font-bold uppercase tracking-widest transition-all bg-white text-bgdark border-2 border-sage hover:border-bgdark disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-4 rounded-full font-medium transition-all bg-white text-slate-900 border-2 border-slate-200 hover:border-slate-400 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Deny
               </button>
@@ -275,8 +263,8 @@ export default function OAuthConsentPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-bglight flex items-center justify-center">
-          <div className="animate-pulse text-2xl font-bold text-bgdark">Loading...</div>
+        <div className="min-h-screen bg-white flex items-center justify-center">
+          <div className="animate-pulse text-2xl font-medium text-slate-900">Loading...</div>
         </div>
       }
     >

@@ -22,10 +22,10 @@ export async function GET(
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: "#EACCD4",
-            color: "#007A5E",
+            background: "#FFF5FE",
+            color: "#7B2CBF",
             fontSize: 48,
-            fontWeight: "bold",
+            fontWeight: 500,
           }}
         >
           Card not found
@@ -50,22 +50,20 @@ export async function GET(
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "60px",
-          background: "linear-gradient(135deg, #EACCD4 0%, #d4a5b0 100%)",
-          color: "#007A5E",
+          background: "linear-gradient(135deg, #FFF5FE 0%, #F3EAFA 100%)",
+          color: "#7B2CBF",
         }}
       >
         {/* Top: Topic badge */}
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <div
             style={{
-              background: "#007A5E",
-              color: "#EACCD4",
+              background: "#7B2CBF",
+              color: "white",
               padding: "8px 20px",
               borderRadius: "20px",
               fontSize: 18,
-              fontWeight: "bold",
-              textTransform: "uppercase",
-              letterSpacing: "1px",
+              fontWeight: 500,
             }}
           >
             {card.topic[0]}
@@ -93,7 +91,7 @@ export async function GET(
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-            <div style={{ fontSize: 28, fontWeight: "bold" }}>
+            <div style={{ fontSize: 28, fontWeight: 500 }}>
               {card.author}
             </div>
             <div style={{ fontSize: 20, opacity: 0.7, fontStyle: "italic" }}>
@@ -111,9 +109,8 @@ export async function GET(
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <span style={{ fontSize: 28 }}>🌱</span>
-            <span style={{ fontSize: 24, fontWeight: "bold" }}>
-              Scrollbliss
+            <span style={{ fontSize: 24, fontWeight: 500 }}>
+              BloomScroll
             </span>
           </div>
           {ref && (

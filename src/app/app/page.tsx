@@ -313,21 +313,11 @@ export default function AppPage() {
     }
   }, [dailyProgress.read, dailyProgress.goal, dailyProgress.completed, isAuthenticated, loading]);
 
+  // dailyLimitPrompted is set when views run out — no notification, just show paywall UI
   useEffect(() => {
     if (loading || !isAuthenticated || isSubscribed || optimisticViewsRemaining > 0 || dailyLimitPrompted) return;
-    notify({
-      title: "Daily free reading complete",
-      message: "Upgrade to Pro for unlimited reading, audio mode, and review.",
-      tone: "info",
-    });
     setDailyLimitPrompted(true);
-  }, [dailyLimitPrompted, isAuthenticated, isSubscribed, loading, notify, optimisticViewsRemaining]);
-
-  useEffect(() => {
-    if (optimisticViewsRemaining > 0) {
-      setDailyLimitPrompted(false);
-    }
-  }, [optimisticViewsRemaining]);
+  }, [dailyLimitPrompted, isAuthenticated, isSubscribed, loading, optimisticViewsRemaining]);
 
   useEffect(() => {
     if (isSubscribed || !selectedLearningTrack) return;
@@ -777,16 +767,16 @@ export default function AppPage() {
   if (!isLoaded) {
     if (!loading && !isAuthenticated) {
       return (
-        <div className="min-h-screen bg-gradient-to-b from-[#102219] to-[#0a1610] flex items-center justify-center px-6 text-center">
+        <div className="min-h-screen bg-white flex items-center justify-center px-6 text-center">
           <div className="max-w-md">
             <div className="text-5xl mb-4">🌱</div>
-            <h1 className="text-3xl font-bold text-primary mb-3">Sign in to start reading</h1>
-            <p className="text-white/60 mb-6">
+            <h1 className="text-3xl font-medium font-instrument-serif text-brand mb-3">Sign in to start reading</h1>
+            <p className="text-slate-500 mb-6">
               BloomScroll now requires an account before you can open the reader, save cards, and grow your garden.
             </p>
             <Link
               href="/auth?redirect=/app"
-              className="inline-flex items-center justify-center rounded-full h-12 px-6 bg-primary text-[#102219] text-sm font-bold"
+              className="inline-flex items-center justify-center rounded-full h-12 px-6 bg-brand text-white text-sm font-medium"
             >
               Continue to sign in
             </Link>
@@ -796,17 +786,17 @@ export default function AppPage() {
     }
 
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#102219] to-[#0a1610] flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <div className="text-5xl mb-4">🌱</div>
-          <div className="text-2xl font-bold text-primary">Loading...</div>
+          <div className="text-2xl font-medium font-instrument-serif text-brand">Loading...</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#102219] to-[#0a1610] text-white overflow-hidden">
+    <div className="min-h-screen bg-white text-slate-900 overflow-hidden">
       <AppHeader
         user={user}
         profile={profile}
@@ -861,14 +851,14 @@ export default function AppPage() {
         />
       ) : freeReadLimitReached ? (
         <div className="flex-1 px-3 sm:px-4 pt-20 sm:pt-24 pb-6 flex items-start justify-center">
-          <div className="w-full max-w-2xl rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0.04))] p-6 sm:p-8 text-center shadow-2xl shadow-black/20">
-            <span className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
+          <div className="w-full max-w-2xl rounded-[30px] border border-slate-200 bg-brand-light p-6 sm:p-8 text-center shadow-2xl shadow-black/5">
+            <span className="inline-flex rounded-full border border-brand/20 bg-brand/10 px-3 py-1 text-[11px] font-medium text-brand">
               Free limit reached
             </span>
-            <h1 className="mt-4 font-impact text-3xl sm:text-4xl uppercase text-primary">
+            <h1 className="mt-4 font-instrument-serif text-3xl sm:text-4xl text-brand">
               Your daily reads are done
             </h1>
-            <p className="mt-3 text-sm sm:text-base text-white/65 max-w-md mx-auto">
+            <p className="mt-3 text-sm sm:text-base text-slate-500 max-w-md mx-auto">
               Free accounts get {FREE_DAILY_READ_LIMIT} cards per day. Upgrade to Pro to keep reading without a cap and unlock review, audio, and deeper book browsing.
             </p>
             <div className="mt-6 grid gap-3 sm:grid-cols-3 text-left">
@@ -877,7 +867,7 @@ export default function AppPage() {
                 "Audio mode and book browsing",
                 "Review queue that helps memory stick",
               ].map((point) => (
-                <div key={point} className="rounded-2xl border border-white/8 bg-white/5 px-4 py-4 text-sm text-white/75">
+                <div key={point} className="rounded-2xl border border-slate-200 bg-white px-4 py-4 text-sm text-slate-600">
                   {point}
                 </div>
               ))}
@@ -885,13 +875,13 @@ export default function AppPage() {
             <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
               <button
                 onClick={() => handleUpgrade("feed_controls")}
-                className="inline-flex items-center justify-center rounded-full h-12 px-6 bg-primary text-[#102219] text-sm font-bold uppercase tracking-[0.18em]"
+                className="inline-flex items-center justify-center rounded-full h-12 px-6 bg-brand text-white text-sm font-medium"
               >
                 Upgrade to Pro
               </button>
               <button
                 onClick={() => setShowSaved(true)}
-                className="inline-flex items-center justify-center rounded-full h-12 px-6 border border-white/10 bg-white/5 text-sm font-bold uppercase tracking-[0.18em] text-white/80"
+                className="inline-flex items-center justify-center rounded-full h-12 px-6 border border-slate-200 bg-slate-100 text-sm font-medium text-slate-700"
               >
                 Open library
               </button>
@@ -1115,7 +1105,7 @@ export default function AppPage() {
       <AnimatePresence>
         {newAchievement && (
           <div
-            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-[#007A5E] text-[#EACCD4] px-6 py-3 rounded-2xl shadow-xl flex items-center gap-3 cursor-pointer"
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-brand text-white px-6 py-3 rounded-2xl shadow-xl flex items-center gap-3 cursor-pointer"
             onClick={() => {
               setNewAchievement(null);
               setShowAchievements(true);
@@ -1123,7 +1113,7 @@ export default function AppPage() {
           >
             <span className="text-2xl">{newAchievement.icon}</span>
             <div>
-              <div className="font-bold">{newAchievement.name}</div>
+              <div className="font-medium">{newAchievement.name}</div>
               <div className="text-xs opacity-80">+{newAchievement.xpReward} XP</div>
             </div>
           </div>

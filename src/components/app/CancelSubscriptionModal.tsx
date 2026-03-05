@@ -74,27 +74,24 @@ export default function CancelSubscriptionModal({
         exit={{ opacity: 0, y: 10, scale: 0.98 }}
         transition={{ duration: 0.2 }}
         onClick={(event) => event.stopPropagation()}
-        className="mx-auto mt-8 max-h-[calc(100vh-4rem)] w-full max-w-2xl overflow-y-auto rounded-[28px] border border-botsage/20 bg-cream shadow-2xl"
+        className="mx-auto mt-8 max-h-[calc(100vh-4rem)] w-full max-w-2xl overflow-y-auto rounded-[28px] border border-slate-200 bg-white shadow-2xl"
       >
-        <div className="border-b border-botsage/15 bg-white/70 px-6 py-5 sm:px-8">
+        <div className="border-b border-slate-200 bg-slate-50 px-6 py-5 sm:px-8">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.22em] text-botgreen">
+              <p className="mb-2 text-[11px] font-medium text-brand">
                 Manage Membership
               </p>
-              <h2
-                className="text-3xl font-bold text-darkteal"
-                style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
-              >
+              <h2 className="text-3xl font-instrument-serif font-medium text-slate-900">
                 Before you cancel Pro
               </h2>
-              <p className="mt-2 max-w-xl text-sm text-botsagedark">
+              <p className="mt-2 max-w-xl text-sm text-slate-500">
                 If something is off, tell us first. You will still be able to cancel in Dodo after this step.
               </p>
             </div>
             <button
               onClick={onClose}
-              className="rounded-full border border-botsage/20 px-3 py-1.5 text-sm text-botsagedark transition-colors hover:bg-botsage/10"
+              className="rounded-full border border-slate-200 px-3 py-1.5 text-sm text-slate-500 transition-colors hover:bg-slate-100"
             >
               Close
             </button>
@@ -103,8 +100,8 @@ export default function CancelSubscriptionModal({
 
         <div className="grid gap-6 px-6 py-6 sm:px-8 lg:grid-cols-[1.2fr_0.8fr]">
           <div>
-            <div className="mb-6 rounded-3xl border border-botsage/15 bg-white/70 p-5">
-              <h3 className="text-lg font-bold text-darkteal">What is the main reason?</h3>
+            <div className="mb-6 rounded-3xl border border-slate-200 bg-slate-50 p-5">
+              <h3 className="text-lg font-instrument-serif font-medium text-slate-900">What is the main reason?</h3>
               <div className="mt-4 grid gap-2">
                 {REASONS.map((item) => (
                   <button
@@ -112,19 +109,19 @@ export default function CancelSubscriptionModal({
                     onClick={() => setReason(item.id)}
                     className={`rounded-2xl border px-4 py-3 text-left transition-all ${
                       reason === item.id
-                        ? "border-botgreen bg-botgreen/10 text-darkteal"
-                        : "border-botsage/15 bg-cream text-botsagedark hover:border-botsage/35 hover:bg-white"
+                        ? "border-brand bg-brand/10 text-slate-900"
+                        : "border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:bg-slate-50"
                     }`}
                   >
-                    <span className="block text-sm font-semibold">{item.label}</span>
+                    <span className="block text-sm font-medium">{item.label}</span>
                   </button>
                 ))}
               </div>
             </div>
 
-            <div className="rounded-3xl border border-botsage/15 bg-white/70 p-5">
-              <h3 className="text-lg font-bold text-darkteal">Anything you want us to know?</h3>
-              <p className="mt-1 text-sm text-botsagedark">
+            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+              <h3 className="text-lg font-instrument-serif font-medium text-slate-900">Anything you want us to know?</h3>
+              <p className="mt-1 text-sm text-slate-500">
                 Optional, but useful if you want us to improve something specific.
               </p>
               <textarea
@@ -132,51 +129,51 @@ export default function CancelSubscriptionModal({
                 onChange={(event) => setDetails(event.target.value.slice(0, 500))}
                 rows={5}
                 placeholder="Tell us what pushed you to cancel..."
-                className="mt-4 w-full rounded-2xl border border-botsage/20 bg-cream px-4 py-3 text-sm text-darkteal outline-none transition-colors placeholder:text-botsagedark/45 focus:border-botgreen"
+                className="mt-4 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-brand"
               />
-              <div className="mt-2 text-right text-xs text-botsagedark/60">{details.length}/500</div>
+              <div className="mt-2 text-right text-xs text-slate-400">{details.length}/500</div>
             </div>
           </div>
 
           <div className="space-y-4">
-            <div className="rounded-3xl bg-botgreen p-6 text-cream shadow-lg">
-              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-botsagelight">
+            <div className="rounded-3xl bg-brand p-6 text-white shadow-lg">
+              <p className="text-[11px] font-medium text-white/70">
                 Keep In Mind
               </p>
-              <p className="mt-3 text-lg font-semibold">{selectedReason.insight}</p>
-              <div className="mt-5 space-y-2 text-sm text-botsagelight">
+              <p className="mt-3 text-lg font-medium">{selectedReason.insight}</p>
+              <div className="mt-5 space-y-2 text-sm text-white/70">
                 <p>Unlimited reading stays active until your billing period ends.</p>
                 <p>Your garden, account, and reading history stay attached to your profile.</p>
                 <p>You can still cancel after this screen. This step just helps us understand why.</p>
               </div>
             </div>
 
-            <div className="rounded-3xl border border-botsage/15 bg-white/70 p-5">
-              <h3 className="text-lg font-bold text-darkteal">Want to keep Pro?</h3>
-              <p className="mt-2 text-sm text-botsagedark">
+            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+              <h3 className="text-lg font-instrument-serif font-medium text-slate-900">Want to keep Pro?</h3>
+              <p className="mt-2 text-sm text-slate-500">
                 Keep your unlimited feed, streak shield, and full garden features without interruption.
               </p>
               <div className="mt-4 space-y-3">
                 <Link
                   href="/app"
                   onClick={onClose}
-                  className="block rounded-full bg-botgreen px-5 py-3 text-center text-sm font-bold text-cream transition-transform hover:scale-[1.01]"
+                  className="block rounded-full bg-brand px-5 py-3 text-center text-sm font-medium text-white transition-transform hover:scale-[1.01]"
                 >
                   Keep my membership
                 </Link>
                 <button
                   onClick={() => onConfirm({ reason, details: details.trim() })}
                   disabled={loading}
-                  className={`w-full rounded-full border px-5 py-3 text-sm font-bold transition-colors ${
+                  className={`w-full rounded-full border px-5 py-3 text-sm font-medium transition-colors ${
                     loading
-                      ? "cursor-not-allowed border-botsage/20 text-botsagedark/40"
-                      : "border-softclay/35 text-softclay hover:bg-softclay/5"
+                      ? "cursor-not-allowed border-slate-200 text-slate-300"
+                      : "border-red-300 text-red-500 hover:bg-red-50"
                   }`}
                 >
                   {loading ? "Opening cancellation..." : "Continue to cancellation"}
                 </button>
               </div>
-              <p className="mt-3 text-xs text-botsagedark/70">
+              <p className="mt-3 text-xs text-slate-400">
                 Cancellation is completed in Dodo&apos;s secure customer portal.
               </p>
             </div>

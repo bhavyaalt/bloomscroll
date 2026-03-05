@@ -56,10 +56,10 @@ export default function FollowButton({ currentUserId, targetUserId, onFollowChan
   if (!currentUserId || currentUserId === targetUserId) {
     return (
       <div className="flex gap-4 text-sm">
-        <span className="text-[#007A5E]">
+        <span className="text-brand">
           <strong>{counts.followers}</strong> followers
         </span>
-        <span className="text-[#007A5E]">
+        <span className="text-brand">
           <strong>{counts.following}</strong> following
         </span>
       </div>
@@ -72,10 +72,10 @@ export default function FollowButton({ currentUserId, targetUserId, onFollowChan
         whileTap={{ scale: 0.95 }}
         onClick={handleClick}
         disabled={loading}
-        className={`px-6 py-2 rounded-full font-bold text-sm transition-all ${
+        className={`px-6 py-2 rounded-full font-medium text-sm transition-all ${
           following
-            ? "bg-white/50 text-[#007A5E] border-2 border-[#007A5E]"
-            : "bg-[#007A5E] text-[#EACCD4]"
+            ? "bg-white/50 text-brand border-2 border-brand"
+            : "bg-brand text-white"
         }`}
       >
         {loading ? (
@@ -93,7 +93,7 @@ export default function FollowButton({ currentUserId, targetUserId, onFollowChan
       </motion.button>
       
       <div className="flex gap-3 text-sm">
-        <span className="text-[#007A5E]">
+        <span className="text-brand">
           <strong>{counts.followers}</strong> followers
         </span>
       </div>

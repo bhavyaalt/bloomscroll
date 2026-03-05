@@ -173,26 +173,26 @@ export default function CardFeed({
             exit={{ opacity: 0, height: 0 }}
             className="max-w-2xl mx-auto w-full mb-1.5 sm:mb-2 overflow-hidden flex-shrink-0"
           >
-            <div className="bg-primary/10 border border-primary/20 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 flex items-center gap-2 sm:gap-3">
+            <div className="bg-brand-light border border-brand/20 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 flex items-center gap-2 sm:gap-3">
               <div className="flex-1 min-w-0">
-                <span className="text-[10px] sm:text-xs font-bold text-primary uppercase tracking-wider">
+                <span className="text-[10px] sm:text-xs font-medium text-brand">
                   Card of the Day
                 </span>
-                <p className="text-xs sm:text-sm text-white/70 truncate mt-0.5">
+                <p className="text-xs sm:text-sm text-slate-900 truncate mt-0.5">
                   &ldquo;{dailyCard.quote.slice(0, 50)}{dailyCard.quote.length > 50 ? "..." : ""}&rdquo;
                 </p>
-                <p className="text-[10px] sm:text-xs text-white/40 mt-0.5">— {dailyCard.author}</p>
+                <p className="text-[10px] sm:text-xs text-slate-400 mt-0.5">— {dailyCard.author}</p>
               </div>
               <div className="flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
                 <button
                   onClick={onShareDailyCard}
-                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 flex items-center justify-center text-white/60 text-sm hover:bg-white/20 transition-all"
+                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 text-sm hover:bg-slate-200 transition-all"
                 >
                   <ShareIcon />
                 </button>
                 <button
                   onClick={onDismissDailyCard}
-                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/5 flex items-center justify-center text-white/40 text-sm hover:bg-white/10 transition-all"
+                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 text-sm hover:bg-slate-100 transition-all"
                 >
                   ✕
                 </button>
@@ -220,13 +220,13 @@ export default function CardFeed({
               className="absolute inset-0 flex flex-col cursor-grab active:cursor-grabbing"
             >
               {/* The Card */}
-              <div className="flex-1 bg-gradient-to-b from-[#EACCD4] to-[#e0bfc8] rounded-2xl overflow-hidden flex flex-col relative shadow-2xl shadow-black/30 min-h-0">
+              <div className="flex-1 bg-[#FFF5FE] rounded-2xl overflow-hidden flex flex-col relative shadow-2xl shadow-black/30 min-h-0">
                 <div className="relative flex-1 p-4 sm:p-6 md:p-8 flex flex-col overflow-y-auto min-h-0">
                   {/* Saved badge */}
                   <div className="flex items-center justify-between gap-2 mb-1 sm:mb-2 min-h-[28px] sm:min-h-[32px] flex-shrink-0">
                     <div className="min-w-0">
                       {activeModeLabel && (
-                        <span className="inline-flex max-w-full items-center gap-1 rounded-full border border-[#007A5E]/15 bg-white/45 px-2.5 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-[0.14em] text-[#007A5E]">
+                        <span className="inline-flex max-w-full items-center gap-1 rounded-full border border-[#7B2CBF]/15 bg-white/45 px-2.5 py-1 text-[10px] sm:text-xs font-medium text-[#7B2CBF]">
                           <span className="truncate">{activeModeLabel}</span>
                         </span>
                       )}
@@ -237,7 +237,7 @@ export default function CardFeed({
                           initial={{ scale: 0, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
                           exit={{ scale: 0, opacity: 0 }}
-                          className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-[#007A5E]/20 bg-white/50 text-[#007A5E] text-[10px] sm:text-xs font-bold"
+                          className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-[#7B2CBF]/20 bg-white/50 text-[#7B2CBF] text-[10px] sm:text-xs font-medium"
                         >
                           <StarIcon filled /> SAVED
                         </motion.span>
@@ -247,31 +247,31 @@ export default function CardFeed({
 
                   {/* Quotation marks */}
                   <div className="text-center mb-1 flex-shrink-0">
-                    <span className="text-3xl sm:text-5xl text-[#007A5E]/25 leading-none select-none" style={{ fontFamily: "Georgia, serif" }}>&ldquo;&rdquo;</span>
+                    <span className="text-3xl sm:text-5xl text-[#7B2CBF]/25 leading-none select-none" style={{ fontFamily: "Georgia, serif" }}>&ldquo;&rdquo;</span>
                   </div>
 
                   {/* Quote */}
                   <div className="flex-1 flex items-center justify-center px-1 sm:px-2 min-h-0">
-                    <blockquote className="text-lg sm:text-xl md:text-2xl lg:text-3xl leading-relaxed text-center text-[#007A5E]" style={{ fontFamily: "Georgia, serif" }}>
+                    <blockquote className="text-lg sm:text-xl md:text-2xl lg:text-3xl leading-relaxed text-center text-[#7B2CBF]" style={{ fontFamily: "Georgia, serif" }}>
                       &ldquo;{currentCard.quote}&rdquo;
                     </blockquote>
                   </div>
 
                   {/* Author + Book */}
                   <div className="text-center mt-3 sm:mt-6 mb-1 sm:mb-2 flex-shrink-0">
-                    <p className="font-bold text-xs sm:text-sm md:text-base uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[#007A5E]">
+                    <p className="font-medium text-xs sm:text-sm md:text-base text-[#7B2CBF]">
                       {currentCard.author}
                     </p>
-                    <p className="text-xs sm:text-sm text-[#007A5E]/60 italic mt-0.5 sm:mt-1" style={{ fontFamily: "Georgia, serif" }}>
+                    <p className="text-xs sm:text-sm text-[#7B2CBF]/60 italic mt-0.5 sm:mt-1" style={{ fontFamily: "Georgia, serif" }}>
                       {currentCard.book}
                     </p>
                   </div>
 
                   {/* Divider */}
-                  <div className="w-16 sm:w-24 h-px bg-[#007A5E]/15 mx-auto my-2 sm:my-4 flex-shrink-0" />
+                  <div className="w-16 sm:w-24 h-px bg-[#7B2CBF]/15 mx-auto my-2 sm:my-4 flex-shrink-0" />
 
                   {/* Insight */}
-                  <p className="text-xs sm:text-sm text-[#007A5E]/60 leading-relaxed text-center max-w-md mx-auto line-clamp-2 sm:line-clamp-none flex-shrink-0">
+                  <p className="text-xs sm:text-sm text-[#7B2CBF]/60 leading-relaxed text-center max-w-md mx-auto line-clamp-2 sm:line-clamp-none flex-shrink-0">
                     Insight: {currentCard.insight}
                   </p>
 
@@ -281,7 +281,7 @@ export default function CardFeed({
                     <div className="flex gap-1 sm:gap-1.5">
                       <button
                         onClick={onExpand}
-                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E] transition-all flex items-center justify-center"
+                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#7B2CBF]/8 text-[#7B2CBF]/70 hover:bg-[#7B2CBF]/15 hover:text-[#7B2CBF] transition-all flex items-center justify-center"
                         title="Deep dive"
                       >
                         <InfoIcon />
@@ -290,8 +290,8 @@ export default function CardFeed({
                         onClick={onReadingMode}
                         className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all ${
                           hasChapter
-                            ? "bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E]"
-                            : "bg-[#007A5E]/5 text-[#007A5E]/30"
+                            ? "bg-[#7B2CBF]/8 text-[#7B2CBF]/70 hover:bg-[#7B2CBF]/15 hover:text-[#7B2CBF]"
+                            : "bg-[#7B2CBF]/5 text-[#7B2CBF]/30"
                         }`}
                         title={hasChapter ? "Read chapter" : "Chapter coming soon"}
                       >
@@ -301,10 +301,10 @@ export default function CardFeed({
                         onClick={canUseAssistMode ? onToggleAudio : onShowSubscribe}
                         className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all relative ${
                           audioMode
-                            ? "bg-[#007A5E] text-white"
+                            ? "bg-[#7B2CBF] text-white"
                             : canUseAssistMode
-                              ? "bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E]"
-                              : "bg-[#007A5E]/5 text-[#007A5E]/40"
+                              ? "bg-[#7B2CBF]/8 text-[#7B2CBF]/70 hover:bg-[#7B2CBF]/15 hover:text-[#7B2CBF]"
+                              : "bg-[#7B2CBF]/5 text-[#7B2CBF]/40"
                         }`}
                         title={
                           canUseAssistMode
@@ -314,10 +314,10 @@ export default function CardFeed({
                       >
                         <VolumeIcon active={audioMode || isSpeaking} />
                         {!isSubscribed && !canUseAssistMode && (
-                          <span className="absolute -top-1 -right-1 text-[8px] bg-[#007A5E] text-white px-1 rounded">PRO</span>
+                          <span className="absolute -top-1 -right-1 text-[8px] bg-[#7B2CBF] text-white px-1 rounded">PRO</span>
                         )}
                         {!isSubscribed && canUseAssistMode && (
-                          <span className="absolute -top-1 -right-1 text-[8px] bg-[#007A5E] text-white px-1 rounded">
+                          <span className="absolute -top-1 -right-1 text-[8px] bg-[#7B2CBF] text-white px-1 rounded">
                             {assistModePreviewRemaining}
                           </span>
                         )}
@@ -326,10 +326,10 @@ export default function CardFeed({
                         onClick={canUseAssistMode ? onToggleAutoScroll : onShowSubscribe}
                         className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all relative ${
                           autoScroll
-                            ? "bg-[#007A5E] text-white"
+                            ? "bg-[#7B2CBF] text-white"
                             : canUseAssistMode
-                              ? "bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E]"
-                              : "bg-[#007A5E]/5 text-[#007A5E]/40"
+                              ? "bg-[#7B2CBF]/8 text-[#7B2CBF]/70 hover:bg-[#7B2CBF]/15 hover:text-[#7B2CBF]"
+                              : "bg-[#7B2CBF]/5 text-[#7B2CBF]/40"
                         }`}
                         title={
                           canUseAssistMode
@@ -339,7 +339,7 @@ export default function CardFeed({
                       >
                         <PlayIcon active={autoScroll} />
                         {!isSubscribed && !canUseAssistMode && (
-                          <span className="absolute -top-1 -right-1 text-[8px] bg-[#007A5E] text-white px-1 rounded">PRO</span>
+                          <span className="absolute -top-1 -right-1 text-[8px] bg-[#7B2CBF] text-white px-1 rounded">PRO</span>
                         )}
                       </button>
                     </div>
@@ -351,8 +351,8 @@ export default function CardFeed({
                         whileTap={{ scale: 0.9 }}
                         className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all ${
                           savedCards.has(currentCard.id)
-                            ? "bg-[#007A5E] text-white"
-                            : "bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E]"
+                            ? "bg-[#7B2CBF] text-white"
+                            : "bg-[#7B2CBF]/8 text-[#7B2CBF]/70 hover:bg-[#7B2CBF]/15 hover:text-[#7B2CBF]"
                         }`}
                         title={savedCards.has(currentCard.id) ? "Unsave" : "Save"}
                       >
@@ -367,8 +367,8 @@ export default function CardFeed({
                         whileTap={{ scale: 0.9 }}
                         className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all ${
                           pinnedCards.has(currentCard.id)
-                            ? "bg-[#007A5E] text-white"
-                            : "bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E]"
+                            ? "bg-[#7B2CBF] text-white"
+                            : "bg-[#7B2CBF]/8 text-[#7B2CBF]/70 hover:bg-[#7B2CBF]/15 hover:text-[#7B2CBF]"
                         }`}
                         title={pinnedCards.has(currentCard.id) ? "Unpin from garden" : "Pin to garden"}
                       >
@@ -377,14 +377,14 @@ export default function CardFeed({
                       <button
                         onClick={onShare}
                         disabled={isSharing}
-                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E] transition-all flex items-center justify-center disabled:opacity-50"
+                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#7B2CBF]/8 text-[#7B2CBF]/70 hover:bg-[#7B2CBF]/15 hover:text-[#7B2CBF] transition-all flex items-center justify-center disabled:opacity-50"
                         title="Share"
                       >
                         <ShareIcon />
                       </button>
                       <button
                         onClick={onCopy}
-                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#007A5E]/8 text-[#007A5E]/70 hover:bg-[#007A5E]/15 hover:text-[#007A5E] transition-all flex items-center justify-center relative"
+                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#7B2CBF]/8 text-[#7B2CBF]/70 hover:bg-[#7B2CBF]/15 hover:text-[#7B2CBF] transition-all flex items-center justify-center relative"
                         title="Copy quote"
                       >
                         <CopyIcon />
@@ -394,7 +394,7 @@ export default function CardFeed({
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
                               exit={{ opacity: 0 }}
-                              className="absolute -top-8 left-1/2 -translate-x-1/2 bg-[#102219] text-white text-xs px-2 py-1 rounded whitespace-nowrap"
+                              className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap"
                             >
                               Copied!
                             </motion.span>
@@ -412,12 +412,12 @@ export default function CardFeed({
                       initial={{ opacity: 0, scale: 0.5 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.5 }}
-                      className="absolute inset-0 flex items-center justify-center bg-[#007A5E]/10 pointer-events-none"
+                      className="absolute inset-0 flex items-center justify-center bg-[#7B2CBF]/10 pointer-events-none"
                     >
                       <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: [0, 1.3, 1] }}
-                        className="text-[#007A5E]"
+                        className="text-[#7B2CBF]"
                       >
                         <svg className="size-16" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
@@ -431,17 +431,17 @@ export default function CardFeed({
               {/* Daily Progress Bar */}
               <div className="mt-2 sm:mt-4 px-1 flex-shrink-0">
                 <div className="flex items-center justify-between text-[10px] sm:text-xs mb-1 sm:mb-2">
-                  <span className="text-primary font-medium flex items-center gap-1">
+                  <span className="text-brand font-medium flex items-center gap-1">
                     Daily Progress
                     {dailyProgress.completed && <span title="Goal reached!">✓</span>}
                   </span>
-                  <span className="text-primary/70">
+                  <span className="text-brand/70">
                     {progressLabel}
                   </span>
                 </div>
-                <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden">
+                <div className="h-1 w-full bg-slate-200 rounded-full overflow-hidden">
                   <motion.div
-                    className="h-full bg-primary rounded-full"
+                    className="h-full bg-brand rounded-full"
                     initial={{ width: 0 }}
                     animate={{ width: `${progressPercent}%` }}
                     transition={{ duration: 0.5, ease: "easeOut" }}
@@ -450,36 +450,36 @@ export default function CardFeed({
               </div>
 
               {!isSubscribed && (
-                <div className="mt-3 rounded-2xl border border-[#007A5E]/12 bg-[#f4e7eb] px-3 py-2.5 text-[#007A5E] flex-shrink-0">
+                <div className="mt-3 rounded-2xl border border-[#7B2CBF]/12 bg-[#f4e7eb] px-3 py-2.5 text-[#7B2CBF] flex-shrink-0">
                   <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
-                    <span className="shrink-0 rounded-full bg-[#007A5E] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white">
+                    <span className="shrink-0 rounded-full bg-[#7B2CBF] px-2.5 py-1 text-[10px] font-medium text-white">
                       Pro
                     </span>
                     <div className="shrink-0 rounded-full bg-white/70 px-3 py-1.5 text-[11px]">
-                      <span className="font-semibold">Library</span> {savedCount}/{saveLimit}
-                      <span className="ml-2 inline-block h-1.5 w-10 overflow-hidden rounded-full bg-[#007A5E]/10 align-middle">
-                        <span className="block h-full rounded-full bg-[#007A5E]" style={{ width: `${savedProgressPercent}%` }} />
+                      <span className="font-medium">Library</span> {savedCount}/{saveLimit}
+                      <span className="ml-2 inline-block h-1.5 w-10 overflow-hidden rounded-full bg-[#7B2CBF]/10 align-middle">
+                        <span className="block h-full rounded-full bg-[#7B2CBF]" style={{ width: `${savedProgressPercent}%` }} />
                       </span>
                     </div>
                     <div className="shrink-0 rounded-full bg-white/70 px-3 py-1.5 text-[11px]">
-                      <span className="font-semibold">Garden</span> {pinnedCount}/{pinLimit}
-                      <span className="ml-2 inline-block h-1.5 w-10 overflow-hidden rounded-full bg-[#007A5E]/10 align-middle">
-                        <span className="block h-full rounded-full bg-[#007A5E]" style={{ width: `${pinnedProgressPercent}%` }} />
+                      <span className="font-medium">Garden</span> {pinnedCount}/{pinLimit}
+                      <span className="ml-2 inline-block h-1.5 w-10 overflow-hidden rounded-full bg-[#7B2CBF]/10 align-middle">
+                        <span className="block h-full rounded-full bg-[#7B2CBF]" style={{ width: `${pinnedProgressPercent}%` }} />
                       </span>
                     </div>
                     <div className="shrink-0 rounded-full bg-white/70 px-3 py-1.5 text-[11px]">
-                      <span className="font-semibold">Review</span>{" "}
-                      <span className="text-[#007A5E]/65">
+                      <span className="font-medium">Review</span>{" "}
+                      <span className="text-[#7B2CBF]/65">
                         {reviewDueCount > 0 ? `${reviewDueCount} ready` : "unlock memory mode"}
                       </span>
                     </div>
                     <div className="shrink-0 rounded-full bg-white/70 px-3 py-1.5 text-[11px]">
-                      <span className="font-semibold">Learn</span>{" "}
-                      <span className="text-[#007A5E]/65">finance, crypto, AI</span>
+                      <span className="font-medium">Learn</span>{" "}
+                      <span className="text-[#7B2CBF]/65">finance, crypto, AI</span>
                     </div>
                     <button
                       onClick={onShowSubscribe}
-                      className="shrink-0 rounded-full border border-[#007A5E]/18 bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-[#007A5E]"
+                      className="shrink-0 rounded-full border border-[#7B2CBF]/18 bg-white px-3 py-1.5 text-[11px] font-medium text-[#7B2CBF]"
                     >
                       Upgrade
                     </button>
@@ -488,9 +488,9 @@ export default function CardFeed({
               )}
 
               {/* Swipe hint */}
-              <div className="mt-2 sm:mt-4 flex flex-col items-center text-white/30 flex-shrink-0">
+              <div className="mt-2 sm:mt-4 flex flex-col items-center text-slate-400 flex-shrink-0">
                 <ChevronUpIcon />
-                <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.2em] font-bold mt-0.5">Swipe up for next</span>
+                <span className="text-[9px] sm:text-[10px] font-medium mt-0.5">Swipe up for next</span>
               </div>
             </motion.div>
           )}
@@ -498,10 +498,10 @@ export default function CardFeed({
 
         {/* Empty State */}
         {feedLength === 0 && (
-          <div className="h-full flex items-center justify-center text-white/40 text-center">
+          <div className="h-full flex items-center justify-center text-slate-400 text-center">
             <div>
               <p className="text-lg mb-2">No cards in this selection</p>
-              <button onClick={onClearFilters} className="text-primary underline">
+              <button onClick={onClearFilters} className="text-brand underline">
                 View all cards
               </button>
             </div>
@@ -510,7 +510,7 @@ export default function CardFeed({
       </div>
 
       {/* Footer */}
-      <div className="text-center py-2 sm:py-4 text-white/20 text-[8px] sm:text-[10px] uppercase tracking-wider sm:tracking-widest flex-shrink-0">
+      <div className="text-center py-2 sm:py-4 text-slate-400 text-[8px] sm:text-[10px]  flex-shrink-0">
         &copy; 2025 BloomScroll &middot; Cultivating Mindfulness One Quote at a Time
       </div>
     </div>

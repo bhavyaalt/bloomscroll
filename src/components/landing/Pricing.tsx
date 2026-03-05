@@ -14,8 +14,9 @@ export default function Pricing() {
   const { isAuthenticated } = useAuth();
   const [region, setRegion] = useState<Region>("OTHER");
   const [loaded, setLoaded] = useState(false);
+  const [cycle, setCycle] = useState<"monthly" | "yearly">("yearly");
   const freeHref = isAuthenticated ? "/app" : "/auth?redirect=/app";
-  const freeLabel = isAuthenticated ? "Start Reading" : "Sign In to Start";
+  const freeLabel = isAuthenticated ? "Get Started" : "Get Started";
 
   useEffect(() => {
     detectRegionClient().then((r) => {
@@ -25,16 +26,20 @@ export default function Pricing() {
   }, []);
 
   const pricing = PRICING[region];
-  const monthly = pricing.monthly;
+  const plan = cycle === "monthly" ? pricing.monthly : pricing.yearly;
+  const cycleLabel = cycle === "monthly" ? "/mo" : "/year";
 
   return (
-    <section id="pricing" className="px-6 md:px-20 lg:px-40 py-24">
-      <div className="text-center flex flex-col gap-3 mb-12">
-        <h2 className="text-3xl md:text-5xl font-black text-slate-900">
-          Choose Your Path to Growth
+    <section id="pricing" className="px-6 md:px-20 lg:px-40 py-16 md:py-24 bg-white">
+      <div className="text-center flex flex-col gap-3 mb-10">
+        <h2 className="font-instrument-serif text-2xl md:text-5xl font-medium text-slate-900">
+          Simple{" "}
+          <span className="font-instrument-serif italic text-brand font-normal">
+            Pricing
+          </span>
         </h2>
         <p className="text-slate-500">
-          Flexible plans to support your wisdom journey.
+          Choose the plan that&apos;s right for you.
         </p>
         {loaded && region !== "OTHER" && (
           <p className="text-xs text-slate-400">
@@ -42,45 +47,79 @@ export default function Pricing() {
           </p>
         )}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto w-full gap-8">
+
+      {/* Cycle toggle */}
+      <div className="flex flex-col items-center gap-3 mb-10">
+        <div className="relative">
+          <span className="text-xs font-medium text-white bg-green-600 rounded-full px-3 py-1 block">
+            Get 2 months free
+          </span>
+          <div className="absolute right-6 -bottom-1.5 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-green-600" />
+        </div>
+        <div className="flex items-center bg-slate-100 rounded-full p-1">
+          <button
+            onClick={() => setCycle("monthly")}
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
+              cycle === "monthly"
+                ? "bg-white text-slate-900 shadow-sm"
+                : "text-slate-500"
+            }`}
+          >
+            Monthly
+          </button>
+          <button
+            onClick={() => setCycle("yearly")}
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
+              cycle === "yearly"
+                ? "bg-white text-slate-900 shadow-sm"
+                : "text-slate-500"
+            }`}
+          >
+            Annual
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 max-w-3xl mx-auto w-full gap-6">
         {/* Free */}
-        <div className="flex flex-col p-8 rounded-3xl border-2 border-sage bg-white relative overflow-hidden">
+        <div className="flex flex-col p-8 rounded-2xl border border-slate-200 bg-white">
           <div className="flex flex-col gap-6 h-full">
-            <div className="flex flex-col gap-2">
-              <h3 className="text-xl font-bold text-slate-900">
-                Seedling Plan
-              </h3>
-              <p className="text-slate-500 text-sm">
-                Everything you need to start blooming.
-              </p>
+            <div className="flex flex-col gap-1">
+              <h3 className="font-instrument-serif text-lg font-medium text-slate-900">Seedling Plan</h3>
             </div>
             <div className="flex items-baseline gap-1">
-              <span className="text-4xl font-black text-slate-900">
+              <span className="text-4xl font-medium text-slate-900">
                 {pricing.symbol}0
               </span>
               <span className="text-slate-400 font-medium">/forever</span>
             </div>
-            <ul className="flex flex-col gap-4 mt-4 flex-grow">
+            <p className="text-sm text-slate-500">
+              Free
+            </p>
+            <p className="text-sm text-slate-500">
+              Everything you need to start blooming.
+            </p>
+            <ul className="flex flex-col gap-3 mt-2 flex-grow">
               <li className="flex items-center gap-3 text-sm text-slate-700">
-                <span className="text-primary text-lg">✓</span>
-                15 daily wisdom cards
+                <span className="text-brand">&#10003;</span>
+                5 daily wisdom cards
               </li>
               <li className="flex items-center gap-3 text-sm text-slate-700">
-                <span className="text-primary text-lg">✓</span>
+                <span className="text-brand">&#10003;</span>
                 Daily streak tracking
               </li>
               <li className="flex items-center gap-3 text-sm text-slate-700">
-                <span className="text-primary text-lg">✓</span>
-                Save &amp; share cards
+                <span className="text-brand">&#10003;</span>
+                Save & share cards
               </li>
               <li className="flex items-center gap-3 text-sm text-slate-400">
-                <span className="text-slate-300 text-lg">✕</span>
-                Unlimited access
+                <span className="text-slate-300">&#10005;</span>
+                No Unlimited Access
               </li>
             </ul>
             <Link
               href={freeHref}
-              className="w-full py-4 rounded-xl border-2 border-sage font-bold text-center hover:bg-sage/10 transition-colors mt-8 text-slate-700 block"
+              className="w-full py-3 rounded-xl border border-slate-200 font-medium text-center hover:bg-slate-50 transition-colors mt-6 text-slate-700 block text-sm"
             >
               {freeLabel}
             </Link>
@@ -88,55 +127,56 @@ export default function Pricing() {
         </div>
 
         {/* Pro */}
-        <div className="flex flex-col p-8 rounded-3xl border-2 border-primary bg-bglight shadow-2xl shadow-primary/10 relative overflow-hidden transform md:scale-105 z-10">
-          <div className="absolute top-0 right-0 bg-red-500 text-white font-bold text-[10px] uppercase tracking-widest px-4 py-2 rounded-bl-xl">
-            {pricing.discountPercent}% OFF
-          </div>
+        <div className="flex flex-col p-8 rounded-2xl border-2 border-brand bg-white shadow-lg shadow-brand-light relative">
+          <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-medium text-white bg-brand rounded-full px-4 py-1 whitespace-nowrap">
+            Recommended
+          </span>
           <div className="flex flex-col gap-6 h-full">
-            <div className="flex flex-col gap-2">
-              <h3 className="text-xl font-bold text-slate-900">Pro Garden</h3>
-              <p className="text-slate-500 text-sm">
-                Unlock the full power of daily wisdom.
+            <div className="flex flex-col gap-1">
+              <h3 className="font-instrument-serif text-lg font-medium text-slate-900">Pro Garden</h3>
+            </div>
+            <div className="flex items-baseline gap-2">
+              {plan.originalPrice !== plan.price && (
+                <span className="text-lg line-through text-slate-400">
+                  {pricing.symbol}{plan.originalPrice}
+                </span>
+              )}
+              <span className="text-4xl font-medium text-brand">
+                {pricing.symbol}{plan.price}
+              </span>
+              <span className="text-slate-400 font-medium">{cycleLabel}</span>
+            </div>
+            {pricing.yearly.savings && (
+              <p className="text-xs text-brand font-medium">
+                {pricing.yearly.savings}
               </p>
-            </div>
-            <div className="flex items-baseline gap-1">
-              <span className="text-xl line-through text-slate-400">
-                {pricing.symbol}
-                {monthly.originalPrice}
-              </span>
-              <span className="text-4xl font-black text-primary">
-                {pricing.symbol}
-                {monthly.price}
-              </span>
-              <span className="text-slate-400 font-medium">/month</span>
-            </div>
-            <ul className="flex flex-col gap-4 mt-4 flex-grow">
-              <li className="flex items-center gap-3 text-sm font-semibold text-slate-900">
-                <span className="text-primary text-lg font-bold">✓</span>
+            )}
+            <p className="text-sm text-slate-500">
+              Unlock the full power of daily wisdom.
+            </p>
+            <ul className="flex flex-col gap-3 mt-2 flex-grow">
+              <li className="flex items-center gap-3 text-sm font-medium text-slate-900">
+                <span className="text-brand font-medium">&#10003;</span>
                 Unlimited wisdom cards
               </li>
-              <li className="flex items-center gap-3 text-sm font-semibold text-slate-900">
-                <span className="text-primary text-lg font-bold">✓</span>
+              <li className="flex items-center gap-3 text-sm font-medium text-slate-900">
+                <span className="text-brand font-medium">&#10003;</span>
                 Spaced repetition learning
               </li>
-              <li className="flex items-center gap-3 text-sm font-semibold text-slate-900">
-                <span className="text-primary text-lg font-bold">✓</span>
+              <li className="flex items-center gap-3 text-sm font-medium text-slate-900">
+                <span className="text-brand font-medium">&#10003;</span>
                 All 8 curated collections
               </li>
-              <li className="flex items-center gap-3 text-sm font-semibold text-slate-900">
-                <span className="text-primary text-lg font-bold">✓</span>
-                Advanced quiz &amp; stats
-              </li>
-              <li className="flex items-center gap-3 text-sm font-semibold text-slate-900">
-                <span className="text-primary text-lg font-bold">✓</span>
+              <li className="flex items-center gap-3 text-sm font-medium text-slate-900">
+                <span className="text-brand font-medium">&#10003;</span>
                 Offline reading mode
               </li>
             </ul>
             <Link
               href="/subscribe"
-              className="w-full py-4 rounded-xl bg-primary text-bgdark font-black shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all mt-8 text-center block"
+              className="w-full py-3 rounded-xl bg-brand text-white font-medium shadow-md shadow-brand/20 hover:bg-brand-dark transition-all mt-6 text-center block text-sm"
             >
-              Grow Now
+              Get Started
             </Link>
           </div>
         </div>

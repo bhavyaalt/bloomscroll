@@ -72,13 +72,13 @@ export default function LeaderboardModal({ isOpen, onClose, currentUserId }: Lea
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#EACCD4] w-full sm:w-[480px] max-h-[85vh] rounded-t-3xl sm:rounded-3xl overflow-hidden"
+            className="bg-white w-full sm:w-[480px] max-h-[85vh] rounded-t-3xl sm:rounded-3xl overflow-hidden"
           >
             {/* Header */}
-            <div className="p-6 border-b border-[#007A5E]/10">
+            <div className="p-6 border-b border-slate-200">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-impact text-2xl text-[#007A5E] uppercase">Leaderboard</h2>
-                <button onClick={onClose} className="text-[#007A5E]/60 hover:text-[#007A5E]">
+                <h2 className="font-instrument-serif text-2xl text-[#7B2CBF]">Leaderboard</h2>
+                <button onClick={onClose} className="text-[#7B2CBF]/60 hover:text-[#7B2CBF]">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
@@ -91,10 +91,10 @@ export default function LeaderboardModal({ isOpen, onClose, currentUserId }: Lea
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex-1 py-2 px-3 rounded-xl text-sm font-bold transition-all ${
+                    className={`flex-1 py-2 px-3 rounded-xl text-sm font-medium transition-all ${
                       activeTab === tab.id
-                        ? "bg-[#007A5E] text-[#EACCD4]"
-                        : "bg-white/30 text-[#007A5E]/60 hover:bg-white/50"
+                        ? "bg-[#7B2CBF] text-white"
+                        : "bg-slate-100 text-[#7B2CBF]/60 hover:bg-slate-200"
                     }`}
                   >
                     {tab.label}
@@ -107,10 +107,10 @@ export default function LeaderboardModal({ isOpen, onClose, currentUserId }: Lea
             <div className="p-4 overflow-y-auto max-h-[60vh]">
               {loading ? (
                 <div className="flex items-center justify-center py-12">
-                  <div className="w-8 h-8 border-2 border-[#007A5E] border-t-transparent rounded-full animate-spin" />
+                  <div className="w-8 h-8 border-2 border-[#7B2CBF] border-t-transparent rounded-full animate-spin" />
                 </div>
               ) : entries.length === 0 ? (
-                <div className="text-center py-12 text-[#007A5E]/60">
+                <div className="text-center py-12 text-[#7B2CBF]/60">
                   <p>No entries yet. Be the first!</p>
                 </div>
               ) : (
@@ -130,11 +130,11 @@ export default function LeaderboardModal({ isOpen, onClose, currentUserId }: Lea
                           href={`/garden/${entry.username}`}
                           className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
                             isCurrentUser
-                              ? "bg-[#007A5E] text-[#EACCD4]"
-                              : "bg-white/40 hover:bg-white/60"
+                              ? "bg-[#7B2CBF] text-white"
+                              : "bg-slate-50 hover:bg-slate-100"
                           }`}
                         >
-                          <div className={`w-8 text-center font-bold ${isCurrentUser ? "text-[#EACCD4]" : "text-[#007A5E]"}`}>
+                          <div className={`w-8 text-center font-medium ${isCurrentUser ? "text-white" : "text-[#7B2CBF]"}`}>
                             {medal || `#${entry.rank}`}
                           </div>
                           
@@ -146,26 +146,26 @@ export default function LeaderboardModal({ isOpen, onClose, currentUserId }: Lea
                             />
                           ) : (
                             <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg ${
-                              isCurrentUser ? "bg-[#EACCD4]/20" : "bg-[#007A5E]/20"
+                              isCurrentUser ? "bg-white/20" : "bg-[#7B2CBF]/20"
                             }`}>
                               {entry.display_name.charAt(0).toUpperCase()}
                             </div>
                           )}
                           
                           <div className="flex-1 min-w-0">
-                            <div className={`font-bold truncate ${isCurrentUser ? "text-[#EACCD4]" : "text-[#007A5E]"}`}>
+                            <div className={`font-medium truncate ${isCurrentUser ? "text-white" : "text-[#7B2CBF]"}`}>
                               {entry.display_name}
                             </div>
-                            <div className={`text-xs ${isCurrentUser ? "text-[#EACCD4]/60" : "text-[#007A5E]/60"}`}>
+                            <div className={`text-xs ${isCurrentUser ? "text-white/60" : "text-[#7B2CBF]/60"}`}>
                               @{entry.username}
                             </div>
                           </div>
                           
                           <div className="text-right">
-                            <div className={`font-bold ${isCurrentUser ? "text-[#EACCD4]" : "text-[#007A5E]"}`}>
+                            <div className={`font-medium ${isCurrentUser ? "text-white" : "text-[#7B2CBF]"}`}>
                               {entry.value.toLocaleString()}
                             </div>
-                            <div className={`text-xs ${isCurrentUser ? "text-[#EACCD4]/60" : "text-[#007A5E]/60"}`}>
+                            <div className={`text-xs ${isCurrentUser ? "text-white/60" : "text-[#7B2CBF]/60"}`}>
                               {tabs.find(t => t.id === activeTab)?.unit}
                             </div>
                           </div>

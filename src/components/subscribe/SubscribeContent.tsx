@@ -147,28 +147,23 @@ export default function SubscribeContent({ initialRegion }: { initialRegion: Reg
 
   if ((!regionResolved) || (!loading && isAuthenticated && autoCheckout)) {
     return (
-      <div className="min-h-screen bg-bglight flex items-center justify-center">
+      <div className="min-h-screen bg-white text-slate-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin text-4xl mb-4">⟳</div>
-          <p className="font-bold text-xl text-bgdark">Taking you to checkout...</p>
+          <p className="font-medium text-xl text-slate-900">Taking you to checkout...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#102219] to-[#0a1610] text-white">
-      <header className="border-b border-white/5 bg-[#102219]/90 backdrop-blur-md">
+    <div className="min-h-screen bg-white text-slate-900">
+      <header className="border-b border-slate-200 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="size-7 flex items-center justify-center bg-primary rounded-lg text-[#102219]">
-              <svg className="size-4" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 22c4.97 0 9-4.03 9-9-4.97 0-9 4.03-9 9ZM5.6 10.25c0 1.64 1.33 2.97 2.97 2.97h.86c1.97 0 3.56-1.6 3.56-3.57v-5.4C12.99 2.56 11.43 1 9.43 1c-2 0-3.56 1.56-3.56 3.56v5.4c0 .1 0 .2-.27.29ZM3 13c0 4.97 4.03 9 9 9 0-4.97-4.03-9-9-9Z" />
-              </svg>
-            </div>
-            <span className="text-lg font-bold tracking-tight text-primary">BloomScroll</span>
+            <span className="font-instrument-serif italic text-xl text-slate-900">BloomScroll</span>
           </Link>
-          <Link href="/app" className="text-xs sm:text-sm font-bold uppercase text-white/55 hover:text-white/80">
+          <Link href="/app" className="text-xs sm:text-sm font-medium text-slate-500 hover:text-slate-900">
             Back to App
           </Link>
         </div>
@@ -179,14 +174,14 @@ export default function SubscribeContent({ initialRegion }: { initialRegion: Reg
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mx-auto max-w-2xl text-center mb-12 p-8 bg-white/5 border border-white/10 rounded-3xl"
+            className="mx-auto max-w-2xl text-center mb-12 p-8 bg-brand-light border border-brand/20 rounded-3xl"
           >
-            <span className="text-4xl mb-4 block text-primary">🌿</span>
-            <h2 className="font-impact text-3xl uppercase mb-2 text-primary">You&apos;re Already Pro!</h2>
-            <p className="text-white/60 mb-6">You have full access to all premium features.</p>
+            <span className="text-4xl mb-4 block text-brand">🌿</span>
+            <h2 className="font-instrument-serif text-3xl mb-2 text-brand">You&apos;re Already Pro!</h2>
+            <p className="text-slate-500 mb-6">You have full access to all premium features.</p>
             <Link
               href="/app"
-              className="inline-block px-8 py-3 bg-primary text-[#102219] font-bold uppercase tracking-widest rounded-xl hover:bg-primary/90 transition-all"
+              className="inline-block px-8 py-3 bg-brand text-white font-medium rounded-xl hover:bg-brand-dark transition-all"
             >
               Back to App
             </Link>
@@ -197,17 +192,17 @@ export default function SubscribeContent({ initialRegion }: { initialRegion: Reg
           <>
             <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] items-start">
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="pt-2">
-                <span className="inline-flex py-1 px-3 border border-primary/30 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-4 text-primary bg-primary/10">
+                <span className="inline-flex py-1 px-3 border border-brand/30 rounded-full text-[10px] sm:text-xs font-medium mb-4 text-brand bg-brand-light">
                   {sourceCopy.eyebrow}
                 </span>
-                <h1 className="font-impact text-4xl sm:text-6xl uppercase mb-4 text-primary leading-none">
+                <h1 className="font-instrument-serif text-4xl sm:text-6xl mb-4 text-brand leading-none">
                   {sourceCopy.title}
                 </h1>
-                <p className="font-times italic text-lg sm:text-2xl text-white/75 max-w-xl">
+                <p className="text-lg sm:text-2xl text-slate-500 max-w-xl">
                   {sourceCopy.subtitle}
                 </p>
                 {user && (
-                  <p className="text-xs sm:text-sm text-white/45 mt-4 truncate">
+                  <p className="text-xs sm:text-sm text-slate-400 mt-4 truncate">
                     Logged in as {user.email}
                   </p>
                 )}
@@ -251,12 +246,12 @@ export default function SubscribeContent({ initialRegion }: { initialRegion: Reg
                       ),
                     },
                   ].map((feature) => (
-                    <div key={feature.title} className="rounded-2xl border border-white/8 bg-white/5 px-4 py-3">
+                    <div key={feature.title} className="rounded-2xl border border-slate-200 bg-white px-4 py-3">
                       <div className="flex items-start gap-3">
-                        <div className="mt-0.5 rounded-xl bg-primary/12 p-2 text-primary">{feature.icon}</div>
+                        <div className="mt-0.5 rounded-xl bg-brand-light p-2 text-brand">{feature.icon}</div>
                         <div>
-                          <p className="font-semibold text-white">{feature.title}</p>
-                          <p className="mt-1 text-sm text-white/50">{feature.copy}</p>
+                          <p className="font-medium text-slate-900">{feature.title}</p>
+                          <p className="mt-1 text-sm text-slate-500">{feature.copy}</p>
                         </div>
                       </div>
                     </div>
@@ -268,59 +263,59 @@ export default function SubscribeContent({ initialRegion }: { initialRegion: Reg
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="rounded-[30px] border border-white/10 bg-[#13261d] p-5 shadow-2xl shadow-black/25"
+                className="rounded-[30px] border border-slate-200 bg-white p-5 shadow-lg"
               >
                 <div className="flex items-center justify-between gap-3 mb-5">
                   <div>
-                    <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-primary">Choose plan</p>
-                    <p className="text-sm text-white/45 mt-1">Secure checkout powered by Dodo Payments</p>
+                    <p className="text-[11px] font-medium text-brand">Choose plan</p>
+                    <p className="text-sm text-slate-400 mt-1">Secure checkout powered by Dodo Payments</p>
                   </div>
-                  <div className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs font-bold text-white/70">
+                  <div className="rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-500">
                     {REGION_NAMES[region]}
                   </div>
                 </div>
 
-                <div className="inline-flex w-full rounded-full bg-[#0c1913] p-1 mb-5">
+                <div className="inline-flex w-full rounded-full bg-slate-100 p-1 mb-5">
                   <button
                     onClick={() => setBillingCycle("monthly")}
-                    className={`flex-1 rounded-full px-4 py-2 text-sm font-bold transition-all ${
-                      billingCycle === "monthly" ? "bg-primary text-[#102219]" : "text-white/55 hover:text-white"
+                    className={`flex-1 rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                      billingCycle === "monthly" ? "bg-brand text-white" : "text-slate-500 hover:text-slate-900"
                     }`}
                   >
                     Monthly
                   </button>
                   <button
                     onClick={() => setBillingCycle("yearly")}
-                    className={`flex-1 rounded-full px-4 py-2 text-sm font-bold transition-all ${
-                      billingCycle === "yearly" ? "bg-primary text-[#102219]" : "text-white/55 hover:text-white"
+                    className={`flex-1 rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                      billingCycle === "yearly" ? "bg-brand text-white" : "text-slate-500 hover:text-slate-900"
                     }`}
                   >
                     Yearly
                   </button>
                 </div>
 
-                <div className="rounded-[28px] bg-[#EACCD4] p-6 text-[#007A5E]">
+                <div className="rounded-[28px] bg-[#FFF5FE] p-6 text-brand">
                   <div className="flex items-center justify-between gap-3 mb-6">
                     <div>
-                      <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#007A5E]/60">
+                      <p className="text-[11px] font-medium text-brand/60">
                         {billingCycle === "yearly" ? `Save ${savings.percentage}` : `${pricing.discountPercent}% off`}
                       </p>
-                      <h2 className="font-impact text-4xl mt-2">
+                      <h2 className="font-instrument-serif text-4xl mt-2">
                         {pricing.symbol}
                         {plan.price}
-                        <span className="ml-2 text-lg text-[#007A5E]/55">
+                        <span className="ml-2 text-lg text-brand/55">
                           /{billingCycle === "monthly" ? "month" : "year"}
                         </span>
                       </h2>
-                      <p className="mt-1 text-sm text-[#007A5E]/55">
+                      <p className="mt-1 text-sm text-brand/55">
                         {billingCycle === "yearly"
                           ? `Just ${pricing.symbol}${Math.round(plan.price / 12)}/month billed yearly`
                           : `Renews monthly in ${pricing.currency}`}
                       </p>
                     </div>
                     <div className="rounded-2xl bg-white/55 px-3 py-2 text-right">
-                      <div className="text-xs font-bold uppercase tracking-[0.18em] text-[#007A5E]/55">Was</div>
-                      <div className="text-xl line-through text-[#007A5E]/40">
+                      <div className="text-xs font-medium text-brand/60">Was</div>
+                      <div className="text-xl line-through text-brand/40">
                         {pricing.symbol}
                         {plan.originalPrice}
                       </div>
@@ -336,12 +331,12 @@ export default function SubscribeContent({ initialRegion }: { initialRegion: Reg
                       "Streak shield and premium growth tools",
                     ].map((feature) => (
                       <li key={feature} className="flex items-start gap-3 text-sm">
-                        <span className="mt-0.5 rounded-full bg-[#007A5E]/10 p-1">
+                        <span className="mt-0.5 rounded-full bg-brand/10 p-1 text-brand">
                           <svg className="size-3.5" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                           </svg>
                         </span>
-                        <span className="font-semibold">{feature}</span>
+                        <span className="font-medium">{feature}</span>
                       </li>
                     ))}
                   </ul>
@@ -350,7 +345,7 @@ export default function SubscribeContent({ initialRegion }: { initialRegion: Reg
                     <button
                       onClick={handleCheckout}
                       disabled={loading}
-                      className="w-full py-4 bg-[#007A5E] text-[#EACCD4] font-bold uppercase tracking-widest text-lg hover:bg-[#004a39] transition-all rounded-xl shadow-lg disabled:opacity-50"
+                      className="w-full py-4 bg-brand text-white font-medium text-lg hover:bg-brand-dark transition-all rounded-xl shadow-lg disabled:opacity-50"
                     >
                       {loading ? "Loading..." : "Get Pro Now"}
                     </button>
@@ -359,7 +354,7 @@ export default function SubscribeContent({ initialRegion }: { initialRegion: Reg
                       <button
                         onClick={() => handleSocialSignIn("google")}
                         disabled={!!socialLoading}
-                        className="w-full py-4 rounded-xl font-bold uppercase tracking-widest transition-all bg-white text-[#102219] border border-white/40 hover:bg-white/90 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full py-4 rounded-xl font-medium transition-all bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {socialLoading === "google" ? (
                           <span className="animate-spin">⟳</span>
@@ -377,7 +372,7 @@ export default function SubscribeContent({ initialRegion }: { initialRegion: Reg
                       <button
                         onClick={() => handleSocialSignIn("twitter")}
                         disabled={!!socialLoading}
-                        className="w-full py-4 rounded-xl font-bold uppercase tracking-widest transition-all bg-[#102219] text-white border border-[#102219] hover:bg-[#0b1711] flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full py-4 rounded-xl font-medium transition-all bg-slate-900 text-white border border-slate-900 hover:bg-slate-800 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {socialLoading === "twitter" ? (
                           <span className="animate-spin">⟳</span>
@@ -397,7 +392,7 @@ export default function SubscribeContent({ initialRegion }: { initialRegion: Reg
                     </div>
                   )}
 
-                  <p className="text-xs text-center text-[#007A5E]/55 mt-4">Secure checkout powered by Dodo Payments</p>
+                  <p className="text-xs text-center text-brand/55 mt-4">Secure checkout powered by Dodo Payments</p>
                 </div>
               </motion.div>
             </div>
@@ -413,9 +408,9 @@ export default function SubscribeContent({ initialRegion }: { initialRegion: Reg
                 { label: "Cancel anytime", copy: "Access stays active until your billing period ends." },
                 { label: "Real support", copy: "Questions go to support@bloomscroll.club." },
               ].map((item) => (
-                <div key={item.label} className="rounded-2xl border border-white/8 bg-white/5 p-4">
-                  <p className="text-sm font-semibold text-primary">{item.label}</p>
-                  <p className="mt-1 text-sm text-white/50">{item.copy}</p>
+                <div key={item.label} className="rounded-2xl border border-slate-200 bg-white p-4">
+                  <p className="text-sm font-medium text-brand">{item.label}</p>
+                  <p className="mt-1 text-sm text-slate-500">{item.copy}</p>
                 </div>
               ))}
             </motion.div>
@@ -426,7 +421,7 @@ export default function SubscribeContent({ initialRegion }: { initialRegion: Reg
               transition={{ delay: 0.2 }}
               className="mt-10 space-y-4"
             >
-              <h2 className="font-impact text-2xl uppercase text-center text-primary mb-6">Common Questions</h2>
+              <h2 className="font-instrument-serif text-2xl text-center text-brand mb-6">Common Questions</h2>
 
               {[
                 {
@@ -446,12 +441,12 @@ export default function SubscribeContent({ initialRegion }: { initialRegion: Reg
                   a: "Yes. You can change plans later from the billing portal.",
                 },
               ].map((faq, i) => (
-                <details key={i} className="group rounded-2xl border border-white/8 bg-white/5">
-                  <summary className="flex items-center justify-between p-4 cursor-pointer font-bold text-white">
+                <details key={i} className="group rounded-2xl border border-slate-200 bg-white">
+                  <summary className="flex items-center justify-between p-4 cursor-pointer font-medium text-slate-900">
                     {faq.q}
-                    <span className="transform group-open:rotate-180 transition-transform text-primary">▼</span>
+                    <span className="transform group-open:rotate-180 transition-transform text-brand">▼</span>
                   </summary>
-                  <p className="px-4 pb-4 text-white/55">{faq.a}</p>
+                  <p className="px-4 pb-4 text-slate-500">{faq.a}</p>
                 </details>
               ))}
             </motion.div>
@@ -459,8 +454,8 @@ export default function SubscribeContent({ initialRegion }: { initialRegion: Reg
         )}
       </main>
 
-      <footer className="border-t border-white/5 py-8">
-        <div className="max-w-4xl mx-auto px-6 text-center text-sm text-white/35">
+      <footer className="border-t border-slate-200 py-8">
+        <div className="max-w-4xl mx-auto px-6 text-center text-sm text-slate-400">
           <p>Questions? Reach out to support@bloomscroll.club</p>
         </div>
       </footer>

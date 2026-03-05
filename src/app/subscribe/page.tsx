@@ -10,8 +10,8 @@ export default async function SubscribePage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-bglight flex items-center justify-center">
-          <div className="animate-pulse text-4xl font-bold text-bgdark">Loading...</div>
+        <div className="min-h-screen bg-white flex items-center justify-center">
+          <div className="animate-pulse text-4xl font-medium font-instrument-serif text-brand">Loading...</div>
         </div>
       }
     >

@@ -32,7 +32,7 @@ export default function ShareStreakCard({
 
     try {
       const canvas = await html2canvas(cardRef.current, {
-        backgroundColor: "#EACCD4",
+        backgroundColor: "#FFF5FE",
         scale: 2,
       });
 
@@ -82,7 +82,7 @@ export default function ShareStreakCard({
         {/* Shareable Card */}
         <div
           ref={cardRef}
-          className="bg-[#EACCD4] rounded-3xl p-6 mb-4"
+          className="bg-[#FFF5FE] rounded-3xl p-6 mb-4"
           style={{ aspectRatio: "1/1.2" }}
         >
           {/* Header */}
@@ -90,38 +90,38 @@ export default function ShareStreakCard({
             {pfpUrl ? (
               <img src={pfpUrl} alt={displayName} className="w-12 h-12 rounded-full object-cover" />
             ) : (
-              <div className="w-12 h-12 rounded-full bg-[#007A5E] flex items-center justify-center text-[#EACCD4] text-xl font-bold">
+              <div className="w-12 h-12 rounded-full bg-brand flex items-center justify-center text-white text-xl font-medium">
                 {displayName.charAt(0).toUpperCase()}
               </div>
             )}
             <div>
-              <div className="font-bold text-[#007A5E]">{displayName}</div>
-              <div className="text-sm text-[#007A5E]/60">@{username}</div>
+              <div className="font-medium text-brand">{displayName}</div>
+              <div className="text-sm text-brand/60">@{username}</div>
             </div>
           </div>
 
           {/* Main Stats */}
           <div className="text-center mb-6">
             <div className="text-6xl mb-2">🔥</div>
-            <div className="font-impact text-6xl text-[#007A5E]">{streak}</div>
-            <div className="text-lg text-[#007A5E]/80 font-bold uppercase tracking-wider">Day Streak</div>
+            <div className="font-instrument-serif text-6xl text-brand">{streak}</div>
+            <div className="text-lg text-brand/80 font-medium">Day Streak</div>
           </div>
 
           {/* Additional Stats */}
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="bg-white/40 rounded-xl p-3 text-center">
-              <div className="font-bold text-2xl text-[#007A5E]">{totalCards}</div>
-              <div className="text-xs text-[#007A5E]/60 uppercase">Cards Read</div>
+              <div className="font-medium text-2xl text-brand">{totalCards}</div>
+              <div className="text-xs text-brand/60">Cards Read</div>
             </div>
             <div className="bg-white/40 rounded-xl p-3 text-center">
-              <div className="font-bold text-2xl text-[#007A5E]">Lv.{level}</div>
-              <div className="text-xs text-[#007A5E]/60 uppercase">{levelTitle}</div>
+              <div className="font-medium text-2xl text-brand">Lv.{level}</div>
+              <div className="text-xs text-brand/60">{levelTitle}</div>
             </div>
           </div>
 
           {/* Footer */}
           <div className="text-center">
-            <div className="inline-flex items-center gap-2 bg-[#007A5E] text-[#EACCD4] px-4 py-2 rounded-full text-sm font-bold">
+            <div className="inline-flex items-center gap-2 bg-brand text-white px-4 py-2 rounded-full text-sm font-medium">
               <span>🌱</span>
               <span>bloomscroll.club</span>
             </div>
@@ -132,7 +132,7 @@ export default function ShareStreakCard({
         <div className="flex gap-3">
           <button
             onClick={handleShare}
-            className="flex-1 bg-[#007A5E] text-[#EACCD4] py-3 rounded-xl font-bold flex items-center justify-center gap-2"
+            className="flex-1 bg-brand text-white py-3 rounded-xl font-medium flex items-center justify-center gap-2"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -141,7 +141,7 @@ export default function ShareStreakCard({
           </button>
           <button
             onClick={handleCopyLink}
-            className="flex-1 bg-white/50 text-[#007A5E] py-3 rounded-xl font-bold flex items-center justify-center gap-2"
+            className="flex-1 bg-white/50 text-brand py-3 rounded-xl font-medium flex items-center justify-center gap-2"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />

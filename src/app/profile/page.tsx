@@ -40,11 +40,11 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 const DAYS = ["", "Mon", "", "Wed", "", "Fri", ""];
 
 const TOPIC_COLORS = [
-  { text: "text-botgreen", bar: "bg-botsage" },
-  { text: "text-softclay", bar: "bg-softclay" },
-  { text: "text-mutedlav", bar: "bg-mutedlav" },
-  { text: "text-botsagedark", bar: "bg-botsagedark" },
-  { text: "text-darkteal", bar: "bg-darkteal/50" },
+  { text: "text-brand", bar: "bg-brand/40" },
+  { text: "text-amber-600", bar: "bg-amber-300" },
+  { text: "text-violet-600", bar: "bg-violet-300" },
+  { text: "text-brand-dark", bar: "bg-brand-dark/40" },
+  { text: "text-slate-700", bar: "bg-slate-400" },
 ];
 
 export default function ProfilePage() {
@@ -280,36 +280,31 @@ export default function ProfilePage() {
 
   if (!stats) {
     return (
-      <div className="min-h-screen bg-cream flex items-center justify-center">
-        <div className="animate-pulse text-2xl font-bold text-botgreen">Loading...</div>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="animate-pulse text-2xl font-medium text-brand">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-cream text-darkteal" style={{ fontFamily: "'Lexend', sans-serif" }}>
+    <div className="min-h-screen bg-white text-slate-900">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-cream/90 backdrop-blur-md border-b border-botsage/30 px-3 sm:px-6 py-3 sm:py-4">
+      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 px-3 sm:px-6 py-3 sm:py-4">
         <div className="max-w-[1100px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-4">
             <Link
               href="/app"
-              className="flex items-center justify-center p-1.5 sm:p-2 rounded-full bg-botsage/20 hover:bg-botsage/30 text-botgreen transition-colors"
+              className="flex items-center justify-center p-1.5 sm:p-2 rounded-full bg-brand-light hover:bg-brand/10 text-brand transition-colors"
             >
               <svg className="size-4 sm:size-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
               </svg>
             </Link>
-            <div className="flex items-center gap-1.5 sm:gap-2">
-              <svg className="size-4 sm:size-5 text-botgreen" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 22c4.97 0 9-4.03 9-9-4.97 0-9 4.03-9 9ZM5.6 10.25c0 1.64 1.33 2.97 2.97 2.97h.86c1.97 0 3.56-1.6 3.56-3.57v-5.4C12.99 2.56 11.43 1 9.43 1c-2 0-3.56 1.56-3.56 3.56v5.4c0 .1 0 .2-.27.29ZM3 13c0 4.97 4.03 9 9 9 0-4.97-4.03-9-9-9Z" />
-              </svg>
-              <h2 className="text-base sm:text-xl font-bold tracking-tight text-botgreen hidden min-[400px]:block" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>BloomScroll</h2>
-            </div>
+            <span className="font-instrument-serif italic text-lg sm:text-xl text-slate-900">BloomScroll</span>
           </div>
           <button
             onClick={handleShare}
-            className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-1.5 sm:py-2 rounded-full bg-botgreen text-cream font-medium text-xs sm:text-sm transition-transform active:scale-95 shadow-md"
+            className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-1.5 sm:py-2 rounded-full bg-brand text-white font-medium text-xs sm:text-sm transition-transform active:scale-95 shadow-md"
           >
             <svg className="size-3.5 sm:size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
@@ -323,8 +318,8 @@ export default function ProfilePage() {
         {/* Profile Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center text-center mb-8 sm:mb-12">
           <div className="relative mb-4 sm:mb-6">
-            <div className="w-24 h-24 sm:w-36 sm:h-36 rounded-full border-2 border-botsage p-1 sm:p-1.5 bg-white shadow-sm">
-              <div className="w-full h-full rounded-full bg-botsagelight flex items-center justify-center text-3xl sm:text-5xl">
+            <div className="w-24 h-24 sm:w-36 sm:h-36 rounded-full border-2 border-brand/30 p-1 sm:p-1.5 bg-white shadow-sm">
+              <div className="w-full h-full rounded-full bg-brand-light flex items-center justify-center text-3xl sm:text-5xl">
                 {avatarUrl ? (
                   <img src={avatarUrl} alt="" className="w-full h-full rounded-full object-cover" />
                 ) : (
@@ -332,26 +327,26 @@ export default function ProfilePage() {
                 )}
               </div>
             </div>
-            <div className="absolute -bottom-1 -right-1 bg-white border border-botsage/50 rounded-full w-8 h-8 sm:w-11 sm:h-11 flex items-center justify-center text-base sm:text-xl shadow-md">
+            <div className="absolute -bottom-1 -right-1 bg-white border border-brand/30 rounded-full w-8 h-8 sm:w-11 sm:h-11 flex items-center justify-center text-base sm:text-xl shadow-md">
               🌿
             </div>
           </div>
-          <h1 className="text-2xl sm:text-4xl font-bold mb-2 text-darkteal" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+          <h1 className="text-2xl sm:text-4xl font-medium mb-2 text-slate-900 font-instrument-serif">
             {displayName}
           </h1>
-          {user?.email && <p className="text-botsagedark font-medium mb-3">{user.email}</p>}
-          <p className="text-sm text-botsagedark/80 mb-6 flex items-center justify-center gap-2">
+          {user?.email && <p className="text-slate-600 font-medium mb-3">{user.email}</p>}
+          <p className="text-sm text-slate-500 mb-6 flex items-center justify-center gap-2">
             <svg className="size-4" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 22c4.97 0 9-4.03 9-9-4.97 0-9 4.03-9 9ZM5.6 10.25c0 1.64 1.33 2.97 2.97 2.97h.86c1.97 0 3.56-1.6 3.56-3.57v-5.4C12.99 2.56 11.43 1 9.43 1c-2 0-3.56 1.56-3.56 3.56v5.4c0 .1 0 .2-.27.29ZM3 13c0 4.97 4.03 9 9 9 0-4.97-4.03-9-9-9Z" />
             </svg>
             Member since {new Date(stats.joinedDate).toLocaleDateString("en-US", { month: "short", year: "numeric" })} • 🌱 {streak.currentStreak} Day Streak
           </p>
-          <div className={`inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white border font-semibold text-sm shadow-sm ${
-            isSubscribed ? "border-botsage/40 text-botgreen" : "border-botsage/20 text-botsagedark"
+          <div className={`inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white border font-medium text-sm shadow-sm ${
+            isSubscribed ? "border-brand/40 text-brand" : "border-slate-200 text-slate-600"
           }`}>
             {isSubscribed ? (
               <>
-                <svg className="size-4 text-softclay" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="size-4 text-amber-500" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                 </svg>
                 Pro Member
@@ -361,14 +356,14 @@ export default function ProfilePage() {
             )}
           </div>
           {!isSubscribed && (
-            <Link href="/subscribe" className="block text-center mt-3 text-botgreen text-sm font-bold hover:underline">
+            <Link href="/subscribe" className="block text-center mt-3 text-brand text-sm font-medium hover:underline">
               Upgrade to Pro →
             </Link>
           )}
         </motion.div>
 
         {/* Tab Navigation */}
-        <div className="flex border-b border-botsage/20 mb-10 justify-center">
+        <div className="flex border-b border-slate-200 mb-10 justify-center">
           {[
             { id: "stats" as const, label: "Stats" },
             { id: "garden" as const, label: "Garden" },
@@ -379,8 +374,8 @@ export default function ProfilePage() {
               onClick={() => setActiveTab(tab.id)}
               className={`px-8 py-4 border-b-2 font-medium text-sm transition-colors ${
                 activeTab === tab.id
-                  ? "border-botgreen text-botgreen font-bold"
-                  : "border-transparent text-botsagedark hover:text-botgreen"
+                  ? "border-brand text-brand"
+                  : "border-transparent text-slate-500 hover:text-brand"
               }`}
             >
               {tab.label}
@@ -396,43 +391,43 @@ export default function ProfilePage() {
             >
               {[
                 { label: "Cards Read", value: stats.totalCardsRead.toLocaleString(), icon: (
-                  <svg className="size-5 text-botgreen" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                  <svg className="size-5 text-brand" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                   </svg>
                 )},
                 { label: "Current Streak", value: `${streak.currentStreak} Days`, icon: (
-                  <svg className="size-5 text-softclay" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                  <svg className="size-5 text-amber-500" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 6.51 6.51 0 009 4.5a6.5 6.5 0 016.362.714z" />
                   </svg>
                 )},
                 { label: "Best Streak", value: `${streak.longestStreak} Days`, icon: (
-                  <svg className="size-5 text-botgreen" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                  <svg className="size-5 text-brand" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M18.75 4.236c.982.143 1.954.317 2.916.52A6.003 6.003 0 0016.27 9.728M18.75 4.236V4.5c0 2.108-.966 3.99-2.48 5.228M18.75 4.236V2.721M14.503 14.25a7.454 7.454 0 00.981-3.172M14.503 14.25H9.497m5.006 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 01-.981-3.172" />
                   </svg>
                 )},
                 { label: "Quiz Accuracy", value: `${stats.quizAccuracy}%`, icon: (
-                  <svg className="size-5 text-mutedlav" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                  <svg className="size-5 text-violet-500" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 )},
               ].map((s, i) => (
-                <div key={i} className="bg-white border border-botsage/30 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+                <div key={i} className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-botsagedark text-xs font-bold uppercase tracking-wider">{s.label}</span>
+                    <span className="text-slate-500 text-xs font-medium">{s.label}</span>
                     {s.icon}
                   </div>
-                  <p className="text-3xl font-bold text-darkteal">{s.value}</p>
+                  <p className="text-3xl font-medium text-slate-900">{s.value}</p>
                 </div>
               ))}
             </motion.div>
 
             {/* Contribution Grid */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-              className="bg-white border border-botsage/20 rounded-2xl p-8 mb-12 shadow-sm"
+              className="bg-white border border-slate-200 rounded-2xl p-8 mb-12 shadow-sm"
             >
-              <h3 className="text-lg font-bold mb-8 flex items-center gap-2 text-darkteal" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+              <h3 className="text-lg font-medium mb-8 flex items-center gap-2 text-slate-900 font-instrument-serif">
                 Growth Activity
-                <span className="text-xs font-normal text-botsagedark" style={{ fontFamily: "'Lexend', sans-serif" }}>
+                <span className="text-xs font-normal text-slate-500" style={{ fontFamily: "inherit" }}>
                   {stats.totalCardsRead.toLocaleString()} lessons blooming in the last year
                 </span>
               </h3>
@@ -440,7 +435,7 @@ export default function ProfilePage() {
                 <div className="min-w-[700px]">
                   <div className="flex">
                     {/* Day labels */}
-                    <div className="flex flex-col justify-around text-[10px] text-botsagedark font-medium pr-2" style={{ height: grid.length > 0 ? undefined : 88 }}>
+                    <div className="flex flex-col justify-around text-[10px] text-slate-500 font-medium pr-2" style={{ height: grid.length > 0 ? undefined : 88 }}>
                       {DAYS.map((day, i) => (
                         <span key={i} className="h-[12px] flex items-center">{day}</span>
                       ))}
@@ -462,7 +457,7 @@ export default function ProfilePage() {
                   </div>
                 </div>
               </div>
-              <div className="mt-6 flex items-center justify-end gap-2 text-[10px] text-botsagedark uppercase font-bold tracking-wider">
+              <div className="mt-6 flex items-center justify-end gap-2 text-[10px] text-slate-500 font-medium">
                 <span>Dormant</span>
                 {LEVEL_COLORS.map((color, i) => (
                   <div key={i} className={`w-3 h-3 rounded-[2px] ${color}`} />
@@ -475,7 +470,7 @@ export default function ProfilePage() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
               className="mb-14"
             >
-              <h3 className="text-2xl font-bold mb-8 text-darkteal" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+              <h3 className="text-2xl font-medium mb-8 text-slate-900 font-instrument-serif">
                 Cultivated Topics
               </h3>
               {topTopics.length > 0 ? (
@@ -486,10 +481,10 @@ export default function ProfilePage() {
                     return (
                       <div key={topic.topic}>
                         <div className="flex justify-between items-center mb-3">
-                          <span className={`text-sm font-semibold capitalize ${color.text}`}>{topic.topic}</span>
-                          <span className={`text-sm font-bold ${color.text}`}>{pct}%</span>
+                          <span className={`text-sm font-medium capitalize ${color.text}`}>{topic.topic}</span>
+                          <span className={`text-sm font-medium ${color.text}`}>{pct}%</span>
                         </div>
-                        <div className="h-2.5 w-full bg-botsage/20 rounded-full overflow-hidden">
+                        <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden">
                           <div className={`h-full ${color.bar} rounded-full`} style={{ width: `${pct}%` }} />
                         </div>
                       </div>
@@ -497,59 +492,59 @@ export default function ProfilePage() {
                   })}
                 </div>
               ) : (
-                <p className="text-botsagedark text-center py-8">Start reading to see your top topics!</p>
+                <p className="text-slate-500 text-center py-8">Start reading to see your top topics!</p>
               )}
             </motion.div>
 
-            {/* Share CTA */}
+            {/* Pro Preview CTAs */}
             {!isSubscribed && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
                 className="grid gap-4 md:grid-cols-2 mb-10"
               >
-                <div className="rounded-3xl border border-botsage/20 bg-white p-6 shadow-sm">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-botgreen">Pro Preview</p>
-                  <h4 className="mt-2 text-2xl font-bold text-darkteal" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                  <p className="text-[11px] font-medium text-brand">Pro Preview</p>
+                  <h4 className="mt-2 text-2xl font-medium text-slate-900 font-instrument-serif">
                     Review queue
                   </h4>
-                  <p className="mt-2 text-sm text-botsagedark">
+                  <p className="mt-2 text-sm text-slate-500">
                     {reviewPreviewCount > 0
                       ? `${reviewPreviewCount} saved cards are ready to become lasting knowledge.`
                       : "Build a review queue that helps you remember what you read."}
                   </p>
-                  <div className="mt-4 h-2 rounded-full bg-botsage/15 overflow-hidden">
-                    <div className="h-full w-2/3 rounded-full bg-botgreen/70" />
+                  <div className="mt-4 h-2 rounded-full bg-brand/10 overflow-hidden">
+                    <div className="h-full w-2/3 rounded-full bg-brand/60" />
                   </div>
                   <button
                     onClick={() => handleUpgradeClick("profile_review_preview")}
-                    className="mt-5 rounded-full bg-botgreen px-5 py-3 text-sm font-bold text-cream"
+                    className="mt-5 rounded-full bg-brand px-5 py-3 text-sm font-medium text-white"
                   >
                     Unlock review mode
                   </button>
                 </div>
-                <div className="rounded-3xl border border-botsage/20 bg-white p-6 shadow-sm">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-botgreen">Pro Preview</p>
-                  <h4 className="mt-2 text-2xl font-bold text-darkteal" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                  <p className="text-[11px] font-medium text-brand">Pro Preview</p>
+                  <h4 className="mt-2 text-2xl font-medium text-slate-900 font-instrument-serif">
                     Browse by book
                   </h4>
-                  <p className="mt-2 text-sm text-botsagedark">
+                  <p className="mt-2 text-sm text-slate-500">
                     Explore {totalBooks}+ books by theme, author, and depth instead of relying on random feed order.
                   </p>
-                  <div className="mt-4 rounded-2xl bg-cream p-4">
+                  <div className="mt-4 rounded-2xl bg-brand-light p-4">
                     <div className="grid gap-2">
                       {getAllBooks().slice(0, 3).map(({ book, author }) => (
                         <div key={book} className="flex items-center justify-between rounded-xl bg-white px-3 py-2 text-sm">
-                          <span className="font-semibold text-darkteal truncate">{book}</span>
-                          <span className="ml-3 shrink-0 text-botsagedark text-xs">{author}</span>
+                          <span className="font-medium text-slate-900 truncate">{book}</span>
+                          <span className="ml-3 shrink-0 text-slate-500 text-xs">{author}</span>
                         </div>
                       ))}
                     </div>
-                    <div className="mt-3 text-center text-xs font-bold uppercase tracking-[0.16em] text-botsagedark/60">
+                    <div className="mt-3 text-center text-xs font-medium text-slate-400">
                       Full browser available with Pro
                     </div>
                   </div>
                   <button
                     onClick={() => handleUpgradeClick("profile_book_preview")}
-                    className="mt-5 rounded-full border border-botgreen/30 px-5 py-3 text-sm font-bold text-botgreen"
+                    className="mt-5 rounded-full border border-brand text-sm font-medium text-brand px-5 py-3"
                   >
                     Unlock book browsing
                   </button>
@@ -559,20 +554,20 @@ export default function ProfilePage() {
 
             {/* Share CTA */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-              className="bg-botgreen rounded-3xl p-10 text-center relative overflow-hidden shadow-xl mb-10"
+              className="bg-brand rounded-3xl p-10 text-center relative overflow-hidden shadow-xl mb-10"
             >
               <div className="absolute -right-16 -bottom-16 w-48 h-48 bg-white/5 rounded-full blur-3xl" />
               <div className="absolute -left-16 -top-16 w-48 h-48 bg-white/5 rounded-full blur-3xl" />
               <div className="relative z-10">
-                <h3 className="text-3xl font-bold mb-4 text-cream" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                <h3 className="text-3xl font-medium mb-4 text-white font-instrument-serif">
                   Ready to share your garden?
                 </h3>
-                <p className="text-botsagelight mb-8 max-w-md mx-auto">
+                <p className="text-white/70 mb-8 max-w-md mx-auto">
                   Inspire others with your curated learning journey and consistent growth.
                 </p>
                 <button
                   onClick={handleShare}
-                  className="bg-cream hover:bg-white text-botgreen px-10 py-4 rounded-full font-bold transition-all transform hover:scale-105 shadow-lg"
+                  className="bg-white hover:bg-slate-50 text-brand px-10 py-4 rounded-full font-medium transition-all transform hover:scale-105 shadow-lg"
                 >
                   {copied ? "Copied!" : "Share Your Progress"}
                 </button>
@@ -597,30 +592,30 @@ export default function ProfilePage() {
           <>
             {/* Account */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              className="bg-white border border-botsage/20 rounded-2xl p-6 mb-6 shadow-sm"
+              className="bg-white border border-slate-200 rounded-2xl p-6 mb-6 shadow-sm"
             >
-              <h2 className="font-bold text-lg mb-4 flex items-center gap-2 text-darkteal">
-                <svg className="size-5 text-botgreen" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+              <h2 className="font-medium text-lg mb-4 flex items-center gap-2 text-slate-900">
+                <svg className="size-5 text-brand" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                 </svg>
                 Account
               </h2>
               <div className="space-y-3 text-sm">
                 {user?.email && (
-                  <div className="flex justify-between py-2 border-b border-botsage/10">
-                    <span className="text-botsagedark">Email</span>
-                    <span className="text-darkteal">{user.email}</span>
+                  <div className="flex justify-between py-2 border-b border-slate-100">
+                    <span className="text-slate-500">Email</span>
+                    <span className="text-slate-900">{user.email}</span>
                   </div>
                 )}
                 {profile?.fc_username && (
-                  <div className="flex justify-between py-2 border-b border-botsage/10">
-                    <span className="text-botsagedark">Farcaster</span>
-                    <span className="text-darkteal">@{profile.fc_username}</span>
+                  <div className="flex justify-between py-2 border-b border-slate-100">
+                    <span className="text-slate-500">Farcaster</span>
+                    <span className="text-slate-900">@{profile.fc_username}</span>
                   </div>
                 )}
                 <div className="flex justify-between py-2">
-                  <span className="text-botsagedark">Plan</span>
-                  <span className={isSubscribed ? "text-botgreen font-bold" : "text-darkteal"}>
+                  <span className="text-slate-500">Plan</span>
+                  <span className={isSubscribed ? "text-brand font-medium" : "text-slate-900"}>
                     {isSubscribed ? "Pro" : "Free"}
                   </span>
                 </div>
@@ -629,7 +624,7 @@ export default function ProfilePage() {
                 <Link
                   href="/subscribe"
                   onClick={() => trackGrowthEvent({ event: "profile_upgrade_click", metadata: { source: "account_card" } })}
-                  className="block w-full mt-4 py-3 bg-botgreen rounded-xl text-center font-bold text-cream"
+                  className="block w-full mt-4 py-3 bg-brand rounded-xl text-center font-medium text-white"
                 >
                   Upgrade to Pro
                 </Link>
@@ -637,7 +632,7 @@ export default function ProfilePage() {
               {isSubscribed && (
                 <button
                   onClick={() => setShowCancelModal(true)}
-                  className="mt-4 w-full rounded-xl border border-softclay/30 py-3 text-sm font-bold text-softclay transition-colors hover:bg-softclay/5"
+                  className="mt-4 w-full rounded-xl border border-red-300 py-3 text-sm font-medium text-red-500 transition-colors hover:bg-red-50"
                 >
                   Manage or cancel subscription
                 </button>
@@ -646,10 +641,10 @@ export default function ProfilePage() {
 
             {/* Notifications */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-              className="bg-white border border-botsage/20 rounded-2xl p-6 mb-6 shadow-sm"
+              className="bg-white border border-slate-200 rounded-2xl p-6 mb-6 shadow-sm"
             >
-              <h2 className="font-bold text-lg mb-4 flex items-center gap-2 text-darkteal">
-                <svg className="size-5 text-botgreen" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+              <h2 className="font-medium text-lg mb-4 flex items-center gap-2 text-slate-900">
+                <svg className="size-5 text-brand" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                 </svg>
                 Daily Reminder
@@ -657,27 +652,27 @@ export default function ProfilePage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-darkteal">Push Notifications</p>
-                    <p className="text-xs text-botsagedark">Get reminded to read daily</p>
+                    <p className="font-medium text-slate-900">Push Notifications</p>
+                    <p className="text-xs text-slate-500">Get reminded to read daily</p>
                   </div>
                   <button
                     onClick={handleNotificationToggle}
-                    className={`w-14 h-8 rounded-full transition-all relative ${notificationsEnabled ? "bg-botgreen" : "bg-botsage/30"}`}
+                    className={`w-14 h-8 rounded-full transition-all relative ${notificationsEnabled ? "bg-brand" : "bg-slate-200"}`}
                   >
                     <div className={`w-6 h-6 bg-white rounded-full absolute top-1 transition-all shadow-sm ${notificationsEnabled ? "right-1" : "left-1"}`} />
                   </button>
                 </div>
                 {notificationsEnabled && (
-                  <div className="flex items-center justify-between pt-4 border-t border-botsage/10">
+                  <div className="flex items-center justify-between pt-4 border-t border-slate-100">
                     <div>
-                      <p className="font-medium text-darkteal">Reminder Time</p>
-                      <p className="text-xs text-botsagedark">When should we nudge you?</p>
+                      <p className="font-medium text-slate-900">Reminder Time</p>
+                      <p className="text-xs text-slate-500">When should we nudge you?</p>
                     </div>
                     <input
                       type="time"
                       value={reminderTime}
                       onChange={(e) => handleReminderTimeChange(e.target.value)}
-                      className="bg-cream rounded-lg px-3 py-2 text-sm border border-botsage/30 focus:border-botgreen outline-none text-darkteal"
+                      className="bg-white rounded-lg px-3 py-2 text-sm border border-slate-200 focus:border-brand outline-none text-slate-900"
                     />
                   </div>
                 )}
@@ -686,22 +681,22 @@ export default function ProfilePage() {
 
             {/* Sound Effects */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-              className="bg-white border border-botsage/20 rounded-2xl p-6 mb-6 shadow-sm"
+              className="bg-white border border-slate-200 rounded-2xl p-6 mb-6 shadow-sm"
             >
-              <h2 className="font-bold text-lg mb-4 flex items-center gap-2 text-darkteal">
-                <svg className="size-5 text-botgreen" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+              <h2 className="font-medium text-lg mb-4 flex items-center gap-2 text-slate-900">
+                <svg className="size-5 text-brand" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
                 </svg>
                 Sound Effects
               </h2>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-darkteal">Enable Sounds</p>
-                  <p className="text-xs text-botsagedark">Swipe, save, and milestone sounds</p>
+                  <p className="font-medium text-slate-900">Enable Sounds</p>
+                  <p className="text-xs text-slate-500">Swipe, save, and milestone sounds</p>
                 </div>
                 <button
                   onClick={() => { const v = !soundEnabled; setSoundEnabledState(v); setSoundEnabled(v); if (v) sounds.save(); }}
-                  className={`w-14 h-8 rounded-full transition-all relative ${soundEnabled ? "bg-botgreen" : "bg-botsage/30"}`}
+                  className={`w-14 h-8 rounded-full transition-all relative ${soundEnabled ? "bg-brand" : "bg-slate-200"}`}
                 >
                   <div className={`w-6 h-6 bg-white rounded-full absolute top-1 transition-all shadow-sm ${soundEnabled ? "right-1" : "left-1"}`} />
                 </button>
@@ -710,24 +705,24 @@ export default function ProfilePage() {
 
             {/* Daily Goal */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.17 }}
-              className="bg-white border border-botsage/20 rounded-2xl p-6 mb-6 shadow-sm"
+              className="bg-white border border-slate-200 rounded-2xl p-6 mb-6 shadow-sm"
             >
-              <h2 className="font-bold text-lg mb-4 flex items-center gap-2 text-darkteal">
-                <svg className="size-5 text-botgreen" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+              <h2 className="font-medium text-lg mb-4 flex items-center gap-2 text-slate-900">
+                <svg className="size-5 text-brand" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
                 </svg>
                 Daily Goal
               </h2>
-              <p className="text-xs text-botsagedark mb-4">Cards to read per day</p>
+              <p className="text-xs text-slate-500 mb-4">Cards to read per day</p>
               <div className="grid grid-cols-4 gap-2">
                 {[5, 10, 15, 20].map(g => (
                   <button
                     key={g}
                     onClick={() => { saveDailyGoal(g); setDailyGoal(g); }}
-                    className={`py-3 rounded-xl text-sm font-bold transition-all ${
+                    className={`py-3 rounded-xl text-sm font-medium transition-all ${
                       dailyGoal === g
-                        ? "bg-botgreen text-cream"
-                        : "bg-botsage/15 text-botsagedark hover:bg-botsage/25"
+                        ? "bg-brand text-white"
+                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     }`}
                   >
                     {g}
@@ -738,30 +733,30 @@ export default function ProfilePage() {
 
             {/* Streak Shield */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}
-              className="bg-white border border-botsage/20 rounded-2xl p-6 mb-6 shadow-sm"
+              className="bg-white border border-slate-200 rounded-2xl p-6 mb-6 shadow-sm"
             >
-              <h2 className="font-bold text-lg mb-4 flex items-center gap-2 text-darkteal">
-                <svg className="size-5 text-botgreen" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+              <h2 className="font-medium text-lg mb-4 flex items-center gap-2 text-slate-900">
+                <svg className="size-5 text-brand" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                 </svg>
                 Streak Shield
               </h2>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-darkteal">Protect your streak</p>
-                  <p className="text-xs text-botsagedark">Saves your streak if you miss 1 day</p>
+                  <p className="font-medium text-slate-900">Protect your streak</p>
+                  <p className="text-xs text-slate-500">Saves your streak if you miss 1 day</p>
                 </div>
                 {isSubscribed ? (
                   <button
                     onClick={() => { const v = !streakFreezeActive; saveStreakFreeze(v); setStreakFreezeActive(v); }}
-                    className={`w-14 h-8 rounded-full transition-all relative ${streakFreezeActive ? "bg-botgreen" : "bg-botsage/30"}`}
+                    className={`w-14 h-8 rounded-full transition-all relative ${streakFreezeActive ? "bg-brand" : "bg-slate-200"}`}
                   >
                     <div className={`w-6 h-6 bg-white rounded-full absolute top-1 transition-all shadow-sm ${streakFreezeActive ? "right-1" : "left-1"}`} />
                   </button>
                 ) : (
                   <Link
                     href="/subscribe"
-                    className="text-xs font-bold text-botgreen bg-botgreen/10 px-4 py-2 rounded-full"
+                    className="text-xs font-medium text-brand bg-brand-light px-4 py-2 rounded-full"
                   >
                     Pro Only
                   </Link>
@@ -771,32 +766,32 @@ export default function ProfilePage() {
 
             {/* Wallet */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-              className="bg-white border border-botsage/20 rounded-2xl p-6 mb-6 shadow-sm"
+              className="bg-white border border-slate-200 rounded-2xl p-6 mb-6 shadow-sm"
             >
-              <h2 className="font-bold text-lg mb-4 flex items-center gap-2 text-darkteal">
-                <svg className="size-5 text-botgreen" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+              <h2 className="font-medium text-lg mb-4 flex items-center gap-2 text-slate-900">
+                <svg className="size-5 text-brand" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3" />
                 </svg>
                 Wallet Address
               </h2>
-              <p className="text-xs text-botsagedark mb-4">For crypto payments and rewards</p>
+              <p className="text-xs text-slate-500 mb-4">For crypto payments and rewards</p>
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={walletInput}
                   onChange={(e) => setWalletInput(e.target.value)}
                   placeholder="0x..."
-                  className="flex-1 bg-cream rounded-xl px-4 py-3 text-sm border border-botsage/30 focus:border-botgreen outline-none font-mono text-darkteal"
+                  className="flex-1 bg-white rounded-xl px-4 py-3 text-sm border border-slate-200 focus:border-brand outline-none font-mono text-slate-900"
                 />
                 <button
                   onClick={handleWalletSave}
                   disabled={walletSaving || !walletInput}
-                  className={`px-4 py-3 rounded-xl font-bold text-sm transition-all ${
+                  className={`px-4 py-3 rounded-xl font-medium text-sm transition-all ${
                     walletSaved
-                      ? "bg-botgreen text-cream"
+                      ? "bg-brand text-white"
                       : walletSaving || !walletInput
-                        ? "bg-botsage/20 text-botsagedark cursor-not-allowed"
-                        : "bg-botgreen text-cream hover:bg-botgreen/90"
+                        ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                        : "bg-brand text-white hover:bg-brand-dark"
                   }`}
                 >
                   {walletSaved ? "✓" : walletSaving ? "..." : "Save"}
@@ -806,11 +801,11 @@ export default function ProfilePage() {
 
             {/* Sign Out */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-              className="bg-white border border-softclay/20 rounded-2xl p-6 mb-6 shadow-sm"
+              className="bg-white border border-red-200 rounded-2xl p-6 mb-6 shadow-sm"
             >
               <button
                 onClick={async () => { try { await signOut(); } catch {} window.location.href = "/"; }}
-                className="w-full py-3 border border-softclay/30 rounded-xl text-softclay hover:bg-softclay/5 transition-all text-sm font-bold"
+                className="w-full py-3 border border-red-300 rounded-xl text-red-500 hover:bg-red-50 transition-all text-sm font-medium"
               >
                 Sign Out
               </button>
@@ -831,8 +826,8 @@ export default function ProfilePage() {
       />
 
       {/* Footer */}
-      <footer className="p-10 text-center text-botsagedark text-sm border-t border-botsage/10">
-        <p className="text-lg mb-2 italic" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Grow a little every day.</p>
+      <footer className="p-10 text-center text-slate-500 text-sm border-t border-slate-100">
+        <p className="text-lg mb-2 italic font-instrument-serif">Grow a little every day.</p>
         <p>&copy; 2025 BloomScroll. Organic wisdom, curated for you.</p>
       </footer>
     </div>

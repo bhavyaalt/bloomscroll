@@ -66,16 +66,11 @@ export default function AppHeader({
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#102219]/90 backdrop-blur-md border-b border-white/5">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
         <div className="max-w-2xl mx-auto px-2 sm:px-4 h-12 sm:h-14 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-1.5 sm:gap-2.5">
-            <div className="size-6 sm:size-7 flex items-center justify-center bg-primary rounded-lg">
-              <svg className="size-3.5 sm:size-4 text-[#102219]" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 22c4.97 0 9-4.03 9-9-4.97 0-9 4.03-9 9ZM5.6 10.25c0 1.64 1.33 2.97 2.97 2.97h.86c1.97 0 3.56-1.6 3.56-3.57v-5.4C12.99 2.56 11.43 1 9.43 1c-2 0-3.56 1.56-3.56 3.56v5.4c0 .1 0 .2-.27.29ZM3 13c0 4.97 4.03 9 9 9 0-4.97-4.03-9-9-9Z" />
-              </svg>
-            </div>
-            <span className="text-base sm:text-lg font-bold tracking-tight text-primary hidden min-[400px]:inline">BloomScroll</span>
+          <Link href="/" className="flex items-center">
+            <span className="font-instrument-serif italic text-lg sm:text-xl text-slate-900">BloomScroll</span>
           </Link>
 
           {/* Right controls */}
@@ -83,7 +78,7 @@ export default function AppHeader({
             {/* Books - hidden on very small screens */}
             <button
               onClick={onShowBookFilter}
-              className="hidden sm:flex items-center gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-white/60 hover:text-white/80 hover:bg-white/5 transition-all text-sm"
+              className="hidden sm:flex items-center gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all text-sm"
             >
               <svg className="size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
@@ -93,29 +88,29 @@ export default function AppHeader({
             {/* Streak */}
             <button
               onClick={onShowStreakModal}
-              className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-full text-white/60 hover:text-white/80 hover:bg-white/5 transition-all"
+              className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all"
             >
               <span className="text-xs sm:text-sm">🔥</span>
-              <span className="text-xs sm:text-sm font-bold text-white/70">{streak.currentStreak}</span>
+              <span className="text-xs sm:text-sm font-medium text-slate-600">{streak.currentStreak}</span>
             </button>
 
             <button
               onClick={onShowLearningTracks}
-              className="hidden min-[440px]:flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-white/60 hover:text-white/80 hover:bg-white/5 transition-all"
+              className="hidden min-[440px]:flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all"
               title="Learning tracks"
             >
               <svg className="size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 14.25c-3.728 0-6.75 1.679-6.75 3.75V21h13.5v-3c0-2.071-3.022-3.75-6.75-3.75zm0 0a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5zM6.75 9.75c0-2.9 2.35-5.25 5.25-5.25 1.595 0 3.024.712 3.987 1.834" />
               </svg>
               <span className="text-xs sm:text-sm font-medium">Learn</span>
-              {!isSubscribed && <span className="text-[9px] uppercase tracking-[0.16em] text-primary">Pro</span>}
+              {!isSubscribed && <span className="text-[9px] text-brand">Pro</span>}
             </button>
 
             {/* Achievements */}
             {onShowAchievements && (
               <button
                 onClick={onShowAchievements}
-                className="flex items-center gap-1 px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-full text-white/60 hover:text-white/80 hover:bg-white/5 transition-all"
+                className="flex items-center gap-1 px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all"
                 title="Achievements"
               >
                 <span className="text-xs sm:text-sm">🏆</span>
@@ -126,7 +121,7 @@ export default function AppHeader({
             {onShowLeaderboard && (
               <button
                 onClick={onShowLeaderboard}
-                className="hidden min-[400px]:flex items-center gap-1 px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-full text-white/60 hover:text-white/80 hover:bg-white/5 transition-all"
+                className="hidden min-[400px]:flex items-center gap-1 px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all"
                 title="Leaderboard"
               >
                 <span className="text-xs sm:text-sm">📊</span>
@@ -138,23 +133,23 @@ export default function AppHeader({
               onClick={onToggleSaved}
               className={`flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-full transition-all ${
                 showSaved
-                  ? "bg-primary text-[#102219]"
-                  : "text-white/60 hover:text-white/80 hover:bg-white/5"
+                  ? "bg-brand text-white"
+                  : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
               }`}
             >
               <svg className="size-3.5 sm:size-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
               </svg>
-              <span className="text-xs sm:text-sm font-bold">{savedCount}</span>
+              <span className="text-xs sm:text-sm font-medium">{savedCount}</span>
               {!isSubscribed && (
-                <span className="hidden sm:inline text-[10px] text-white/35">/ {saveLimit}</span>
+                <span className="hidden sm:inline text-[10px] text-slate-400">/ {saveLimit}</span>
               )}
             </button>
 
             {!isSubscribed && (
               <Link
                 href="/subscribe"
-                className="hidden min-[520px]:inline-flex rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-primary hover:bg-primary/15"
+                className="hidden min-[520px]:inline-flex rounded-full border border-brand/20 bg-brand/10 px-3 py-1.5 text-[11px] font-medium text-brand hover:bg-brand/15"
               >
                 Pro
               </Link>
@@ -164,18 +159,18 @@ export default function AppHeader({
             {user || profile ? (
               <button
                 onClick={onToggleUserMenu}
-                className="size-7 sm:size-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/15 transition-all overflow-hidden border border-white/10"
+                className="size-7 sm:size-9 rounded-full bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition-all overflow-hidden border border-slate-200"
               >
                 {profile?.fc_pfp_url ? (
                   <img src={profile.fc_pfp_url} alt="" className="size-full object-cover" />
                 ) : (
-                  <span className="text-xs sm:text-sm font-bold text-white/70">{displayInitial}</span>
+                  <span className="text-xs sm:text-sm font-medium text-slate-600">{displayInitial}</span>
                 )}
               </button>
             ) : (
               <Link
                 href="/auth?redirect=/app"
-                className="px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-primary text-[#102219] text-xs sm:text-sm font-bold hover:bg-primary/90 transition-all"
+                className="px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-brand text-white text-xs sm:text-sm font-medium hover:bg-brand-dark transition-all"
               >
                 Login
               </Link>
@@ -186,16 +181,16 @@ export default function AppHeader({
 
       {/* User Menu Dropdown */}
       {showUserMenu && (
-        <div className="fixed top-16 right-4 z-50 bg-[#1a2e23] border border-white/10 rounded-xl p-2 min-w-[200px] shadow-2xl">
+        <div className="fixed top-16 right-4 z-50 bg-white border border-slate-200 rounded-xl p-2 min-w-[200px] shadow-lg">
           {user || profile ? (
             <>
-              <div className="px-3 py-2 text-xs text-white/40 truncate border-b border-white/10 mb-1">
+              <div className="px-3 py-2 text-xs text-slate-400 truncate border-b border-slate-200 mb-1">
                 {user?.email || profile?.fc_username || "User"}
               </div>
               <Link
                 href="/profile"
                 onClick={onToggleUserMenu}
-                className="w-full px-3 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg flex items-center gap-2.5 text-white/70"
+                className="w-full px-3 py-2.5 text-left text-sm hover:bg-slate-100 rounded-lg flex items-center gap-2.5 text-slate-600"
               >
                 <svg className="size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
@@ -204,25 +199,25 @@ export default function AppHeader({
               </Link>
               <button
                 onClick={() => { onShowBookFilter(); onToggleUserMenu(); }}
-                className="w-full px-3 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg flex items-center gap-2.5 text-white/70"
+                className="w-full px-3 py-2.5 text-left text-sm hover:bg-slate-100 rounded-lg flex items-center gap-2.5 text-slate-600"
               >
                 <svg className="size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                 </svg>
-                Browse Books {!isSubscribed && <span className="text-xs text-white/30 ml-auto">PRO</span>}
+                Browse Books {!isSubscribed && <span className="text-xs text-slate-400 ml-auto">PRO</span>}
               </button>
               <button
                 onClick={() => { onShowLearningTracks(); onToggleUserMenu(); }}
-                className="w-full px-3 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg flex items-center gap-2.5 text-white/70"
+                className="w-full px-3 py-2.5 text-left text-sm hover:bg-slate-100 rounded-lg flex items-center gap-2.5 text-slate-600"
               >
                 <svg className="size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 14.25c-3.728 0-6.75 1.679-6.75 3.75V21h13.5v-3c0-2.071-3.022-3.75-6.75-3.75zm0 0a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5zM6.75 9.75c0-2.9 2.35-5.25 5.25-5.25 1.595 0 3.024.712 3.987 1.834" />
                 </svg>
-                Learning Tracks {!isSubscribed && <span className="text-xs text-white/30 ml-auto">PRO</span>}
+                Learning Tracks {!isSubscribed && <span className="text-xs text-slate-400 ml-auto">PRO</span>}
               </button>
               <button
                 onClick={() => { onShowCollections(); onToggleUserMenu(); }}
-                className="w-full px-3 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg flex items-center gap-2.5 text-white/70"
+                className="w-full px-3 py-2.5 text-left text-sm hover:bg-slate-100 rounded-lg flex items-center gap-2.5 text-slate-600"
               >
                 <svg className="size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 6.878V6a2.25 2.25 0 012.25-2.25h7.5A2.25 2.25 0 0118 6v.878m-12 0c.235-.083.487-.128.75-.128h10.5c.263 0 .515.045.75.128m-12 0A2.25 2.25 0 004.5 9v.878m13.5-3A2.25 2.25 0 0119.5 9v.878m0 0a2.246 2.246 0 00-.75-.128H5.25c-.263 0-.515.045-.75.128m15 0A2.25 2.25 0 0121 12v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6c0-1.243 1.007-2.25 2.25-2.25h13.5" />
@@ -233,14 +228,14 @@ export default function AppHeader({
                 <>
                   <button
                     onClick={() => { onShowReview(); onToggleUserMenu(); }}
-                    className="w-full px-3 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg flex items-center gap-2.5 text-white/70"
+                    className="w-full px-3 py-2.5 text-left text-sm hover:bg-slate-100 rounded-lg flex items-center gap-2.5 text-slate-600"
                   >
                     <svg className="size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" />
                     </svg>
                     Review Cards
                     {reviewDueCount > 0 && (
-                      <span className="ml-auto text-xs bg-primary/20 text-primary px-1.5 py-0.5 rounded-full font-bold">
+                      <span className="ml-auto text-xs bg-brand/20 text-brand px-1.5 py-0.5 rounded-full font-medium">
                         {reviewDueCount}
                       </span>
                     )}
@@ -249,15 +244,15 @@ export default function AppHeader({
                     <Link
                       href="/subscribe?source=header_review_teaser"
                       onClick={onToggleUserMenu}
-                      className="block rounded-xl border border-primary/15 bg-primary/10 px-3 py-3 text-sm text-white/75"
+                      className="block rounded-xl border border-brand/15 bg-brand/10 px-3 py-3 text-sm text-slate-600"
                     >
                       <div className="flex items-center justify-between gap-2">
-                        <span className="font-semibold text-primary">
+                        <span className="font-medium text-brand">
                           {reviewDueCount > 0 ? `${reviewDueCount} cards waiting to stick` : "Make your saved cards memorable"}
                         </span>
-                        <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-primary">Pro</span>
+                        <span className="text-[10px] font-medium text-brand">Pro</span>
                       </div>
-                      <p className="mt-1 text-xs text-white/50">
+                      <p className="mt-1 text-xs text-slate-500">
                         Unlock review mode, unlimited saves, and deeper learning tools.
                       </p>
                     </Link>
@@ -267,7 +262,7 @@ export default function AppHeader({
               <Link
                 href="/profile"
                 onClick={onToggleUserMenu}
-                className="w-full px-3 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg flex items-center gap-2.5 text-white/70"
+                className="w-full px-3 py-2.5 text-left text-sm hover:bg-slate-100 rounded-lg flex items-center gap-2.5 text-slate-600"
               >
                 <svg className="size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
@@ -276,7 +271,7 @@ export default function AppHeader({
               </Link>
               <button
                 onClick={() => { onShowSettings(); onToggleUserMenu(); }}
-                className="w-full px-3 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg flex items-center gap-2.5 text-white/70"
+                className="w-full px-3 py-2.5 text-left text-sm hover:bg-slate-100 rounded-lg flex items-center gap-2.5 text-slate-600"
               >
                 <svg className="size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
@@ -284,10 +279,10 @@ export default function AppHeader({
                 </svg>
                 Settings
               </button>
-              <div className="border-t border-white/5 mt-1 pt-1">
+              <div className="border-t border-slate-100 mt-1 pt-1">
                 <button
                   onClick={async () => { await onSignOut(); window.location.href = "/"; }}
-                  className="w-full px-3 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg text-white/30"
+                  className="w-full px-3 py-2.5 text-left text-sm hover:bg-slate-100 rounded-lg text-slate-400"
                 >
                   Sign out
                 </button>
@@ -295,25 +290,25 @@ export default function AppHeader({
             </>
           ) : (
             <>
-              <div className="px-3 py-2 text-xs text-white/40 border-b border-white/10 mb-1">
+              <div className="px-3 py-2 text-xs text-slate-400 border-b border-slate-200 mb-1">
                 Not signed in
               </div>
               <Link
                 href="/auth?redirect=/app"
-                className="block px-3 py-2.5 text-sm hover:bg-white/5 rounded-lg text-primary font-medium"
+                className="block px-3 py-2.5 text-sm hover:bg-slate-100 rounded-lg text-brand font-medium"
                 onClick={onToggleUserMenu}
               >
                 Sign in to sync
               </Link>
               <button
                 onClick={() => { onShowLearningTracks(); onToggleUserMenu(); }}
-                className="w-full px-3 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg flex items-center gap-2.5 text-white/60"
+                className="w-full px-3 py-2.5 text-left text-sm hover:bg-slate-100 rounded-lg flex items-center gap-2.5 text-slate-500"
               >
                 Learning Tracks
               </button>
               <button
                 onClick={() => { onShowCollections(); onToggleUserMenu(); }}
-                className="w-full px-3 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg flex items-center gap-2.5 text-white/60"
+                className="w-full px-3 py-2.5 text-left text-sm hover:bg-slate-100 rounded-lg flex items-center gap-2.5 text-slate-500"
               >
                 Collections
               </button>

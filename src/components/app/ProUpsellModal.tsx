@@ -37,29 +37,29 @@ export default function ProUpsellModal({
         exit={{ opacity: 0, y: 8, scale: 0.98 }}
         transition={{ duration: 0.18 }}
         onClick={(event) => event.stopPropagation()}
-        className="mx-auto mt-10 w-full max-w-md rounded-[28px] border border-[#007A5E]/20 bg-[#EACCD4] p-6 text-[#007A5E] shadow-2xl"
+        className="mx-auto mt-10 w-full max-w-md rounded-[28px] border border-brand/20 bg-white p-6 text-brand-dark shadow-2xl"
       >
         <div className="mb-4 flex items-start justify-between gap-4">
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#007A5E]/60">BloomScroll Pro</p>
-            <h2 className="mt-2 text-3xl font-bold" style={{ fontFamily: "Georgia, serif" }}>
+            <p className="text-[11px] font-medium text-brand/60">BloomScroll Pro</p>
+            <h2 className="mt-2 text-3xl font-medium" style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}>
               {title}
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="rounded-full border border-[#007A5E]/20 px-3 py-1 text-sm text-[#007A5E]/70 hover:bg-white/40"
+            className="rounded-full border border-brand/20 px-3 py-1 text-sm text-brand/70 hover:bg-brand-light"
           >
             Close
           </button>
         </div>
 
-        <p className="text-sm leading-relaxed text-[#007A5E]/75">{description}</p>
+        <p className="text-sm leading-relaxed text-brand-dark/75">{description}</p>
 
-        <div className="mt-5 space-y-2 rounded-3xl bg-white/45 p-4">
+        <div className="mt-5 space-y-2 rounded-3xl bg-[#FFF5FE] p-4">
           {points.map((point) => (
             <div key={point} className="flex items-start gap-2 text-sm">
-              <span className="mt-0.5 text-[#007A5E]">✓</span>
+              <span className="mt-0.5 text-brand">✓</span>
               <span>{point}</span>
             </div>
           ))}
@@ -68,13 +68,13 @@ export default function ProUpsellModal({
         <div className="mt-5 flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 rounded-full border border-[#007A5E]/20 px-4 py-3 text-sm font-semibold text-[#007A5E]/70 hover:bg-white/40"
+            className="flex-1 rounded-full border border-brand/20 px-4 py-3 text-sm font-medium text-brand/70 hover:bg-brand-light"
           >
             Maybe later
           </button>
           <button
             onClick={onUpgrade}
-            className="flex-1 rounded-full bg-[#007A5E] px-4 py-3 text-sm font-bold uppercase tracking-[0.16em] text-white hover:bg-[#005843]"
+            className="flex-1 rounded-full bg-brand px-4 py-3 text-sm font-medium text-white hover:bg-brand-dark"
           >
             {ctaLabel}
           </button>

@@ -24,41 +24,41 @@ export default function StreakModal({ streak, dailyProgress, onClose }: StreakMo
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-[#1a2e23] border border-primary/20 rounded-2xl sm:rounded-3xl max-w-sm w-full p-5 sm:p-8 text-center text-white mx-2"
+        className="bg-white border border-slate-200 rounded-2xl sm:rounded-3xl max-w-sm w-full p-5 sm:p-8 text-center text-slate-900 mx-2"
       >
         <div className="text-4xl sm:text-6xl mb-3 sm:mb-4">
           {getStreakEmoji(streak.currentStreak)}
         </div>
-        <h2 className="text-4xl sm:text-5xl font-black mb-2 text-primary flex items-center justify-center gap-2">
+        <h2 className="text-4xl sm:text-5xl font-instrument-serif font-medium mb-2 text-brand flex items-center justify-center gap-2">
           {streak.currentStreak}
           {streak.streakFreezeActive && (
             <span className="text-xl sm:text-2xl" title="Streak Shield active">&#x1F6E1;&#xFE0F;</span>
           )}
         </h2>
-        <p className="text-xs sm:text-sm uppercase tracking-widest text-white/50 mb-3 sm:mb-4 font-bold">
+        <p className="text-xs sm:text-sm text-slate-400 mb-3 sm:mb-4 font-medium">
           Day Streak
         </p>
 
         {freezeSavedStreak && (
-          <div className="mb-4 px-4 py-2 rounded-xl bg-blue-500/15 border border-blue-400/20 text-blue-300 text-sm">
+          <div className="mb-4 px-4 py-2 rounded-xl bg-blue-50 border border-blue-200 text-blue-600 text-sm">
             Shield saved your streak!
           </div>
         )}
 
-        <p className="text-white/70 mb-6 leading-relaxed">{getStreakMessage(streak.currentStreak)}</p>
+        <p className="text-slate-500 mb-6 leading-relaxed">{getStreakMessage(streak.currentStreak)}</p>
 
         {/* Daily Goal Progress */}
         <div className="mb-6 px-2">
           <div className="flex items-center justify-between text-xs mb-2">
-            <span className="text-white/50 font-medium">Today&apos;s Goal</span>
-            <span className="text-primary font-bold">
+            <span className="text-slate-400 font-medium">Today&apos;s Goal</span>
+            <span className="text-brand font-medium">
               {dailyProgress.read}/{dailyProgress.goal}
               {dailyProgress.completed && " &#10003;"}
             </span>
           </div>
-          <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+          <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
             <motion.div
-              className="h-full bg-primary rounded-full"
+              className="h-full bg-brand rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${goalPercent}%` }}
               transition={{ duration: 0.6, ease: "easeOut" }}
@@ -67,24 +67,24 @@ export default function StreakModal({ streak, dailyProgress, onClose }: StreakMo
         </div>
 
         {/* Stats row */}
-        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 sm:mb-8 py-3 sm:py-4 border-t border-b border-white/10">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 sm:mb-8 py-3 sm:py-4 border-t border-b border-slate-200">
           <div>
-            <div className="text-xl sm:text-2xl font-bold text-primary">{streak.currentStreak}</div>
-            <div className="text-[9px] sm:text-[10px] uppercase tracking-wider text-white/40 mt-1">Current</div>
+            <div className="text-xl sm:text-2xl font-medium text-brand">{streak.currentStreak}</div>
+            <div className="text-[9px] sm:text-[10px] text-slate-400 mt-1">Current</div>
           </div>
           <div>
-            <div className="text-xl sm:text-2xl font-bold text-white/80">{streak.longestStreak}</div>
-            <div className="text-[9px] sm:text-[10px] uppercase tracking-wider text-white/40 mt-1">Best</div>
+            <div className="text-xl sm:text-2xl font-medium text-slate-700">{streak.longestStreak}</div>
+            <div className="text-[9px] sm:text-[10px] text-slate-400 mt-1">Best</div>
           </div>
           <div>
-            <div className="text-xl sm:text-2xl font-bold text-white/80">{streak.totalDays}</div>
-            <div className="text-[9px] sm:text-[10px] uppercase tracking-wider text-white/40 mt-1">Total Days</div>
+            <div className="text-xl sm:text-2xl font-medium text-slate-700">{streak.totalDays}</div>
+            <div className="text-[9px] sm:text-[10px] text-slate-400 mt-1">Total Days</div>
           </div>
         </div>
 
         <button
           onClick={onClose}
-          className="w-full py-3 sm:py-3.5 bg-primary text-[#102219] rounded-xl font-bold text-sm uppercase tracking-wide hover:bg-primary/90 transition-colors"
+          className="w-full py-3 sm:py-3.5 bg-brand text-white rounded-xl font-medium text-sm hover:bg-brand-dark transition-colors"
         >
           Keep Growing
         </button>

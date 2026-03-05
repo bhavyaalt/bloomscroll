@@ -14,6 +14,9 @@
   --color-green-dark: var(--color-green-dark);
 
   /* Landing page design system */
+  --color-brand: #7B2CBF;
+  --color-brand-dark: #6A24A3;
+  --color-brand-light: #F3EAFA;
   --color-primary: #13ec80;
   --color-bglight: #f6f8f7;
   --color-bgdark: #102219;
@@ -49,6 +52,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: contain;
+  overflow-x: hidden;
 }
 
 /* Botanical dot pattern */
@@ -92,17 +96,16 @@ body {
   transform: translateY(-4px);
 }
 
-::-webkit-scrollbar {
-  width: 8px;
+/* Hide scrollbar globally — visual only, scrolling still works */
+html,
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-::-webkit-scrollbar-track {
-  background: #f6f8f7;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #cfe7db;
-  border-radius: 4px;
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
 }
 
 @keyframes marquee {
@@ -125,6 +128,10 @@ body {
 
 .font-helvetica {
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+}
+
+.font-instrument-serif {
+  font-family: 'Instrument Serif', Georgia, serif;
 }
 
 /* iOS safe area handling */

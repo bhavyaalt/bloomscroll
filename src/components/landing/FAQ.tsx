@@ -6,7 +6,7 @@ const faqs = [
   {
     question: "Is BloomScroll really free?",
     answer:
-      "Yes, 15 cards per day are free forever. Pro unlocks unlimited access plus spaced repetition to help you retain what you learn.",
+      "Yes, 5 cards per day are free forever. Pro unlocks unlimited access plus spaced repetition to help you retain what you learn.",
   },
   {
     question: "How is this different from Blinkist?",
@@ -23,36 +23,40 @@ const faqs = [
     answer:
       "Philosophy, psychology, history, science, leadership, creativity, mental models, and more. 1,000+ cards from 50+ books and counting.",
   },
-  {
-    question: "Can I use it on my phone?",
-    answer:
-      "Yes! BloomScroll is a PWA \u2014 add it to your home screen for a native app experience. Works on iOS, Android, and desktop.",
-  },
 ];
 
 export const FAQ = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section id="faq" className="px-6 md:px-20 lg:px-40 py-24">
+    <section id="faq" className="px-6 md:px-20 lg:px-40 py-16 md:py-24 bg-white">
       <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
-            Frequently Asked Questions
+        <div className="text-center mb-10">
+          <h2 className="font-instrument-serif text-2xl md:text-4xl font-medium tracking-tight text-slate-900">
+            Frequently asked{" "}
+            <span className="font-instrument-serif italic text-brand font-normal">
+              questions
+            </span>
           </h2>
-          <p className="text-slate-500 text-lg mt-3">
-            Everything you need to know about BloomScroll.
+          <p className="text-slate-500 text-base mt-3 max-w-xl mx-auto">
+            Quick answers to help you get set up, understand us better, and choose the right path as your usage grows.
           </p>
         </div>
         <div className="space-y-0">
           {faqs.map((faq, i) => (
-            <div key={i} className="border-b border-sage/30">
+            <div key={i} className="border-b border-slate-200">
               <button
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
                 className="w-full flex justify-between items-center py-5 text-left group"
               >
-                <span className="font-semibold text-slate-900 pr-4">{faq.question}</span>
-                <span className={`size-8 rounded-lg flex items-center justify-center shrink-0 border border-sage/30 text-slate-400 group-hover:bg-primary group-hover:text-bgdark group-hover:border-primary transition-all text-lg ${openIndex === i ? "bg-primary text-bgdark border-primary rotate-45" : ""}`}>
+                <span className={`font-medium pr-4 ${openIndex === i ? "text-brand" : "text-slate-900"}`}>
+                  {faq.question}
+                </span>
+                <span className={`size-8 rounded-full flex items-center justify-center shrink-0 border transition-all text-lg ${
+                  openIndex === i
+                    ? "bg-brand text-white border-brand rotate-45"
+                    : "border-slate-200 text-slate-400 group-hover:border-brand group-hover:text-brand"
+                }`}>
                   +
                 </span>
               </button>

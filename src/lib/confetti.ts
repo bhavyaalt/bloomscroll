@@ -11,7 +11,7 @@ interface ConfettiPiece {
   rotationSpeed: number;
 }
 
-const COLORS = ["#007A5E", "#EACCD4", "#4D9E8A", "#FFD700", "#FF6B6B", "#4ECDC4"];
+const COLORS = ["#7B2CBF", "#F3EAFA", "#A855F7", "#FFD700", "#FF6B6B", "#4ECDC4"];
 
 export function createConfetti(container?: HTMLElement): () => void {
   const target = container || document.body;
