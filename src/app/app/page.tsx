@@ -139,6 +139,7 @@ export default function AppPage() {
   const [audioMode, setAudioMode] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [autoScroll, setAutoScroll] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Reading mode state
   const [showReadingMode, setShowReadingMode] = useState(false);
@@ -424,35 +425,72 @@ export default function AppPage() {
     }
   }, [currentIndex, freeReadLimitReached]);
 
-  // Audio mode: speak quote
-  const speakQuote = useCallback((card: Card) => {
-    if (!card || typeof window === "undefined" || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel();
+  // Audio mode: speak quote using OpenAI TTS
+  const speakQuote = useCallback(async (card: Card) => {
+    if (!card || typeof window === "undefined") return;
+    
+    // Stop any currently playing audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+
     const text = `${card.quote}. By ${card.author}, from ${card.book}.`;
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.9;
-    utterance.pitch = 1;
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => {
-      setIsSpeaking(false);
-      if (autoScroll) {
-        setTimeout(() => goToNext(), 1500);
+    
+    try {
+      setIsSpeaking(true);
+      
+      const response = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, voice: "nova" }),
+      });
+
+      if (!response.ok) {
+        console.error("TTS API error");
+        setIsSpeaking(false);
+        return;
       }
-    };
-    utterance.onerror = () => setIsSpeaking(false);
-    window.speechSynthesis.speak(utterance);
+
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+
+      audio.onended = () => {
+        setIsSpeaking(false);
+        URL.revokeObjectURL(audioUrl);
+        if (autoScroll) {
+          setTimeout(() => goToNext(), 1500);
+        }
+      };
+
+      audio.onerror = () => {
+        setIsSpeaking(false);
+        URL.revokeObjectURL(audioUrl);
+      };
+
+      await audio.play();
+    } catch (error) {
+      console.error("TTS error:", error);
+      setIsSpeaking(false);
+    }
   }, [autoScroll, goToNext]);
 
   useEffect(() => {
     if (audioMode && currentCard && isLoaded) speakQuote(currentCard);
     return () => {
-      if (typeof window !== "undefined" && window.speechSynthesis) window.speechSynthesis.cancel();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
     };
   }, [currentIndex, audioMode, currentCard, isLoaded, speakQuote]);
 
   useEffect(() => {
-    if (!audioMode && typeof window !== "undefined" && window.speechSynthesis) {
-      window.speechSynthesis.cancel();
+    if (!audioMode && audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
       setIsSpeaking(false);
     }
   }, [audioMode]);
@@ -466,7 +504,10 @@ export default function AppPage() {
 
   const toggleAudioMode = () => {
     if (audioMode) {
-      if (typeof window !== "undefined" && window.speechSynthesis) window.speechSynthesis.cancel();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
       setIsSpeaking(false);
       setAudioMode(false);
     } else {
