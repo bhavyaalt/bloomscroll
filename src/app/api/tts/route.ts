@@ -2,9 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
+// Health check - GET /api/tts
+export async function GET() {
+  return NextResponse.json({ 
+    configured: !!OPENAI_API_KEY,
+    keyPrefix: OPENAI_API_KEY ? OPENAI_API_KEY.slice(0, 10) + "..." : null
+  });
+}
+
 export async function POST(request: NextRequest) {
   if (!OPENAI_API_KEY) {
-    return NextResponse.json({ error: "TTS not configured" }, { status: 500 });
+    console.error("OPENAI_API_KEY not set");
+    return NextResponse.json({ error: "TTS not configured - missing API key" }, { status: 500 });
   }
 
   try {
@@ -32,9 +41,13 @@ export async function POST(request: NextRequest) {
     });
 
     if (!response.ok) {
-      const error = await response.text();
-      console.error("OpenAI TTS error:", error);
-      return NextResponse.json({ error: "TTS generation failed" }, { status: 500 });
+      const errorText = await response.text();
+      console.error("OpenAI TTS error:", response.status, errorText);
+      return NextResponse.json({ 
+        error: "TTS generation failed", 
+        details: errorText,
+        status: response.status 
+      }, { status: 500 });
     }
 
     // Return the audio stream
