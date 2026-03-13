@@ -19,7 +19,7 @@ export async function GET(
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(145deg, #FFF5FE 0%, #F3EAFA 50%, #E8D5F5 100%)",
+          background: "#FFF5FE",
         }}
       >
         <div style={{ fontSize: 44, fontWeight: 600, color: "#7B2CBF" }}>
