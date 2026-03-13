@@ -20,11 +20,12 @@ export async function GET(
           alignItems: "center",
           justifyContent: "center",
           background: "#FFF5FE",
+          fontSize: 48,
+          fontWeight: 600,
+          color: "#7B2CBF",
         }}
       >
-        <div style={{ fontSize: 44, fontWeight: 600, color: "#7B2CBF" }}>
-          {displayName} Garden
-        </div>
+        {displayName} Garden
       </div>
     ),
     { width: 1200, height: 630 }
