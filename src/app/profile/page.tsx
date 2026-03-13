@@ -317,7 +317,7 @@ export default function ProfilePage() {
             <span className="font-instrument-serif italic text-lg sm:text-xl text-slate-900">BloomScroll</span>
           </div>
           <button
-            onClick={handleShare}
+            onClick={() => handleShare()}
             className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-1.5 sm:py-2 rounded-full bg-brand text-white font-medium text-xs sm:text-sm transition-transform active:scale-95 shadow-md"
           >
             <svg className="size-3.5 sm:size-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
