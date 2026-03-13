@@ -53,7 +53,6 @@ export default function StreakModal({ streak, dailyProgress, onClose }: StreakMo
             <span className="text-slate-400 font-medium">Today&apos;s Goal</span>
             <span className="text-brand font-medium">
               {dailyProgress.read}/{dailyProgress.goal}
-              {dailyProgress.completed && " &#10003;"}
             </span>
           </div>
           <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
