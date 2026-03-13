@@ -8,6 +8,8 @@ export async function GET(
   { params }: { params: Promise<{ username: string }> }
 ) {
   const { username } = await params;
+  const displayName = username.charAt(0).toUpperCase() + username.slice(1);
+  const initial = displayName.charAt(0).toUpperCase();
 
   return new ImageResponse(
     (
@@ -16,15 +18,37 @@ export async function GET(
           width: "100%",
           height: "100%",
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "#FFF5FE",
-          fontSize: 48,
-          fontWeight: 600,
-          color: "#7B2CBF",
+          backgroundColor: "#FFF5FE",
         }}
       >
-        Hello {username}!
+        <div
+          style={{
+            width: "100px",
+            height: "100px",
+            borderRadius: "50px",
+            backgroundColor: "#7B2CBF",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "white",
+            fontSize: "48px",
+            fontWeight: "bold",
+          }}
+        >
+          {initial}
+        </div>
+        <div style={{ marginTop: "20px", fontSize: "44px", fontWeight: "bold", color: "#7B2CBF" }}>
+          {displayName} Garden
+        </div>
+        <div style={{ marginTop: "8px", fontSize: "24px", color: "#9B4ED8" }}>
+          Wisdom collection
+        </div>
+        <div style={{ marginTop: "20px", fontSize: "20px", color: "#7B2CBF" }}>
+          bloomscroll.club
+        </div>
       </div>
     ),
     { width: 1200, height: 630 }
