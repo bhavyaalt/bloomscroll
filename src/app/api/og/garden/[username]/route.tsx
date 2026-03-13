@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 export async function GET(
   request: NextRequest,
@@ -9,8 +9,6 @@ export async function GET(
 ) {
   const { username } = await params;
 
-  // For now, generate a simple garden preview without DB calls
-  // Will add Supabase calls once basic OG works
   const displayName = username.charAt(0).toUpperCase() + username.slice(1);
   const initial = displayName.charAt(0).toUpperCase();
 
