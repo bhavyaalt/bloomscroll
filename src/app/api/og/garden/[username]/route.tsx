@@ -22,7 +22,7 @@ export async function GET(
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          background: "linear-gradient(145deg, #FFF5FE 0%, #F3EAFA 50%, #E8D5F5 100%)",
+          background: "#FFF5FE",
           gap: 24,
         }}
       >
@@ -31,7 +31,7 @@ export async function GET(
             width: 120,
             height: 120,
             borderRadius: 60,
-            background: "linear-gradient(135deg, #7B2CBF 0%, #9B4ED8 100%)",
+            background: "#7B2CBF",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -43,10 +43,10 @@ export async function GET(
           {initial}
         </div>
         <div style={{ fontSize: 48, fontWeight: 600, color: "#7B2CBF" }}>
-          {displayName}&apos;s Garden
+          {displayName} Garden
         </div>
-        <div style={{ fontSize: 28, color: "#9B4ED8", display: "flex", alignItems: "center", gap: 8 }}>
-          🌱 Wisdom Collection
+        <div style={{ fontSize: 28, color: "#9B4ED8" }}>
+          Wisdom Collection
         </div>
         <div style={{ fontSize: 24, color: "#7B2CBF", marginTop: 20 }}>
           bloomscroll.club
