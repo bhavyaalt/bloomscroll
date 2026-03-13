@@ -5,11 +5,18 @@ import { AnimatePresence, motion } from "framer-motion";
 
 type NotificationTone = "success" | "error" | "info";
 
+interface NotificationAction {
+  label: string;
+  href?: string;
+  onClick?: () => void;
+}
+
 interface NotificationInput {
   title: string;
   message?: string;
   tone?: NotificationTone;
   duration?: number;
+  action?: NotificationAction;
 }
 
 interface NotificationItem extends NotificationInput {
@@ -134,7 +141,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
                 className={`pointer-events-auto rounded-2xl border px-4 py-3 shadow-2xl backdrop-blur ${toneClasses(notification.tone || "info")}`}
               >
                 <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${toneBadgeClasses(notification.tone || "info")}`}>
                         {notification.tone || "info"}
@@ -144,6 +151,31 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
                     {notification.message ? (
                       <p className="mt-1 text-sm text-slate-500">{notification.message}</p>
                     ) : null}
+                    {notification.action && (
+                      <div className="mt-2">
+                        {notification.action.href ? (
+                          <a
+                            href={notification.action.href}
+                            className="inline-flex items-center gap-1 text-xs font-medium text-brand hover:text-brand-dark transition-colors"
+                          >
+                            {notification.action.label}
+                            <svg className="size-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                            </svg>
+                          </a>
+                        ) : (
+                          <button
+                            onClick={notification.action.onClick}
+                            className="inline-flex items-center gap-1 text-xs font-medium text-brand hover:text-brand-dark transition-colors"
+                          >
+                            {notification.action.label}
+                            <svg className="size-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                            </svg>
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
                   <button
                     onClick={() => dismiss(notification.id)}

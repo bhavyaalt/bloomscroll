@@ -662,6 +662,10 @@ export default function AppPage() {
         title: "Planted in your garden",
         message: note ? "Your quote and note are live on your garden." : "Your quote is now saved to your garden.",
         tone: "success",
+        action: {
+          label: "View Garden",
+          href: "/profile?tab=garden",
+        },
       });
     } catch (err) {
       console.error("Error pinning card:", err);
