@@ -44,14 +44,15 @@ export async function GET(
     profile.email?.split("@")[0] ||
     "A Reader";
 
-  // Get first 4 pin quotes for preview
-  const previewQuotes = pins.slice(0, 4).map((pin) => {
+  // Get first 3 pin quotes for preview
+  const previewQuotes = pins.slice(0, 3).map((pin) => {
     const card = getAnyCardById(pin.card_id);
     if (!card) return "...";
-    return card.quote.length > 60 ? card.quote.slice(0, 57) + "..." : card.quote;
+    return card.quote.length > 80 ? card.quote.slice(0, 77) + "..." : card.quote;
   });
 
   const initial = displayName.charAt(0).toUpperCase();
+  const avatarUrl = profile.fc_pfp_url || profile.avatar_url;
 
   return new ImageResponse(
     (
@@ -60,87 +61,168 @@ export async function GET(
           width: "100%",
           height: "100%",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          padding: "60px",
-          background: "linear-gradient(135deg, #FFF5FE 0%, #F3EAFA 100%)",
-          color: "#7B2CBF",
+          position: "relative",
+          background: "linear-gradient(145deg, #FFF5FE 0%, #F3EAFA 50%, #E8D5F5 100%)",
         }}
       >
-        {/* Top: Avatar + Name */}
-        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+        {/* Background chair image - positioned right */}
+        <img
+          src="https://bloomscroll.club/landing/center-chair.svg"
+          width={500}
+          height={500}
+          style={{
+            position: "absolute",
+            right: -50,
+            bottom: -50,
+            opacity: 0.15,
+          }}
+        />
+
+        {/* Main content */}
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            padding: "50px 60px",
+            position: "relative",
+            zIndex: 1,
+          }}
+        >
+          {/* Top: Avatar + Name + Stats */}
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  width={90}
+                  height={90}
+                  style={{
+                    borderRadius: "50%",
+                    border: "4px solid rgba(123, 44, 191, 0.2)",
+                  }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: 90,
+                    height: 90,
+                    borderRadius: "50%",
+                    background: "linear-gradient(135deg, #7B2CBF 0%, #9B4ED8 100%)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "white",
+                    fontSize: 40,
+                    fontWeight: 600,
+                  }}
+                >
+                  {initial}
+                </div>
+              )}
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <div style={{ fontSize: 42, fontWeight: 600, color: "#7B2CBF" }}>
+                  {displayName}&apos;s Garden
+                </div>
+                <div
+                  style={{
+                    fontSize: 22,
+                    color: "#9B4ED8",
+                    marginTop: 6,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <span style={{ fontSize: 24 }}>🌱</span>
+                  {pins.length} quote{pins.length !== 1 ? "s" : ""} planted
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Middle: Quote previews as elegant cards */}
           <div
             style={{
-              width: 80,
-              height: 80,
-              borderRadius: "50%",
-              background: "#7B2CBF",
               display: "flex",
-              alignItems: "center",
+              flexDirection: "column",
+              gap: "14px",
+              flex: 1,
               justifyContent: "center",
-              color: "white",
-              fontSize: 36,
-              fontWeight: 500,
+              maxWidth: "75%",
             }}
           >
-            {initial}
+            {previewQuotes.length > 0 ? (
+              previewQuotes.map((quote, i) => (
+                <div
+                  key={i}
+                  style={{
+                    background: "rgba(255,255,255,0.85)",
+                    borderRadius: "16px",
+                    padding: "18px 24px",
+                    fontSize: 18,
+                    fontStyle: "italic",
+                    lineHeight: 1.5,
+                    color: "#4A2875",
+                    boxShadow: "0 4px 20px rgba(123, 44, 191, 0.08)",
+                    borderLeft: "4px solid #7B2CBF",
+                  }}
+                >
+                  &ldquo;{quote}&rdquo;
+                </div>
+              ))
+            ) : (
+              <div
+                style={{
+                  background: "rgba(255,255,255,0.85)",
+                  borderRadius: "16px",
+                  padding: "24px 32px",
+                  fontSize: 20,
+                  color: "#9B4ED8",
+                  textAlign: "center",
+                }}
+              >
+                Start planting wisdom in your garden ✨
+              </div>
+            )}
           </div>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ fontSize: 36, fontWeight: 500 }}>
-              {displayName}&apos;s Garden
+
+          {/* Bottom: Branding */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+              }}
+            >
+              <span style={{ fontSize: 28, fontWeight: 700, color: "#7B2CBF" }}>
+                BloomScroll
+              </span>
+              <span style={{ fontSize: 20, color: "#9B4ED8" }}>
+                · bloomscroll.club
+              </span>
             </div>
             <div
               style={{
-                fontSize: 20,
-                opacity: 0.7,
-                marginTop: 4,
+                fontSize: 18,
+                color: "#9B4ED8",
+                background: "rgba(123, 44, 191, 0.1)",
+                padding: "8px 16px",
+                borderRadius: "20px",
               }}
             >
-              {pins.length} quote{pins.length !== 1 ? "s" : ""} planted
+              Swipe smarter. Grow wiser.
             </div>
           </div>
-        </div>
-
-        {/* Middle: 2x2 quote previews */}
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "16px",
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "20px 0",
-          }}
-        >
-          {previewQuotes.map((quote, i) => (
-            <div
-              key={i}
-              style={{
-                width: "46%",
-                background: "rgba(255,255,255,0.5)",
-                borderRadius: "16px",
-                padding: "20px",
-                fontSize: 16,
-                fontStyle: "italic",
-                lineHeight: 1.4,
-              }}
-            >
-              &ldquo;{quote}&rdquo;
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom: Branding */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            gap: "8px",
-          }}
-        >
-          <span style={{ fontSize: 24, fontWeight: 500 }}>BloomScroll</span>
         </div>
       </div>
     ),
