@@ -9,9 +9,6 @@ export async function GET(
 ) {
   const { username } = await params;
 
-  const displayName = username.charAt(0).toUpperCase() + username.slice(1);
-  const initial = displayName.charAt(0).toUpperCase();
-
   return new ImageResponse(
     (
       <div
@@ -19,38 +16,15 @@ export async function GET(
           width: "100%",
           height: "100%",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
           alignItems: "center",
+          justifyContent: "center",
           background: "#FFF5FE",
-          gap: 24,
+          fontSize: 48,
+          fontWeight: 600,
+          color: "#7B2CBF",
         }}
       >
-        <div
-          style={{
-            width: 120,
-            height: 120,
-            borderRadius: 60,
-            background: "#7B2CBF",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "white",
-            fontSize: 56,
-            fontWeight: 600,
-          }}
-        >
-          {initial}
-        </div>
-        <div style={{ fontSize: 48, fontWeight: 600, color: "#7B2CBF" }}>
-          {displayName} Garden
-        </div>
-        <div style={{ fontSize: 28, color: "#9B4ED8" }}>
-          Wisdom Collection
-        </div>
-        <div style={{ fontSize: 24, color: "#7B2CBF", marginTop: 20 }}>
-          bloomscroll.club
-        </div>
+        Hello {username}!
       </div>
     ),
     { width: 1200, height: 630 }
