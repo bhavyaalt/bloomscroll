@@ -112,7 +112,7 @@ export default function SubscribeContent({ initialRegion }: { initialRegion: Reg
     });
   }, [isAuthenticated, region, source]);
 
-  const handleSocialSignIn = async (provider: "google" | "twitter") => {
+  const handleSocialSignIn = async (provider: "google") => {
     setSocialLoading(provider);
     setAuthError(null);
     try {
@@ -367,21 +367,6 @@ export default function SubscribeContent({ initialRegion }: { initialRegion: Reg
                           </svg>
                         )}
                         Sign in with Google
-                      </button>
-
-                      <button
-                        onClick={() => handleSocialSignIn("twitter")}
-                        disabled={!!socialLoading}
-                        className="w-full py-4 rounded-xl font-medium transition-all bg-slate-900 text-white border border-slate-900 hover:bg-slate-800 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {socialLoading === "twitter" ? (
-                          <span className="animate-spin">⟳</span>
-                        ) : (
-                          <svg className="size-5" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                          </svg>
-                        )}
-                        Sign in with X
                       </button>
 
                       {authError && (
