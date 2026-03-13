@@ -54,6 +54,7 @@ import { useNotifications } from "@/components/NotificationProvider";
 import ProUpsellModal from "@/components/app/ProUpsellModal";
 import { trackGrowthEvent } from "@/lib/analytics";
 import LearningTracksModal from "@/components/app/LearningTracksModal";
+import BottomNav from "@/components/app/BottomNav";
 
 const SWIPE_THRESHOLD = 100;
 const VIEW_STORAGE_KEY = "bloomscroll_viewed_cards";
@@ -891,7 +892,7 @@ export default function AppPage() {
           onUpgrade={() => handleUpgrade("saved_cards_view")}
         />
       ) : freeReadLimitReached ? (
-        <div className="flex-1 px-3 sm:px-4 pt-20 sm:pt-24 pb-6 flex items-start justify-center">
+        <div className="flex-1 px-3 sm:px-4 pt-20 sm:pt-24 pb-20 flex items-start justify-center">
           <div className="w-full max-w-2xl rounded-[30px] border border-slate-200 bg-brand-light p-6 sm:p-8 text-center shadow-2xl shadow-black/5">
             <span className="inline-flex rounded-full border border-brand/20 bg-brand/10 px-3 py-1 text-[11px] font-medium text-brand">
               Free limit reached
@@ -1160,6 +1161,13 @@ export default function AppPage() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Bottom Navigation */}
+      <BottomNav
+        activeTab="feed"
+        savedCount={savedCards.size}
+        onShowSaved={() => setShowSaved(true)}
+      />
     </div>
   );
 }
