@@ -68,8 +68,8 @@ export default function ReadingMode({ card, isOpen, onClose, isSubscribed, onUpg
         </div>
 
         {/* Header */}
-        <header className="fixed top-0 left-0 right-0 z-40 backdrop-blur-md bg-black/20">
-          <div className="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
+        <header className="fixed top-0 left-0 right-0 z-40 backdrop-blur-md bg-black/20 safe-top">
+          <div className="max-w-2xl mx-auto px-3 sm:px-4 h-12 sm:h-14 flex items-center justify-between">
             <button
               onClick={onClose}
               className="flex items-center gap-2 text-sm font-medium opacity-70 hover:opacity-100"
@@ -81,14 +81,14 @@ export default function ReadingMode({ card, isOpen, onClose, isSubscribed, onUpg
               {/* Font size controls */}
               <button
                 onClick={() => setFontSizeIndex(Math.max(0, fontSizeIndex - 1))}
-                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-sm"
+                className="w-9 h-9 sm:w-8 sm:h-8 rounded-full bg-white/10 flex items-center justify-center text-sm"
                 disabled={fontSizeIndex === 0}
               >
                 A-
               </button>
               <button
                 onClick={() => setFontSizeIndex(Math.min(FONT_SIZES.length - 1, fontSizeIndex + 1))}
-                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-sm"
+                className="w-9 h-9 sm:w-8 sm:h-8 rounded-full bg-white/10 flex items-center justify-center text-sm"
                 disabled={fontSizeIndex === FONT_SIZES.length - 1}
               >
                 A+
@@ -100,7 +100,7 @@ export default function ReadingMode({ card, isOpen, onClose, isSubscribed, onUpg
                   <button
                     key={t}
                     onClick={() => setTheme(t)}
-                    className={`w-6 h-6 rounded-full ${
+                    className={`w-7 h-7 sm:w-6 sm:h-6 rounded-full ${
                       theme === t ? 'bg-brand' : ''
                     } ${
                       t === 'dark' ? 'bg-gray-800' : t === 'light' ? 'bg-white' : 'bg-[#d4c4a8]'
@@ -116,7 +116,7 @@ export default function ReadingMode({ card, isOpen, onClose, isSubscribed, onUpg
         {/* Content */}
         <div
           id="reading-content"
-          className="h-full overflow-y-auto pt-20 pb-32 px-4"
+          className="h-full overflow-y-auto pt-16 sm:pt-20 pb-20 sm:pb-32 px-3 sm:px-4"
         >
           <div className="max-w-2xl mx-auto">
             {/* Book info */}

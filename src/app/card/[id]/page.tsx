@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAnyCardById } from "@/lib/card-resolver";
+import Logo from "@/components/Logo";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -51,14 +52,14 @@ export default async function CardPage({ params, searchParams }: PageProps) {
       {/* Header */}
       <header className="px-4 h-14 flex items-center justify-between max-w-2xl mx-auto w-full">
         <Link href="/" className="flex items-center">
-          <span className="font-instrument-serif italic text-lg sm:text-xl text-slate-900">BloomScroll</span>
+          <Logo size="md" />
         </Link>
       </header>
 
       {/* Card */}
       <main className="flex-1 flex items-center justify-center px-4 py-8">
         <div className="w-full max-w-lg">
-          <div className="bg-white border border-slate-200 text-slate-900 rounded-2xl overflow-hidden shadow-2xl p-8 sm:p-10">
+          <div className="bg-white border border-slate-200 text-slate-900 rounded-2xl overflow-hidden shadow-2xl p-5 sm:p-8 md:p-10">
             {/* Topics */}
             <div className="flex flex-wrap gap-2 mb-6">
               {card.topic.map((t) => (
@@ -72,7 +73,7 @@ export default async function CardPage({ params, searchParams }: PageProps) {
             </div>
 
             {/* Quote */}
-            <blockquote className="text-xl sm:text-2xl font-instrument-serif leading-relaxed mb-6">
+            <blockquote className="text-lg sm:text-xl md:text-2xl font-instrument-serif leading-relaxed mb-6">
               <span className="text-brand/30 text-3xl">&ldquo;</span>
               {card.quote}
               <span className="text-brand/30 text-3xl">&rdquo;</span>
@@ -80,7 +81,7 @@ export default async function CardPage({ params, searchParams }: PageProps) {
 
             {/* Author */}
             <div className="mb-6">
-              <p className="font-medium text-xl font-instrument-serif">{card.author}</p>
+              <p className="font-medium text-lg sm:text-xl font-instrument-serif">{card.author}</p>
               <p className="text-slate-500 italic">{card.book}</p>
             </div>
 

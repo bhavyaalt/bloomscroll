@@ -163,7 +163,7 @@ export default function CardFeed({
     : `${freeReadsUsed}/${freeDailyLimit} free reads used`;
 
   return (
-    <div className="fixed inset-0 pt-12 sm:pt-14 pb-0 px-3 sm:px-4 touch-pan-y flex flex-col">
+    <div className="fixed inset-0 pt-12 sm:pt-14 pb-0 px-2 sm:px-4 touch-pan-y flex flex-col safe-bottom">
       {/* Daily Card Banner */}
       <AnimatePresence>
         {dailyCard && (
@@ -221,7 +221,7 @@ export default function CardFeed({
             >
               {/* The Card */}
               <div className="flex-1 bg-[#FFF5FE] rounded-2xl overflow-hidden flex flex-col relative shadow-2xl shadow-black/30 min-h-0">
-                <div className="relative flex-1 p-4 sm:p-6 md:p-8 flex flex-col overflow-y-auto min-h-0">
+                <div className="relative flex-1 p-3 sm:p-6 md:p-8 flex flex-col overflow-y-auto min-h-0">
                   {/* Saved badge */}
                   <div className="flex items-center justify-between gap-2 mb-1 sm:mb-2 min-h-[28px] sm:min-h-[32px] flex-shrink-0">
                     <div className="min-w-0">
@@ -252,7 +252,7 @@ export default function CardFeed({
 
                   {/* Quote */}
                   <div className="flex-1 flex items-center justify-center px-1 sm:px-2 min-h-0">
-                    <blockquote className="text-lg sm:text-xl md:text-2xl lg:text-3xl leading-relaxed text-center text-[#7B2CBF]" style={{ fontFamily: "Georgia, serif" }}>
+                    <blockquote className="text-lg sm:text-xl md:text-2xl lg:text-3xl leading-relaxed text-center text-black" style={{ fontFamily: "Georgia, serif" }}>
                       &ldquo;{currentCard.quote}&rdquo;
                     </blockquote>
                   </div>
@@ -510,7 +510,7 @@ export default function CardFeed({
       </div>
 
       {/* Footer */}
-      <div className="text-center py-2 sm:py-4 text-slate-400 text-[8px] sm:text-[10px]  flex-shrink-0">
+      <div className="text-center py-1.5 sm:py-4 text-slate-400 text-[8px] sm:text-[10px] flex-shrink-0">
         &copy; 2025 BloomScroll &middot; Cultivating Mindfulness One Quote at a Time
       </div>
     </div>

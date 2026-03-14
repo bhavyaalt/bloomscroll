@@ -37,12 +37,12 @@ export default function ProUpsellModal({
         exit={{ opacity: 0, y: 8, scale: 0.98 }}
         transition={{ duration: 0.18 }}
         onClick={(event) => event.stopPropagation()}
-        className="mx-auto mt-10 w-full max-w-md rounded-[28px] border border-brand/20 bg-white p-6 text-brand-dark shadow-2xl"
+        className="mx-auto mt-6 sm:mt-10 w-full max-w-md rounded-[28px] border border-brand/20 bg-white p-4 sm:p-6 text-brand-dark shadow-2xl"
       >
         <div className="mb-4 flex items-start justify-between gap-4">
           <div>
             <p className="text-[11px] font-medium text-brand/60">BloomScroll Pro</p>
-            <h2 className="mt-2 text-3xl font-medium" style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}>
+            <h2 className="mt-2 text-2xl sm:text-3xl font-medium" style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}>
               {title}
             </h2>
           </div>

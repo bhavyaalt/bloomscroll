@@ -13,7 +13,8 @@ import {
 } from "@/lib/content-library";
 import ReadingMode from "@/components/ReadingMode";
 import { getStreakData, updateStreak, getStreakEmoji, getStreakMessage } from "@/lib/streak";
-import { shareCard, copyQuote } from "@/lib/share";
+import { shareCard, generateShareImage, copyQuote } from "@/lib/share";
+import ShareMenu, { ShareMenuData } from "@/components/app/ShareMenu";
 import { generateQuizQuestion, updateQuizStats, getQuizStats, QuizQuestion } from "@/lib/quiz";
 import { getCollectionCards, Collection } from "@/lib/collections";
 import { recordCardRead, recordQuizResult, getDailyProgress, markDailyGoalCompleted, setDailyGoal as saveDailyGoal, setStreakFreeze as saveStreakFreeze, DailyProgress } from "@/lib/reading-stats";
@@ -152,6 +153,7 @@ export default function AppPage() {
   const [justSaved, setJustSaved] = useState(false);
   const [showCopied, setShowCopied] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
+  const [shareMenuData, setShareMenuData] = useState<ShareMenuData | null>(null);
 
   // Settings & modals
   const [showSettings, setShowSettings] = useState(false);
@@ -731,16 +733,22 @@ export default function AppPage() {
   // Derive ref username for share attribution
   const refUsername = profile?.fc_username || user?.email?.split("@")[0] || undefined;
 
-  const handleShare = async (e: React.MouseEvent) => {
+  const openShareMenu = (card: Card) => {
+    const cardUrl = `${window.location.origin}/card/${card.id}${refUsername ? `?ref=${encodeURIComponent(refUsername)}` : ""}`;
+    setShareMenuData({
+      twitterText: `"${card.quote.slice(0, 200)}${card.quote.length > 200 ? "..." : ""}" — ${card.author}\n\nvia @bloomscroll`,
+      url: cardUrl,
+      copyText: `"${card.quote}"\n\n— ${card.author}, ${card.book}\n\n${cardUrl}`,
+      generateImage: () => generateShareImage(card),
+      imageFilename: `bloomscroll-${card.author.toLowerCase().replace(/\s+/g, "-")}.png`,
+    });
+  };
+
+  const handleShare = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!currentCard || isSharing) return;
-    setIsSharing(true);
-    try {
-      await shareCard(currentCard, refUsername);
-    } finally {
-      setTimeout(() => setIsSharing(false), 500);
-    }
+    if (!currentCard) return;
+    openShareMenu(currentCard);
   };
 
   const handleCopy = () => {
@@ -765,11 +773,11 @@ export default function AppPage() {
     setDailyCard(null);
   };
 
-  const handleShareDailyCard = async (e: React.MouseEvent) => {
+  const handleShareDailyCard = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (!dailyCard) return;
-    await shareCard(dailyCard, refUsername);
+    openShareMenu(dailyCard);
   };
 
   const handleSaveWallet = async (address: string): Promise<boolean> => {
@@ -959,7 +967,7 @@ export default function AppPage() {
           assistModePreviewRemaining={assistModePreviewRemaining}
           reviewDueCount={reviewDueCount}
           activeModeLabel={activeModeLabel}
-          dailyCard={dailyCard}
+          dailyCard={!isSubscribed && freeReadLimitReached ? dailyCard : null}
           onDismissDailyCard={handleDismissDailyCard}
           onShareDailyCard={handleShareDailyCard}
           onDragEnd={handleDragEnd}
@@ -1164,6 +1172,14 @@ export default function AppPage() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Share Menu */}
+      <ShareMenu
+        open={!!shareMenuData}
+        onClose={() => setShareMenuData(null)}
+        data={shareMenuData || { twitterText: "", url: "", copyText: "" }}
+        onNotify={(message) => notify({ title: "Share", message, tone: "success", duration: 2500 })}
+      />
     </div>
   );
 }

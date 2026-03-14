@@ -29,10 +29,10 @@ export function BeforeAfter() {
 
       <div className="relative z-10 px-6 md:px-16 lg:px-32 pt-16 md:pt-20 pb-48 md:pb-64">
         <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-8 mb-12 md:mb-16">
-          <p className="font-instrument-serif italic text-xl md:text-4xl lg:text-5xl text-brand leading-snug max-w-md">
+          <p className="font-instrument-serif italic text-lg sm:text-xl md:text-4xl lg:text-5xl text-brand leading-snug max-w-md">
             Everyday is a chance to be a better version of you....
           </p>
-          <p className="font-instrument-serif text-xl md:text-4xl lg:text-5xl text-brand leading-snug max-w-md text-right self-end md:self-start">
+          <p className="font-instrument-serif text-lg sm:text-xl md:text-4xl lg:text-5xl text-brand leading-snug max-w-md text-right self-end md:self-start">
             Maybe that can start with a{" "}
             <span className="italic">better scroll ?</span>
           </p>

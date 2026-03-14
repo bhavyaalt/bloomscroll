@@ -82,7 +82,7 @@ export default function Pricing() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 max-w-3xl mx-auto w-full gap-6">
         {/* Free */}
-        <div className="flex flex-col p-8 rounded-2xl border border-slate-200 bg-white">
+        <div className="flex flex-col p-5 sm:p-8 rounded-2xl border border-slate-200 bg-white">
           <div className="flex flex-col gap-6 h-full">
             <div className="flex flex-col gap-1">
               <h3 className="font-instrument-serif text-lg font-medium text-slate-900">Seedling Plan</h3>
@@ -127,7 +127,7 @@ export default function Pricing() {
         </div>
 
         {/* Pro */}
-        <div className="flex flex-col p-8 rounded-2xl border-2 border-brand bg-white shadow-lg shadow-brand-light relative">
+        <div className="flex flex-col p-5 sm:p-8 rounded-2xl border-2 border-brand bg-white shadow-lg shadow-brand-light relative">
           <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-medium text-white bg-brand rounded-full px-4 py-1 whitespace-nowrap">
             Recommended
           </span>

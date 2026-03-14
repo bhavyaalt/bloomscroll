@@ -29,13 +29,13 @@ export default function LearningTracksModal({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         onClick={(event) => event.stopPropagation()}
-        className="bg-white border border-slate-200 rounded-2xl max-w-lg w-full max-h-[80vh] overflow-hidden"
+        className="bg-white border border-slate-200 rounded-2xl max-w-lg w-full max-h-[80dvh] overflow-hidden"
       >
-        <div className="p-6 border-b border-slate-200">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h2 className="font-instrument-serif font-medium text-xl flex items-center gap-2 text-slate-900">
-                <span className="text-2xl">🧠</span>
+        <div className="p-4 sm:p-6 border-b border-slate-200">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <h2 className="font-instrument-serif font-medium text-lg sm:text-xl flex items-center gap-2 text-slate-900">
+                <span className="text-xl sm:text-2xl shrink-0">🧠</span>
                 Learning Tracks
               </h2>
               <p className="text-sm text-slate-500 mt-2">
@@ -48,7 +48,7 @@ export default function LearningTracksModal({
           </div>
         </div>
 
-        <div className="overflow-y-auto max-h-[60vh] p-4">
+        <div className="overflow-y-auto max-h-[55dvh] p-3 sm:p-4">
           {!isSubscribed ? (
             <div className="rounded-3xl border border-brand/15 bg-brand/10 p-5 text-center">
               <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-slate-100 text-2xl">

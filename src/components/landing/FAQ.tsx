@@ -52,7 +52,7 @@ export const FAQ = () => {
                 <span className={`font-medium pr-4 ${openIndex === i ? "text-brand" : "text-slate-900"}`}>
                   {faq.question}
                 </span>
-                <span className={`size-8 rounded-full flex items-center justify-center shrink-0 border transition-all text-lg ${
+                <span className={`size-9 sm:size-8 rounded-full flex items-center justify-center shrink-0 border transition-all text-lg ${
                   openIndex === i
                     ? "bg-brand text-white border-brand rotate-45"
                     : "border-slate-200 text-slate-400 group-hover:border-brand group-hover:text-brand"

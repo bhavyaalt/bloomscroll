@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAuth } from "@/components/AuthProvider";
 import { signInWithProvider } from "@/lib/supabase";
+import Logo from "@/components/Logo";
 import { trackGrowthEvent } from "@/lib/analytics";
 import {
   PRICING,
@@ -161,7 +162,7 @@ export default function SubscribeContent({ initialRegion }: { initialRegion: Reg
       <header className="border-b border-slate-200 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <span className="font-instrument-serif italic text-xl text-slate-900">BloomScroll</span>
+            <Logo size="md" />
           </Link>
           <Link href="/app" className="text-xs sm:text-sm font-medium text-slate-500 hover:text-slate-900">
             Back to App
@@ -195,10 +196,10 @@ export default function SubscribeContent({ initialRegion }: { initialRegion: Reg
                 <span className="inline-flex py-1 px-3 border border-brand/30 rounded-full text-[10px] sm:text-xs font-medium mb-4 text-brand bg-brand-light">
                   {sourceCopy.eyebrow}
                 </span>
-                <h1 className="font-instrument-serif text-4xl sm:text-6xl mb-4 text-brand leading-none">
+                <h1 className="font-instrument-serif text-3xl sm:text-4xl md:text-6xl mb-4 text-brand leading-none">
                   {sourceCopy.title}
                 </h1>
-                <p className="text-lg sm:text-2xl text-slate-500 max-w-xl">
+                <p className="text-base sm:text-lg md:text-2xl text-slate-500 max-w-xl">
                   {sourceCopy.subtitle}
                 </p>
                 {user && (
@@ -294,13 +295,13 @@ export default function SubscribeContent({ initialRegion }: { initialRegion: Reg
                   </button>
                 </div>
 
-                <div className="rounded-[28px] bg-[#FFF5FE] p-6 text-brand">
+                <div className="rounded-[28px] bg-[#FFF5FE] p-4 sm:p-6 text-brand">
                   <div className="flex items-center justify-between gap-3 mb-6">
                     <div>
                       <p className="text-[11px] font-medium text-brand/60">
                         {billingCycle === "yearly" ? `Save ${savings.percentage}` : `${pricing.discountPercent}% off`}
                       </p>
-                      <h2 className="font-instrument-serif text-4xl mt-2">
+                      <h2 className="font-instrument-serif text-3xl sm:text-4xl mt-2">
                         {pricing.symbol}
                         {plan.price}
                         <span className="ml-2 text-lg text-brand/55">

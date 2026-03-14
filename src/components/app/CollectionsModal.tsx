@@ -15,9 +15,9 @@ export default function CollectionsModal({ onSelect, onClose }: CollectionsModal
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-white border border-slate-200 rounded-2xl max-w-md w-full max-h-[80vh] overflow-auto"
+        className="bg-white border border-slate-200 rounded-2xl max-w-md w-full max-h-[80dvh] overflow-auto"
       >
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <h2 className="font-instrument-serif font-medium text-xl mb-4 text-slate-900">Collections</h2>
           <div className="space-y-3">
             {collections.map((collection) => (
@@ -27,7 +27,7 @@ export default function CollectionsModal({ onSelect, onClose }: CollectionsModal
                 className="w-full p-4 rounded-xl text-left transition-all bg-slate-50 hover:bg-slate-100"
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-3xl">{collection.emoji}</span>
+                  <span className="text-2xl sm:text-3xl shrink-0">{collection.emoji}</span>
                   <div>
                     <span className="font-medium block text-slate-900">{collection.name}</span>
                     <span className="text-xs text-slate-500">{collection.description}</span>

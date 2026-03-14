@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Logo from "@/components/Logo";
 import { getStreakEmoji } from "@/lib/streak";
 import { StreakState } from "./types";
 
@@ -66,11 +67,11 @@ export default function AppHeader({
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
-        <div className="max-w-2xl mx-auto px-2 sm:px-4 h-12 sm:h-14 flex items-center justify-between">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 safe-top">
+        <div className="max-w-2xl mx-auto px-1.5 sm:px-4 h-11 sm:h-14 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <span className="font-instrument-serif italic text-lg sm:text-xl text-slate-900">BloomScroll</span>
+            <Logo size="sm" />
           </Link>
 
           {/* Right controls */}
@@ -181,7 +182,7 @@ export default function AppHeader({
 
       {/* User Menu Dropdown */}
       {showUserMenu && (
-        <div className="fixed top-16 right-4 z-50 bg-white border border-slate-200 rounded-xl p-2 min-w-[200px] shadow-lg">
+        <div className="fixed top-12 sm:top-16 right-2 sm:right-4 z-50 bg-white border border-slate-200 rounded-xl p-2 min-w-[200px] max-w-[calc(100vw-1rem)] shadow-lg max-h-[80dvh] overflow-y-auto">
           {user || profile ? (
             <>
               <div className="px-3 py-2 text-xs text-slate-400 truncate border-b border-slate-200 mb-1">

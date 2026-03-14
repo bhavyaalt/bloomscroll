@@ -19,7 +19,7 @@ export default function ExpandedCardView({ card, isSaved, isPinned, onToggleSave
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-white/95 backdrop-blur overflow-auto"
+      className="fixed inset-0 z-50 bg-white/95 backdrop-blur overflow-auto safe-top safe-bottom"
       onClick={onClose}
     >
       <motion.div
@@ -27,7 +27,7 @@ export default function ExpandedCardView({ card, isSaved, isPinned, onToggleSave
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 50, opacity: 0 }}
         onClick={(e) => e.stopPropagation()}
-        className="max-w-lg mx-auto p-6 pt-16"
+        className="max-w-lg mx-auto p-4 sm:p-6 pt-12 sm:pt-16"
       >
         {/* Close hint */}
         <div className="text-center mb-8">
@@ -35,7 +35,7 @@ export default function ExpandedCardView({ card, isSaved, isPinned, onToggleSave
         </div>
 
         {/* Full Quote */}
-        <blockquote className="text-2xl sm:text-3xl font-instrument-serif text-slate-900 leading-relaxed mb-8">
+        <blockquote className="text-xl sm:text-3xl font-instrument-serif text-slate-900 leading-relaxed mb-6 sm:mb-8">
           &ldquo;{card.quote}&rdquo;
         </blockquote>
 
@@ -84,7 +84,7 @@ export default function ExpandedCardView({ card, isSaved, isPinned, onToggleSave
         <div className="flex gap-2 justify-end">
           <button
             onClick={onToggleSave}
-            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+            className={`w-11 h-11 rounded-full flex items-center justify-center transition-all ${
               isSaved
                 ? "bg-brand text-white"
                 : "bg-slate-100 text-slate-500 hover:bg-slate-200"
@@ -97,7 +97,7 @@ export default function ExpandedCardView({ card, isSaved, isPinned, onToggleSave
           </button>
           <button
             onClick={() => isPinned ? onUnpin(card.id) : onPin(card.id)}
-            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+            className={`w-11 h-11 rounded-full flex items-center justify-center transition-all ${
               isPinned
                 ? "bg-brand text-white"
                 : "bg-slate-100 text-slate-500 hover:bg-slate-200"
@@ -110,7 +110,7 @@ export default function ExpandedCardView({ card, isSaved, isPinned, onToggleSave
           </button>
           <button
             onClick={onClose}
-            className="w-10 h-10 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center text-lg"
+            className="w-11 h-11 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 flex items-center justify-center text-lg"
             title="Close"
           >
             ✕

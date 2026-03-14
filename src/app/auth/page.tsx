@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { signInWithEmail, signInWithProvider, getSession } from "@/lib/supabase";
+import Logo from "@/components/Logo";
 
 function AuthContent() {
   const router = useRouter();
@@ -42,16 +43,16 @@ function AuthContent() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* Header */}
-      <header className="px-6 md:px-10 h-16 flex items-center absolute top-0 left-0 right-0 z-10">
+      <header className="px-4 sm:px-6 md:px-10 h-14 sm:h-16 flex items-center absolute top-0 left-0 right-0 z-10">
         <Link href="/" className="flex items-center">
-          <span className="font-instrument-serif italic text-xl text-slate-900">BloomScroll</span>
+          <Logo size="md" />
         </Link>
       </header>
 
       {/* Split layout */}
       <div className="flex-1 flex flex-col lg:flex-row">
         {/* Left: Form */}
-        <div className="flex-1 flex items-center justify-center px-6 py-24 lg:py-12">
+        <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-20 sm:py-24 lg:py-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -84,7 +85,7 @@ function AuthContent() {
             ) : (
               <>
                 <div className="mb-8">
-                  <h1 className="font-instrument-serif text-3xl md:text-4xl font-medium mb-3">
+                  <h1 className="font-instrument-serif text-2xl sm:text-3xl md:text-4xl font-medium mb-3">
                     Welcome back
                   </h1>
                   <p className="text-slate-500">

@@ -72,12 +72,12 @@ export default function LeaderboardModal({ isOpen, onClose, currentUserId }: Lea
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white w-full sm:w-[480px] max-h-[85vh] rounded-t-3xl sm:rounded-3xl overflow-hidden"
+            className="bg-white w-full sm:w-[480px] max-h-[85dvh] rounded-t-3xl sm:rounded-3xl overflow-hidden"
           >
             {/* Header */}
-            <div className="p-6 border-b border-slate-200">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="font-instrument-serif text-2xl text-[#7B2CBF]">Leaderboard</h2>
+            <div className="p-4 sm:p-6 border-b border-slate-200">
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
+                <h2 className="font-instrument-serif text-xl sm:text-2xl text-[#7B2CBF]">Leaderboard</h2>
                 <button onClick={onClose} className="text-[#7B2CBF]/60 hover:text-[#7B2CBF]">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -91,7 +91,7 @@ export default function LeaderboardModal({ isOpen, onClose, currentUserId }: Lea
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex-1 py-2 px-3 rounded-xl text-sm font-medium transition-all ${
+                    className={`flex-1 py-2 px-2 sm:px-3 rounded-xl text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
                       activeTab === tab.id
                         ? "bg-[#7B2CBF] text-white"
                         : "bg-slate-100 text-[#7B2CBF]/60 hover:bg-slate-200"
@@ -104,7 +104,7 @@ export default function LeaderboardModal({ isOpen, onClose, currentUserId }: Lea
             </div>
             
             {/* Leaderboard List */}
-            <div className="p-4 overflow-y-auto max-h-[60vh]">
+            <div className="p-3 sm:p-4 overflow-y-auto max-h-[55dvh]">
               {loading ? (
                 <div className="flex items-center justify-center py-12">
                   <div className="w-8 h-8 border-2 border-[#7B2CBF] border-t-transparent rounded-full animate-spin" />

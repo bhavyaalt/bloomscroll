@@ -18,9 +18,9 @@ export default function BookFilterModal({ selectedBook, isSubscribed, onSelect, 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-white border border-slate-200 rounded-2xl max-w-md w-full max-h-[80vh] overflow-hidden"
+        className="bg-white border border-slate-200 rounded-2xl max-w-md w-full max-h-[80dvh] overflow-hidden"
       >
-        <div className="p-6 border-b border-slate-200">
+        <div className="p-4 sm:p-6 border-b border-slate-200">
           <div className="flex justify-between items-center">
             <h2 className="font-instrument-serif font-medium text-xl flex items-center gap-2 text-slate-900">
               <svg className="size-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
@@ -34,7 +34,7 @@ export default function BookFilterModal({ selectedBook, isSubscribed, onSelect, 
             {isSubscribed ? "Select a book to read all its quotes" : "Pro feature — Upgrade to browse by book"}
           </p>
         </div>
-        <div className="overflow-y-auto max-h-[60vh] p-4">
+        <div className="overflow-y-auto max-h-[55dvh] p-3 sm:p-4">
           {!isSubscribed ? (
             <div className="text-center py-8">
               <div className="mb-4 flex justify-center">

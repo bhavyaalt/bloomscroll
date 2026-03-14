@@ -40,7 +40,7 @@ export function HowItWorks() {
           {STEPS.map((step) => (
             <div
               key={step.title}
-              className="flex flex-col items-center text-center gap-6 rounded-2xl p-8"
+              className="flex flex-col items-center text-center gap-4 sm:gap-6 rounded-2xl p-4 sm:p-8"
               style={{ backgroundColor: "#FFF5FE" }}
             >
               <h3 className="font-instrument-serif text-lg md:text-2xl font-medium text-black">
@@ -51,7 +51,7 @@ export function HowItWorks() {
                 <img
                   src={step.image}
                   alt={step.title}
-                  className="h-80 object-contain"
+                  className="h-52 sm:h-80 object-contain"
                 />
               </div>
               <p className="text-sm text-slate-500 leading-relaxed max-w-[280px]">

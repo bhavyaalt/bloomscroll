@@ -24,12 +24,12 @@ export default function StreakModal({ streak, dailyProgress, onClose }: StreakMo
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-white border border-slate-200 rounded-2xl sm:rounded-3xl max-w-sm w-full p-5 sm:p-8 text-center text-slate-900 mx-2"
+        className="bg-white border border-slate-200 rounded-2xl sm:rounded-3xl max-w-sm w-full p-4 sm:p-8 text-center text-slate-900 mx-2"
       >
         <div className="text-4xl sm:text-6xl mb-3 sm:mb-4">
           {getStreakEmoji(streak.currentStreak)}
         </div>
-        <h2 className="text-4xl sm:text-5xl font-instrument-serif font-medium mb-2 text-brand flex items-center justify-center gap-2">
+        <h2 className="text-3xl sm:text-5xl font-instrument-serif font-medium mb-2 text-brand flex items-center justify-center gap-2">
           {streak.currentStreak}
           {streak.streakFreezeActive && (
             <span className="text-xl sm:text-2xl" title="Streak Shield active">&#x1F6E1;&#xFE0F;</span>

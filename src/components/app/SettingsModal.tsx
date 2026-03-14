@@ -61,7 +61,7 @@ export default function SettingsModal({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto text-slate-900"
+        className="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-4 sm:p-6 max-h-[85dvh] overflow-y-auto text-slate-900"
       >
         <div className="flex justify-between items-center mb-6">
           <h2 className="font-instrument-serif font-medium text-xl">Settings</h2>

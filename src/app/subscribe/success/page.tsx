@@ -100,7 +100,7 @@ function SuccessContent() {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", delay: 0.2 }}
-          className="w-24 h-24 bg-brand rounded-full flex items-center justify-center mx-auto mb-8"
+          className="w-20 h-20 sm:w-24 sm:h-24 bg-brand rounded-full flex items-center justify-center mx-auto mb-6 sm:mb-8"
         >
           <motion.span
             initial={{ opacity: 0 }}
@@ -112,11 +112,11 @@ function SuccessContent() {
           </motion.span>
         </motion.div>
 
-        <h1 className="font-instrument-serif text-3xl font-medium text-slate-900 mb-4">
+        <h1 className="font-instrument-serif text-2xl sm:text-3xl font-medium text-slate-900 mb-4">
           Welcome to Pro!
         </h1>
         
-        <p className="text-xl mb-8 text-slate-500">
+        <p className="text-base sm:text-xl mb-6 sm:mb-8 text-slate-500">
           Your subscription is now active. Time to unlock your potential.
         </p>
 

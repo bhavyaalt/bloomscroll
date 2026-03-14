@@ -20,7 +20,7 @@ export function CTA({ ctaHref, isAuthenticated, displayName }: { ctaHref: string
       </div>
 
       <div className="relative z-10 flex flex-col items-center text-center px-6 gap-6">
-        <h2 className="font-instrument-serif text-2xl md:text-5xl lg:text-6xl font-medium text-black leading-tight md:whitespace-nowrap">
+        <h2 className="font-instrument-serif text-xl sm:text-2xl md:text-5xl lg:text-6xl font-medium text-black leading-tight md:whitespace-nowrap">
           Still doomscrolling?{" "}
           <span className="font-instrument-serif italic text-brand font-normal">
             Try bloomscrolling.
@@ -32,7 +32,7 @@ export function CTA({ ctaHref, isAuthenticated, displayName }: { ctaHref: string
         </p>
         <Link
           href={ctaHref}
-          className="flex items-center justify-center rounded-full h-10 md:h-14 px-8 md:px-10 bg-white/30 backdrop-blur-md border border-white/40 text-white text-base md:text-lg font-medium shadow-lg hover:bg-white/40 transition-all mt-2"
+          className="flex items-center justify-center rounded-full h-11 md:h-14 px-6 sm:px-8 md:px-10 bg-white/30 backdrop-blur-md border border-white/40 text-white text-sm sm:text-base md:text-lg font-medium shadow-lg hover:bg-white/40 transition-all mt-2"
         >
           {isAuthenticated ? (displayName ? `Keep Reading, ${displayName}` : "Keep Reading") : "Start Now !"}
         </Link>

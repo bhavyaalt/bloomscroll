@@ -38,12 +38,12 @@ export default function AchievementsModal({ isOpen, onClose }: AchievementsModal
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white w-full sm:w-[480px] max-h-[85vh] rounded-t-3xl sm:rounded-3xl overflow-hidden"
+            className="bg-white w-full sm:w-[480px] max-h-[85dvh] rounded-t-3xl sm:rounded-3xl overflow-hidden"
           >
             {/* Header */}
-            <div className="p-6 border-b border-slate-200">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="font-instrument-serif text-2xl text-brand">Achievements</h2>
+            <div className="p-4 sm:p-6 border-b border-slate-200">
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
+                <h2 className="font-instrument-serif text-xl sm:text-2xl text-brand">Achievements</h2>
                 <button onClick={onClose} className="text-slate-400 hover:text-slate-900">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -52,9 +52,9 @@ export default function AchievementsModal({ isOpen, onClose }: AchievementsModal
               </div>
 
               {/* Level Progress */}
-              <div className="bg-brand-light rounded-2xl p-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-brand flex items-center justify-center text-2xl">
+              <div className="bg-brand-light rounded-2xl p-3 sm:p-4">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-brand flex items-center justify-center text-xl sm:text-2xl shrink-0">
                     {levelInfo.level <= 3 ? "🌱" : levelInfo.level <= 6 ? "🌳" : "🏆"}
                   </div>
                   <div className="flex-1">
@@ -81,7 +81,7 @@ export default function AchievementsModal({ isOpen, onClose }: AchievementsModal
             </div>
 
             {/* Achievement Grid */}
-            <div className="p-6 overflow-y-auto max-h-[50vh]">
+            <div className="p-4 sm:p-6 overflow-y-auto max-h-[45dvh]">
               {categories.map(cat => {
                 const catAchievements = achievements.filter(a => a.category === cat.id);
                 if (catAchievements.length === 0) return null;

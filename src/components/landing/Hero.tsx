@@ -23,10 +23,10 @@ export function Hero({ ctaHref, isAuthenticated, displayName }: { ctaHref: strin
       />
 
       <div className="relative z-10 flex flex-col items-center text-center px-6 pt-20 md:pt-28">
-        <h1 className="font-instrument-serif text-3xl md:text-7xl lg:text-8xl text-slate-900 leading-[1.05] tracking-tight">
+        <h1 className="font-instrument-serif text-2xl sm:text-3xl md:text-7xl lg:text-8xl text-slate-900 leading-[1.05] tracking-tight">
           Turn Scrolling into <span className="italic text-brand">Growing</span>
         </h1>
-        <p className="mt-4 text-slate-700 text-xs md:text-base max-w-xl leading-relaxed">
+        <p className="mt-3 sm:mt-4 text-slate-700 text-xs sm:text-sm md:text-base max-w-xl leading-relaxed px-2">
           Replace mindless doomscrolling with 60-second wisdom cards from Seneca,
           Marcus Aurelius, and history&apos;s greatest minds. Designed for your
           peace of mind.

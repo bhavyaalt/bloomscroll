@@ -81,18 +81,18 @@ export default function OnboardingPage() {
             >
               <div className="text-center mb-8">
                 <div className="text-4xl mb-3">🌱</div>
-                <h1 className="text-3xl font-medium font-instrument-serif text-brand mb-2">
+                <h1 className="text-2xl sm:text-3xl font-medium font-instrument-serif text-brand mb-2">
                   What interests you?
                 </h1>
                 <p className="text-slate-500 text-sm">Pick topics to personalize your feed</p>
               </div>
 
-              <div className="grid grid-cols-3 gap-3 mb-8">
+              <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-8">
                 {TOPICS.map(topic => (
                   <button
                     key={topic.id}
                     onClick={() => toggleTopic(topic.id)}
-                    className={`p-3 rounded-xl text-center transition-all ${
+                    className={`p-2.5 sm:p-3 rounded-xl text-center transition-all ${
                       selectedTopics.includes(topic.id)
                         ? "bg-brand text-white border-2 border-brand"
                         : "bg-white text-slate-700 border-2 border-slate-200 hover:border-brand"
@@ -131,7 +131,7 @@ export default function OnboardingPage() {
             >
               <div className="text-center mb-8">
                 <div className="text-4xl mb-3">🎯</div>
-                <h1 className="text-3xl font-medium font-instrument-serif text-brand mb-2">
+                <h1 className="text-2xl sm:text-3xl font-medium font-instrument-serif text-brand mb-2">
                   What are your goals?
                 </h1>
                 <p className="text-slate-500 text-sm">Help us tailor your experience</p>

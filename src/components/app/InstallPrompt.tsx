@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { isIOS, dismissInstallPrompt } from "@/lib/pwa";
+import Logo from "@/components/Logo";
 
 interface InstallPromptProps {
   installEvent: Event | null;
@@ -40,7 +41,7 @@ export default function InstallPrompt({ installEvent, onClose }: InstallPromptPr
       >
         <div className="text-center mb-5">
           <div className="mb-3 flex justify-center">
-            <span className="font-instrument-serif italic text-2xl text-slate-900">BloomScroll</span>
+            <Logo size="lg" />
           </div>
           <h3 className="text-xl font-instrument-serif font-medium text-brand tracking-tight mb-1">
             Add to Home Screen

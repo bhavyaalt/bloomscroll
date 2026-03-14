@@ -32,7 +32,7 @@ export default function PinModal({ card, onConfirm, onClose }: PinModalProps) {
         exit={{ y: 100, opacity: 0 }}
         transition={{ type: "spring", damping: 25, stiffness: 300 }}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md bg-white rounded-t-2xl sm:rounded-2xl p-6 shadow-2xl"
+        className="w-full max-w-md bg-white rounded-t-2xl sm:rounded-2xl p-4 sm:p-6 shadow-2xl max-h-[90dvh] overflow-y-auto"
       >
         {/* Handle bar (mobile) */}
         <div className="flex justify-center mb-4 sm:hidden">

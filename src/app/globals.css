@@ -135,9 +135,28 @@ body::-webkit-scrollbar {
 }
 
 /* iOS safe area handling */
-@supports (padding-bottom: env(safe-area-inset-bottom)) {
+@supports (padding: env(safe-area-inset-top)) {
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
   .safe-bottom {
     padding-bottom: env(safe-area-inset-bottom);
+  }
+  .safe-left {
+    padding-left: env(safe-area-inset-left);
+  }
+  .safe-right {
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* Use dvh for mobile viewport to account for browser chrome */
+@supports (height: 100dvh) {
+  .h-screen-safe {
+    height: 100dvh;
+  }
+  .min-h-screen-safe {
+    min-height: 100dvh;
   }
 }
 

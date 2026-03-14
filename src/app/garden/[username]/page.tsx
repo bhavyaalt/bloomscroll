@@ -5,6 +5,7 @@ import { getProfileByUsername, getPinnedCards } from "@/lib/pinned-cards";
 import { getAnyCardById } from "@/lib/card-resolver";
 import { UserProfile } from "@/lib/supabase";
 import GardenClient from "@/components/app/GardenClient";
+import Logo from "@/components/Logo";
 
 interface PageProps {
   params: Promise<{ username: string }>;
@@ -48,10 +49,10 @@ export default async function GardenPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="border-b border-slate-200 px-6 py-4">
+      <header className="border-b border-slate-200 px-3 sm:px-6 py-3 sm:py-4">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center">
-            <span className="font-instrument-serif italic text-lg sm:text-xl text-slate-900">BloomScroll</span>
+            <Logo size="md" />
           </Link>
           <Link
             href="/app"
@@ -62,7 +63,7 @@ export default async function GardenPage({ params }: PageProps) {
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 py-10">
+      <main className="max-w-3xl mx-auto px-3 sm:px-4 py-6 sm:py-10">
         {/* Profile hero */}
         <div className="text-center mb-10">
           <div className="w-20 h-20 rounded-full mx-auto mb-4 border-2 border-brand/20 overflow-hidden bg-brand-light flex items-center justify-center">
@@ -74,7 +75,7 @@ export default async function GardenPage({ params }: PageProps) {
               </span>
             )}
           </div>
-          <h1 className="text-3xl font-medium font-instrument-serif text-slate-900 mb-1">
+          <h1 className="text-2xl sm:text-3xl font-medium font-instrument-serif text-slate-900 mb-1">
             {displayName}&apos;s Garden
           </h1>
           <p className="text-slate-500 text-sm mb-4">
