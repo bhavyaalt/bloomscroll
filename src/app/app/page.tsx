@@ -52,6 +52,7 @@ import AchievementsModal from "@/components/app/AchievementsModal";
 import LeaderboardModal from "@/components/app/LeaderboardModal";
 import { AnimatePresence } from "framer-motion";
 import { useNotifications } from "@/components/NotificationProvider";
+import { addPendingReward } from "@/lib/starkzap";
 import ProUpsellModal from "@/components/app/ProUpsellModal";
 import { trackGrowthEvent } from "@/lib/analytics";
 import LearningTracksModal from "@/components/app/LearningTracksModal";
@@ -416,6 +417,7 @@ export default function AppPage() {
     const card = feed[currentIndex];
     const timer = setTimeout(() => {
       recordCardRead(card.id, card.topic);
+      addPendingReward("CARD_READ");
       setDailyProgress(getDailyProgress());
 
       if (profile && !isSubscribed) {
@@ -766,6 +768,7 @@ export default function AppPage() {
     const newStats = updateQuizStats(correct);
     setQuizStats(newStats);
     recordQuizResult(correct);
+    if (correct) addPendingReward("QUIZ_CORRECT");
   };
 
   const handleDismissDailyCard = () => {

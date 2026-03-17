@@ -5,6 +5,7 @@ import Link from "next/link";
 import Logo from "@/components/Logo";
 import { getStreakEmoji } from "@/lib/streak";
 import { StreakState } from "./types";
+import { RewardsWidget } from "@/components/RewardsWidget";
 
 interface AppHeaderProps {
   user: { email?: string } | null;
@@ -94,6 +95,9 @@ export default function AppHeader({
               <span className="text-xs sm:text-sm">🔥</span>
               <span className="text-xs sm:text-sm font-medium text-slate-600">{streak.currentStreak}</span>
             </button>
+
+            {/* BTC Rewards */}
+            <RewardsWidget />
 
             <button
               onClick={onShowLearningTracks}
