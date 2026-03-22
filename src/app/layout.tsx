@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import "./globals.css";
+
+const GA_MEASUREMENT_ID = "G-L1P485EK0P";
 import { AuthProvider } from "@/components/AuthProvider";
 import { FarcasterProvider } from "@/components/FarcasterProvider";
 import { NotificationProvider } from "@/components/NotificationProvider";
@@ -154,6 +157,19 @@ export default function RootLayout({
             }),
           }}
         />
+        {/* Google Analytics */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
       </head>
       <body className="antialiased">
         <NotificationProvider>
